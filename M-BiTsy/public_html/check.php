@@ -172,8 +172,8 @@ if (!$stmt) {
     $arr = ["addedrequests","attachments","bans","bookmarks","bonus","blocks","categories","censor","clients","comments","completed"
             ,"countries","email_bans","faq","files","forumcats","forum_posts","forum_forums","forum_readposts"
             ,"forum_topics","friends","groups","guests","iplog","languages","likes","log","messages","news"
-            ,"peers","pollanswers","polls","ratings","reports","requests","rules","snatched","shoutbox","staffmessages"
-            ,"stylesheets","tasks","teams","thanks","tmdb","torrentlang","torrents","users","warnings"];
+            ,"peers","pollanswers","polls","ratings","reports","requests","rules","snatched","shoutbox","staffmessages","sqlerr"
+            ,"stylesheets","tags","tasks","teams","thanks","tmdb","torrentlang","torrents","users","warnings"];
     echo "<table cellpadding='3' cellspacing='1' style='border-collapse: collapse' border='1'>";
     echo "<tr><th>Table</th><th>Status</th></tr>";
     foreach ($arr as $t) {
