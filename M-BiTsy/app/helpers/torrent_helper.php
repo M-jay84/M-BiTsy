@@ -1,23 +1,34 @@
 <?php
 // Function That Returns The Health Level Of A Torrent
-function get_ratio_color($ratio)
+function health($leechers, $seeders)
 {
-   if ($ratio == '---') {
-       return "<font color='FFFFFF'>$ratio</font>";
-   }
-   if ($ratio < 0.5) {
-       return "<font color='#fc0313'>$ratio</font>";
-   }
-   if ($ratio < 1) {
-       return "<font color='#fc6203'>$ratio</font>";
-   }
-   if ($ratio < 1.5) {
-       return "<font color='#ebc334'>$ratio</font>";
-   }
-   if ($ratio < 2) {
-       return "<font color='#1a7d09'>$ratio</font>";
-   }
-   return "<font color='#0d6efd'>$ratio</font>";
+    if (($leechers == 0 && $seeders == 0) || ($leechers > 0 && $seeders == 0)) {
+        return 0;
+    } elseif ($seeders > $leechers) {
+        return 10;
+    }
+    $ratio = $seeders / $leechers * 100;
+    if ($ratio > 0 && $ratio < 15) {
+        return 1;
+    } elseif ($ratio >= 15 && $ratio < 25) {
+        return 2;
+    } elseif ($ratio >= 25 && $ratio < 35) {
+        return 3;
+    } elseif ($ratio >= 35 && $ratio < 45) {
+        return 4;
+    } elseif ($ratio >= 45 && $ratio < 55) {
+        return 5;
+    } elseif ($ratio >= 55 && $ratio < 65) {
+        return 6;
+    } elseif ($ratio >= 65 && $ratio < 75) {
+        return 7;
+    } elseif ($ratio >= 75 && $ratio < 85) {
+        return 8;
+    } elseif ($ratio >= 85 && $ratio < 95) {
+        return 9;
+    } else {
+        return 10;
+    }
 }
 
 // Create Table Of Peers
@@ -332,33 +343,21 @@ function torrenttable($res)
 function get_ratio_color($ratio)
 {
    if ($ratio == '---') {
-       return "<font color=FFFFFF>$ratio</font>";
-   }
-   if ($ratio < 0.1) {
-       return "<font color=#fc0313>$ratio</font>";
-   }
-   if ($ratio < 0.2) {
-       return "<font color=#fc6203>$ratio</font>";
-   }
-   if ($ratio < 0.3) {
-       return "<font color=#fcf003>$ratio</font>";
-   }
-   if ($ratio < 0.4) {
-       return "<font color=#17fc03>$ratio</font>";
+       return "<font color='FFFFFF'>$ratio</font>";
    }
    if ($ratio < 0.5) {
-       return "<font color=#0324fc>$ratio</font>";
+       return "<font color='#fc0313'>$ratio</font>";
    }
-   if ($ratio < 0.6) {
-       return "<font color=#fc03e8>$ratio</font>";
+   if ($ratio < 1) {
+       return "<font color='#fc6203'>$ratio</font>";
    }
-   if ($ratio < 0.7) {
-       return "<font color=#6203fc>$ratio</font>";
+   if ($ratio < 1.5) {
+       return "<font color='#ebc334'>$ratio</font>";
    }
-   if ($ratio < 0.8) {
-       return "<font color=FFFFFF>$ratio</font>";
+   if ($ratio < 2) {
+       return "<font color='#1a7d09'>$ratio</font>";
    }
-   return "<font color=000>$ratio</font>";
+   return "<font color='#0d6efd'>$ratio</font>";
 }
 
 // Function That Returns The Image Corresponding To The Votes
