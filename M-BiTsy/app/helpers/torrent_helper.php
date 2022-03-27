@@ -139,6 +139,11 @@ function torrenttable($res)
             case 'rating':
                 echo "<th>" . Lang::T("RATINGS") . "</th>";
                 break;
+            case 'admin':
+                if (Users::get('class') === 7) {
+                    echo "<th>" . Lang::T("Admin") . "</th>";
+                }
+                break;
         }
     }
     // Do They Have To Wiait
@@ -307,6 +312,11 @@ function torrenttable($res)
                     }
                     $rating = $row["rating"] . "/5)";
                     print("<td class='ttable_col$x' align='center'>$rating</td>");
+                    break;
+                case 'admin':
+                    if (Users::get('class') === 7) {
+                        print("<td class='ttable_col$x' align='center'><a href='".URLROOT."/torrent/edit?id=".$row['id']."'><i class='fa fa-pencil' title='Edit' aria-hidden='true'></i> </a> <a href='".URLROOT."/torrent/delete?id=".$row['id']."'><i class='fa fa-trash' title='Delete' aria-hidden='true'></i></a> </td>");
+                    }
                     break;
             }
             if ($x == 2) {

@@ -323,7 +323,8 @@ function userpostdetails($row, $type = null)
         $useruploaded = mksize($row["uploaded"]);
     }
     $userratio = $row["downloaded"] > 0 ? number_format($row["uploaded"] / $row["downloaded"], 1) : "---";
-    $commenttext = format_comment($row["body"]);
+    
+    $commenttext = $row["body"] != '' ? format_comment($row["body"]) : format_comment($row["text"]);
 
     if (!$avatar) {
         $avatar = URLROOT . "/assets/images/misc/default_avatar.png";

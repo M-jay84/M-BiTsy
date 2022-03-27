@@ -40,7 +40,7 @@ define('ALLOWEDIMAGETYPES', array(
 // Hide Blocks On Pages
 define('ISURL', array('login', 'logout', 'signup', 'contact', 'recover', 'recover/confirm'));
 // category,name,dl,magnet,uploader,tube,tmdb,comments,nfo,size,completed,seeders,leechers,health,external,added,speed,wait,rating
-define('TORRENTTABLE_COLUMNS', 'category,name,dl,magnet,uploader,tube,tmdb,comments,nfo,size,completed,seeders,leechers,health,external,added,speed,wait,rating');
+define('TORRENTTABLE_COLUMNS', 'category,name,dl,magnet,uploader,tube,tmdb,comments,nfo,size,completed,seeders,leechers,health,external,added,speed,wait,rating,admin');
 // Set User Group
 define('_USER', 1);
 define('_POWERUSER', 2);

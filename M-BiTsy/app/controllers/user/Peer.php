@@ -58,8 +58,10 @@ class Peer
     // uploaded on profile
     public function uploaded()
     {
+        // Get Id
         $id = (int) Input::get("id");
 
+        // Run Some Checks
         if (!Validate::Id($id)) {
             Redirect::autolink(URLROOT, "Bad ID.");
         }
@@ -68,6 +70,7 @@ class Peer
             Redirect::autolink(URLROOT, Lang::T("NO_USER_VIEW"));
         }
 
+        // Check User
         $user = DB::raw('users', '*', ['id'=>$id])->fetch();
         if (!$user) {
             Redirect::autolink(URLROOT, Lang::T("NO_USER_WITH_ID") . " $id.");
@@ -81,25 +84,28 @@ class Peer
             $where = "AND anon='no'";
         }
 
+        // Count For Pager
         $count = DB::run("SELECT COUNT(*) FROM torrents WHERE owner='$id' $where")->fetchColumn();
         unset($where);
         $orderby = "ORDER BY id DESC";
-        //get sql info
+        // Get sql info
         if ($count) {
-            list($pagerbuttons, $limit) = Pagination::pager(25, $count, URLROOT . "/peer/uploaded?id=$id&amp;");
+            list($pager, $limit) = Pagination::pager(25, $count, URLROOT . "/peer/uploaded?id=$id&amp;");
             $res = DB::run("SELECT torrents.id, torrents.category, torrents.leechers, torrents.tmdb, torrents.tube, torrents.nfo, torrents.seeders, torrents.name, torrents.times_completed, torrents.size, torrents.added, torrents.comments, torrents.numfiles, torrents.filename, torrents.owner, torrents.external, torrents.freeleech, categories.name AS cat_name, categories.parent_cat AS cat_parent, categories.image AS cat_pic, users.username, users.privacy, torrents.anon, IF(torrents.numratings < 2, NULL, ROUND(torrents.ratingsum / torrents.numratings, 1)) AS rating, torrents.announce FROM torrents LEFT JOIN categories ON category = categories.id LEFT JOIN users ON torrents.owner = users.id WHERE owner = $id $orderby $limit");
         } else {
             unset($res);
         }
 
+        // Set Title
         $title = sprintf(Lang::T("USER_DETAILS_FOR"), Users::coloredname($user["username"]));
 
+        // Send Data To View
         $data = [
             'id' => $id,
             'title' => $title,
             'count' => $count,
             'res' => $res,
-            'pagerbuttons' => $pagerbuttons,
+            'pager' => $pager,
         ];
         View::render('peer/uploaded', $data, 'user');
     }
