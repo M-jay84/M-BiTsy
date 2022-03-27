@@ -19,14 +19,24 @@ class Comments
         ];
     }
 
-    public static function join($id)
+    public static function join($id, $limit)
     {
-        $row = DB::run("SELECT comments.id, text, user, comments.added, avatar,
-                               signature, username, title, class, uploaded, downloaded, privacy, donated
+        $row = DB::run("SELECT comments.id, comments.type, comments.news, comments.torrent, text, user, comments.added, avatar,
+                               signature, username, users.title, class, uploaded, downloaded, privacy, donated,
+                               news.title as newstitle,
+                               torrents.name as torrenttitle
                         FROM comments
+
                         LEFT JOIN users
                         ON comments.user = users.id
-                        WHERE user = $id ORDER BY comments.id ")->fetch();
+
+                        LEFT JOIN news
+                        ON comments.news = news.id
+
+                        LEFT JOIN torrents
+                        ON comments.torrent = torrents.id
+
+                        WHERE user = $id ORDER BY comments.id $limit")->fetchAll();
         return $row;
     }
 

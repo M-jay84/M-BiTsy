@@ -139,7 +139,7 @@ class Comment
             Torrents::updateComments($id, 'add');
         }
         
-        $ins = DB::insert('comments', ['user'=>Users::get("id"), $type=>$id, 'added'=>TimeDate::get_date_time(), 'text'=>$body]);
+        $ins = DB::insert('comments', ['user'=>Users::get("id"), $type=>$id, 'added'=>TimeDate::get_date_time(), 'text'=>$body, 'type'=>$type]);
         if ($ins) {
             Redirect::autolink(URLROOT . "/comment?type=$type&id=$id", Lang::T("_SUCCESS_ADD_"));
         } else {
@@ -149,22 +149,33 @@ class Comment
 
     public function user()
     {
+        // Get Id
         $id = (int) Input::get("id");
-        
+
+        // Run Some Checks
         if (!isset($id) || !$id) {
             Redirect::autolink(URLROOT, Lang::T("ERROR"));
         }
+        
+        // Count For Pager
+        $count = DB::column('comments', 'count(*)', ['user' => $id]);
+        list($pager, $limit) = Pagination::pager(20, $count, URLROOT . "/comment/user?id=$id&");
+                
+        // Grab All Data
+        $row = Comments::join($id, $limit);
+        //echo '<pre>'.print_r($row, true).'</pre>';  
 
-        $row = Comments::join($id);
+        // Check If Data Returned
         if (!$row) {
-            Redirect::autolink(URLROOT, Lang::T("INVALID_USERID"));
+            Redirect::autolink(URLROOT, "User has not posted any comments");
         }
 
-        $title = Lang::T("COMMENTSFOR") . "<a href='profile?id=" . $row['user'] . "'>&nbsp;".Users::coloredname($row['username'])."</a>";
-
+        // Check If Data Returned
         $data = [
-            'title' => $title,
+            'title' => Lang::T("Search Users Comments"),
             'id' => $id,
+            'res' => $row,
+            'pager' => $pager,
         ];
         View::render('comment/user', $data, 'user');
     }
