@@ -239,6 +239,7 @@ CREATE TABLE IF NOT EXISTS `comments` (
   `ori_text` text DEFAULT NULL,
   `editedby` text DEFAULT NULL,
   `editedat` datetime DEFAULT NULL,
+  `type` VARCHAR(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `user` (`user`),
   KEY `torrent` (`torrent`)
