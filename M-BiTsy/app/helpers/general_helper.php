@@ -303,3 +303,78 @@ function array_flatten($array) {
     }
     return $result;
 }
+
+function userpostdetails($row, $type = null)
+{
+    $postername = Users::coloredname($row["username"]);
+    if ($postername == "") {
+        $postername = Lang::T("DELUSER");
+        $title = Lang::T("DELETED_ACCOUNT");
+        $avatar = "";
+        $usersignature = "";
+        $userdownloaded = "";
+        $useruploaded = "";
+    } else {
+        $privacylevel = $row["privacy"];
+        $avatar = htmlspecialchars($row["avatar"]);
+        $title = format_comment($row["title"]);
+        $usersignature = stripslashes(format_comment($row["signature"]));
+        $userdownloaded = mksize($row["downloaded"]);
+        $useruploaded = mksize($row["uploaded"]);
+    }
+    $userratio = $row["downloaded"] > 0 ? number_format($row["uploaded"] / $row["downloaded"], 1) : "---";
+    $commenttext = format_comment($row["body"]);
+
+    if (!$avatar) {
+        $avatar = URLROOT . "/assets/images/misc/default_avatar.png";
+    }
+
+    $edit = null;
+    if (Users::get("edit_torrents") == "yes" || Users::get("edit_news") == "yes" || Users::get('id') == $row['user']) {
+        $edit = '<a href="' . URLROOT . '/post/edit&amp;postid=' . $row['id'] . '"><i class="fa fa-pencil" title="Edit" aria-hidden="true"></i></a>&nbsp;';
+    }
+
+    $delete = null;
+    if (Users::get("delete_torrents") == "yes" || Users::get("delete_news") == "yes") {
+        $delete = '<a href="' . URLROOT . '/post/delete&amp;postid=' . $row['id'] . '&sure=0"><i class="fa fa-trash" title="Delete" aria-hidden="true"></i></a>&nbsp;';
+    }
+
+    $editcomment = null;
+    if ($type == "torrent" && Users::get("edit_torrents") == "yes" || $type == "news"  || $type == "req" && Users::get("edit_news") == "yes" || Users::get('id') == $row['user']) {
+        $editcomment = '<a href="' . URLROOT . '/comment/edit?id=' . $row["id"] . '&amp;type=' . $type . '"><i class="fa fa-pencil" title="Edit" aria-hidden="true"></i></a>&nbsp;';
+    }
+
+    $deletecomment = null;
+    if ($type == "torrent" && Users::get("delete_torrents") == "yes" || $type == "req" || $type == "news" && Users::get("delete_news") == "yes") {
+        $deletecomment = '<a href="' . URLROOT . '/comment/delete?id=' . $row["id"] . '&amp;type=' . $type . '"><i class="fa fa-trash" title="Delete" aria-hidden="true"></i></a>&nbsp;';
+    }
+
+    return $data = [
+        'postername' => $postername,
+        'title' => $title,
+        'avatar' => $avatar,
+        'usersignature' => $usersignature,
+        'userdownloaded' => $userdownloaded,
+        'useruploaded' => $useruploaded,
+        'privacylevel' => $privacylevel,
+        'userratio' => $userratio,
+        'commenttext' => $commenttext,
+        'edit' => $edit,
+        'delete' => $delete,
+        'editcomment' => $editcomment,
+        'deletecomment' => $deletecomment
+    ];
+
+}
+
+function commentlinktitle($row)
+{
+    if ($row['type'] == 'torrent' && $row['torrent'] > 0) {
+        $link = 'Torrent: <a href="'.URLROOT.'/torrent?id=' . $row['torrent'] . '">' . $row['torrenttitle'] . '</a>&nbsp;';
+
+    } elseif ($row['type'] == 'news' && $row['news'] > 0) {
+        $link = 'News: <a href="'.URLROOT.'/comment?id=' . $row['news'] . '&amp;type=news">' . $row['newstitle'] . '</a>&nbsp;';
+                
+    } 
+    return $link;
+}

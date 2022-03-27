@@ -167,11 +167,12 @@ class Post
         Redirect::autolink(URLROOT . "/topic?topicid=$topicid", Lang::T("_SUCCESS_DEL_"));
     }
 
-
     public function user()
     {
+        // Get Id
         $id = (int) Input::get("id");
 
+        // Run Some Checks
         if (!isset($id) || !$id) {
             Redirect::autolink(URLROOT, Lang::T("ERROR"));
         }
@@ -179,26 +180,25 @@ class Post
             Redirect::autolink(URLROOT, Lang::T("NO_USER_VIEW"));
         }
 
-        $count = DB::column('forum_posts', 'count(*)','');
-        list($pagerbuttons, $limit) = Pagination::pager(15, $count, URLROOT . "/post/user?id=$id&");
-        $row = DB::run("SELECT
-            forum_posts.id, topicid, userid, forum_posts.added, body,
-            avatar, signature, username, title, class, uploaded, downloaded, privacy, donated
-            FROM forum_posts
-            LEFT JOIN users
-            ON forum_posts.userid = users.id
-            WHERE userid = $id ORDER BY forum_posts.added DESC $limit")->fetchAll(); //$limit
+        // Count For Pager
+        $count = DB::column('forum_posts', 'count(*)', ['userid' => $id]);
+        list($pager, $limit) = Pagination::pager(20, $count, URLROOT . "/post/user?id=$id&");
+        
+        // Grab All Data
+        $row = Forums::getUsersPost($id, $limit);
+        //echo '<pre>'.print_r($row, true).'</pre>';  
+
+        // Check If Data Returned
         if (!$row) {
             Redirect::autolink(URLROOT, "User has not posted in forum");
         }
-
-        $title = Lang::T("COMMENTSFOR") . "<a href='profile?id=" . $row['userid'] . "'>&nbsp;$row[username]</a>";
-        
+ 
+        // Send Data To View
         $data = [
-            'title' => $title,
+            'title' => Lang::T("Search Users Post"),
             'id' => $id,
             'res' => $row,
-            'pagerbuttons' => $pagerbuttons,
+            'pager' => $pager,
         ];
         View::render('forum/post/user', $data, 'user');
     }

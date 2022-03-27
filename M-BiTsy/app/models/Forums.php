@@ -115,4 +115,48 @@ class Forums
         return $var;
     }
 
+    // Get User Forum Post By Id
+    public static function getUsersPost($id, $limit)
+    {
+        $stmt = DB::run("SELECT
+                        forum_posts.id, 
+                        forum_posts.topicid, 
+                        forum_posts.userid, 
+                        forum_posts.added, 
+                        forum_posts.body,
+                        
+                        users.avatar, 
+                        users.signature, 
+                        users.username, 
+                        users.title, 
+                        users.class, 
+                        users.uploaded, 
+                        users.downloaded, 
+                        users.privacy, 
+                        users.donated,
+                        
+                        forum_topics.subject,
+                        forum_topics.id as tid,
+                        forum_topics.forumid,
+
+                        forum_forums.name
+                        
+                        FROM forum_posts
+                        
+                        LEFT JOIN users
+                        ON forum_posts.userid = users.id
+                        
+                        LEFT JOIN forum_topics
+                        ON forum_posts.topicid = forum_topics.id
+            
+                        LEFT JOIN forum_forums
+                        ON forum_topics.forumid = forum_forums.id
+                        
+                        WHERE forum_posts.userid = $id 
+                        ORDER BY forum_posts.added 
+                        DESC $limit")->fetchAll();
+                        //echo '<pre>'.print_r($stmt, true).'</pre>';
+        return $stmt;
+    }
+
 }
