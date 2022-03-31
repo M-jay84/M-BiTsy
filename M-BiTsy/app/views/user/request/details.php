@@ -54,7 +54,7 @@ if ($num["descr"]) {
         <B>Requested by: </B>
     </div>
     <div class="col-9">
-        <?php echo Users::coloredname($carr['username']) ?>
+        <?php echo Users::coloredname($num['userid']) ?>
     </div>
 </div>
 

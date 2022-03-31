@@ -29,9 +29,9 @@ class Bonuses
                     if ($res->rowCount() == 0) {
                         Redirect::autolink("bonus", "No HnR found for this user.");
                     }
-                    Logs::write("A HnR for <a href='profile?id=" . $uid . "'>" . Users::coloredname(Users::get('username')) . "</a> has been removed");
+                    Logs::write("A HnR for <a href='profile?id=" . $uid . "'>" . Users::coloredname(Users::get('id')) . "</a> has been removed");
                     $new_modcomment = gmdate("d-m-Y \à H:i") . " - ";
-                    $new_modcomment .= "" . Users::coloredname(Users::get('username')) . " has cleared H&R for " . $row['cost'] . " points \n";
+                    $new_modcomment .= "" . Users::coloredname(Users::get('id')) . " has cleared H&R for " . $row['cost'] . " points \n";
                     $modcom = $new_modcomment;
                     DB::run("UPDATE `users` SET `modcomment` = CONCAT($modcom,modcomment) WHERE id = ?", [$uid]);
                     DB::update('snatched', ['ltime' =>129600, 'hnr' =>'no'], ['uid' => $uid]);

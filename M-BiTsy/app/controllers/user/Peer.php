@@ -41,7 +41,7 @@ class Peer
             $leeching = peerstable($res);
         }
 
-        $title = sprintf(Lang::T("USER_DETAILS_FOR"), Users::coloredname($user["username"]));
+        $title = sprintf(Lang::T("USER_DETAILS_FOR"), Users::coloredname($id));
         
         $data = [
             'id' => $id,
@@ -97,7 +97,7 @@ class Peer
         }
 
         // Set Title
-        $title = sprintf(Lang::T("USER_DETAILS_FOR"), Users::coloredname($user["username"]));
+        $title = sprintf(Lang::T("USER_DETAILS_FOR"), Users::coloredname($id));
 
         // Send Data To View
         $data = [

@@ -3,7 +3,7 @@
 function commenttable($res, $type = null)
 {
     while ($row = $res->fetch(PDO::FETCH_LAZY)) {
-        $postername = Users::coloredname($row["username"]);
+        $postername = Users::coloredname($row["id"]);
         if ($postername == "") {
             $postername = Lang::T("DELUSER");
             $title = Lang::T("DELETED_ACCOUNT");

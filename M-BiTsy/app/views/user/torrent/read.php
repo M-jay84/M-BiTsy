@@ -65,7 +65,7 @@ foreach ($data['selecttor'] as $torr) :
         if ($torr["anon"] == "yes" && !$torr['owned']) { ?>
             <b><?php echo Lang::T("ADDED_BY"); ?>:</b>&nbsp; Anonymous<br> <?php
         } elseif ($torr["username"]) { ?>
-            <b><?php echo Lang::T("ADDED_BY"); ?>:</b>&nbsp;<a href='profile?id=<?php echo $torr["owner"]; ?>'><?php echo Users::coloredname($torr["username"]); ?></a><br><?php
+            <b><?php echo Lang::T("ADDED_BY"); ?>:</b>&nbsp;<a href='profile?id=<?php echo $torr["owner"]; ?>'><?php echo Users::coloredname($torr["owner"]); ?></a><br><?php
         } else { ?>
             <b><?php echo Lang::T("ADDED_BY"); ?>:</b>&nbsp; Unknown<br><?php
         }  ?>
@@ -105,7 +105,7 @@ foreach ($data['selecttor'] as $torr) :
             $data3 = DB::run("SELECT * FROM `users` AS u LEFT JOIN `likes` AS l ON(u.id = l.user) WHERE liked=? AND type=?", [$torr['id'], 'torrent']);
             print('<b>Liked by</b>&nbsp;');
             foreach ($data3 as $stmt) :
-                print("<a href='" . URLROOT . "/profile?id=$stmt[id]'>" . Users::coloredname($stmt['username']) . "</a>&nbsp;");
+                print("<a href='" . URLROOT . "/profile?id=$stmt[id]'>" . Users::coloredname($stmt['id']) . "</a>&nbsp;");
             endforeach;
         }
         echo "<br />";
@@ -113,7 +113,7 @@ foreach ($data['selecttor'] as $torr) :
             $data3 = DB::run("SELECT * FROM `users` AS u LEFT JOIN `thanks` AS l ON(u.id = l.user) WHERE thanked=? AND type=?", [$torr['id'], 'torrent']);
             print('<b>Thanked by</b>&nbsp;');
             foreach ($data3 as $stmt) :
-                print("<a href='" . URLROOT . "/profile?id=$stmt[id]'>" . Users::coloredname($stmt['username']) . "</a>&nbsp;");
+                print("<a href='" . URLROOT . "/profile?id=$stmt[id]'>" . Users::coloredname($stmt['id']) . "</a>&nbsp;");
             endforeach;
         }
         echo "<br />";

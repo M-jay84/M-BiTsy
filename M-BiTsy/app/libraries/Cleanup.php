@@ -127,7 +127,7 @@ class Cleanup
                 DB::insert('warnings', ['userid'=>$arr['id'], 'reason'=>$reason, 'added'=>TimeDate::get_date_time(),'expiry'=>$expiretime,'warnedby'=>0,'type'=>'Poor Ratio']);
                 DB::insert('users', ['warned'=>'yes'], ['id'=>$arr["id"]]);
                 DB::insert('messages', ['sender'=>0, 'receiver'=>$arr['id'], 'added'=>TimeDate::get_date_time(), 'msg'=> $reason]);
-                Logs::write("Auto Leech warning has been <b>added</b> for: <a href='" . URLROOT . "/profile?id=" . $arr["id"] . "'>" . Users::coloredname($arr["username"]) . "</a>");
+                Logs::write("Auto Leech warning has been <b>added</b> for: <a href='" . URLROOT . "/profile?id=" . $arr["id"] . "'>" . Users::coloredname($arr["id"]) . "</a>");
             }
         }
         // REMOVE RATIO WARNING
@@ -136,7 +136,7 @@ class Cleanup
         if ($res1) {
             $reason = "Your warning of low ratio has been removed. We highly recommend you to keep a your ratio up to not be warned again.\n";
             foreach ($res1 as $arr1) {
-                Logs::write("Auto Leech warning has been removed for: <a href='" . URLROOT . "/profile?id=" . $arr1["id"] . "'>" . Users::coloredname($arr1["username"]) . "</a>");
+                Logs::write("Auto Leech warning has been removed for: <a href='" . URLROOT . "/profile?id=" . $arr1["id"] . "'>" . Users::coloredname($arr1["id"]) . "</a>");
                 DB::update(' users', ['warned' => 'no'], ['id' => $arr1['id']]);
                 DB::update('warnings', ['expiry' => TimeDate::get_date_time(), 'active' =>'no'], ['userid' => $arr['id']]);
                 DB::insert('messages', ['sender'=>0, 'receiver'=>$arr1['id'], 'added'=>TimeDate::get_date_time(), 'msg'=> $reason]);
@@ -149,7 +149,7 @@ class Cleanup
             foreach ($res as $arr) {
                 if (TimeDate::gmtime() - $arr["expiry"] >= 0) {
                     DB::update(' users', ['warned' => 'no', 'enabled' =>'no'], ['id' => $arr['id']]);
-                    Logs::write("User <a href='" . URLROOT . "/profile?id=" . $arr["id"] . "'>" . Users::coloredname($arr["username"]) . "</a> has been banned (Auto Leech warning).");
+                    Logs::write("User <a href='" . URLROOT . "/profile?id=" . $arr["id"] . "'>" . Users::coloredname($arr["id"]) . "</a> has been banned (Auto Leech warning).");
                 }
             }
         }

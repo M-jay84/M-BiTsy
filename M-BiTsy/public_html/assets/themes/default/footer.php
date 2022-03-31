@@ -40,6 +40,7 @@ if (Config::get('RIGHTNAV')) {?>
       import Tags from "https://cdn.jsdelivr.net/gh/lekoala/bootstrap5-tags@master/tags.js";
       Tags.init("select[multiple]");
 </script>
+
     <script>
         function updateShouts(){
             // Assuming we have #shoutbox

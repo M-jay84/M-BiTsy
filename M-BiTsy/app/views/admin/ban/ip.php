@@ -20,7 +20,7 @@ if ($data['count'] == 0) {
         <td><?php echo date('d/m/Y H:i:s', TimeDate::utc_to_tz_time($arr["added"])) ?></td>
         <td><?php echo $arr['first'] ?></td>
         <td><?php echo $arr['last'] ?></td>
-        <td><a href='<?php echo URLROOT ?>/profile?id=<?php echo $arr['addedby'] ?>'><?php echo Users::coloredname($arr['username']) ?></a></td>
+        <td><a href='<?php echo URLROOT ?>/profile?id=<?php echo $arr['addedby'] ?>'><?php echo Users::coloredname($arr['addedby']) ?></a></td>
         <td><?php echo $arr['comment'] ?></td>
         <td><input type='checkbox' name='delids[]' value='<?php echo $arr['id'] ?>' /></td>
         </tr></tbody>

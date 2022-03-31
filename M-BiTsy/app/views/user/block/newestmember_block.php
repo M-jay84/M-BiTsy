@@ -19,7 +19,7 @@ if ($_SESSION['loggedin'] == true) {
 		<div>
 	    <?php
         foreach ($rows as $row) {?>
-			<a href='<?php echo URLROOT; ?>/profile?id=<?php echo $row["id"]; ?>'><?php echo Users::coloredname($row["username"]); ?></a>
+			<a href='<?php echo URLROOT; ?>/profile?id=<?php echo $row["id"]; ?>'><?php echo Users::coloredname($row["id"]); ?></a>
 	        <?php
         } ?>
 		</div>

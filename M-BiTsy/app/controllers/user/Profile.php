@@ -47,7 +47,7 @@ class Profile
         $friend = $arr['friend'];
         $block = $arr['enemy'];
 
-        $title = sprintf(Lang::T("USER_DETAILS_FOR"), Users::coloredname($user["username"]));
+        $title = sprintf(Lang::T("USER_DETAILS_FOR"), Users::coloredname($id));
 
         $user1 = DB::all('users', '*', ['id'=>$id]);
         
@@ -88,7 +88,7 @@ class Profile
 
         $user1 = DB::all('users', '*', ['id'=>$id]);
 
-        $title = sprintf(Lang::T("USER_DETAILS_FOR"), Users::coloredname($user["username"]));
+        $title = sprintf(Lang::T("USER_DETAILS_FOR"), Users::coloredname($id));
 
         $data = [
             'title' => $title,
@@ -147,7 +147,7 @@ class Profile
 
         $user1 = DB::raw('users', '*', ['id'=>$id])->fetch();
         
-        $title = sprintf(Lang::T("USER_DETAILS_FOR"), Users::coloredname($user1["username"]));
+        $title = sprintf(Lang::T("USER_DETAILS_FOR"), Users::coloredname($id));
         $user = DB::all('users', '*', ['id'=>$id]);
 
         $data = [

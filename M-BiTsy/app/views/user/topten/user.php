@@ -21,7 +21,7 @@ Style::begin($title);
         
         print("<tbody><tr>
             <td>$num</td>
-            <td><a href=".URLROOT."/profile?id=" . $a["userid"] . "><b>" . Users::coloredname($a["username"]) . "</b>" . "</td>
+            <td><a href=".URLROOT."/profile?id=" . $a["userid"] . "><b>" . Users::coloredname($a["userid"]) . "</b>" . "</td>
             <td><font color=limegreen>" . mksize($a["uploaded"]) . "</font></td>
             <td><font color=limegreen>" . mksize($a["upspeed"]) . "/s" . "</font></td>
             <td><font color=#FF2400>" . mksize($a["downloaded"]) . "</font></td>

@@ -9,7 +9,7 @@ while ($row = $data['sql']->fetch(PDO::FETCH_LAZY)) {
     $uploaded = mksize($row['uploaded']);
     $downloaded = mksize($row['downloaded']);
     ?>
-    <tr><td><a href='<?php echo URLROOT; ?>/profile?id=<?php echo $row['id']; ?>'><?php echo Users::coloredname($username); ?></a></td>
+    <tr><td><a href='<?php echo URLROOT; ?>/profile?id=<?php echo $row['id']; ?>'><?php echo Users::coloredname($row['id']); ?></a></td>
     <td><?php echo $uploaded; ?></td>
     <td><?php echo $downloaded; ?></td></tr>
     <?php

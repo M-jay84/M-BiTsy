@@ -20,7 +20,7 @@ if ($data['count'] > 0) { ?>
     <?php
     while ($row = $data['res']->fetch(PDO::FETCH_ASSOC)): ?>
     <tr>
-        <td><a href="<?php echo URLROOT; ?>/profile?id=<?php echo $row["id"]; ?>"><?php echo Users::coloredname($row["username"]); ?></a></td>
+        <td><a href="<?php echo URLROOT; ?>/profile?id=<?php echo $row["id"]; ?>"><?php echo Users::coloredname($row["id"]); ?></a></td>
         <td><?php echo Groups::get_user_class_name($row["class"]); ?></td>
         <td><?php echo TimeDate::utc_to_tz($row["added"]); ?></td>
         <td><?php echo TimeDate::utc_to_tz($row["last_access"]); ?></td>

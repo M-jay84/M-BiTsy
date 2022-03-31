@@ -12,7 +12,7 @@ if ($_SESSION['loggedin']) {
     $slots = number_format(Users::get("maxslots")) . "/" . number_format($maxslotdownload);
     $userratio = Users::get("downloaded") > 0 ? number_format(Users::get("uploaded") / Users::get("downloaded"), 1) : "---";
 
-    Style::block_begin("<a href=". URLROOT ."/profile?id=".Users::get('id').">". Users::coloredname(Users::get('username'))."</b></a>");
+    Style::block_begin("<a href=". URLROOT ."/profile?id=".Users::get('id').">". Users::coloredname(Users::get('id'))."</b></a>");
     ?>
     <center><img src="<?php echo $avatar; ?>" alt="Avatar" width="170px" height="170px"/></center>
 	<ul class="list-group">

@@ -63,7 +63,7 @@ while ($row = $data['sql']->fetch(PDO::FETCH_LAZY)) {
     <td><b><?php echo $id ?></b> </td> 
     <td><img src='<?php echo $image ?>' alt='' /></td> 
     <td><b><?php echo $name ?></b></td>
-    <td><a href='<?php echo URLROOT ?>/profile?id=<?php echo $owner ?>'><?php echo Users::coloredname($OWNERNAME) ?></a></td>
+    <td><a href='<?php echo URLROOT ?>/profile?id=<?php echo $owner ?>'><?php echo Users::coloredname($owner) ?></a></td>
     <td><?php echo $info ?></td>
     <td><a href='<?php echo URLROOT ?>/adminteam/members?teamid=<?php echo $id ?>'>[Members]</a>&nbsp;
         <a href='<?php echo URLROOT ?>/adminteam/edit?editid=<?php echo $id ?>&amp;name=<?php echo $name ?>&amp;image=<?php echo $image ?>&amp;info=<?php echo $info ?>&amp;owner=<?php echo $OWNERNAME ?>'>[<?php echo Lang::T("EDIT") ?>]</a>&nbsp;

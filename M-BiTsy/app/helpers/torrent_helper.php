@@ -224,7 +224,7 @@ function torrenttable($res)
                     if (($row["anon"] == "yes" || $row["privacy"] == "strong") && Users::get("id") != $row["owner"] && Users::get("edit_torrents") != "yes") {
                         echo "Anonymous";
                     } elseif ($row["username"]) {
-                        echo "<a href='" . URLROOT . "/profile?id=$row[owner]'>" . Users::coloredname($row['username']) . "</a>";
+                        echo "<a href='" . URLROOT . "/profile?id=$row[owner]'>" . Users::coloredname($row['owner']) . "</a>";
                     } else {
                         echo "Unknown";
                     }

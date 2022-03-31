@@ -3,7 +3,7 @@
 <div class="row">
 <?php
 while ($arr = $data['res']->fetch(PDO::FETCH_ASSOC)) {
-    echo ("<div class='col-1'><b><a href=\"" . URLROOT . "/profile?id=" . $arr['id'] . "\">" . Users::coloredname($arr['username']) . "</a></b><br>");
+    echo ("<div class='col-1'><b><a href=\"" . URLROOT . "/profile?id=" . $arr['id'] . "\">" . Users::coloredname($arr['id']) . "</a></b><br>");
     if (!$arr['avatar']) {
         echo "<img width=\"80\" src=" . URLROOT . "/images/misc/default_avatar.png' alt='' /></div>";
     } else {

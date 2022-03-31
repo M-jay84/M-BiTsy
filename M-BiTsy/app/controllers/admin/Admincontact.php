@@ -29,7 +29,7 @@ class Admincontact
 
         if (Validate::Id($arr4["sender"])) {
             $arr2 = DB::select('users', 'username', ['id'=>$arr4["sender"]]);
-            $sender = "<a href='" . URLROOT . "/profile/read?id=$senderr'>" . (Users::coloredname($arr2["username"]) ? Users::coloredname($arr2["username"]) : "[Deleted]") . "</a>";
+            $sender = "<a href='" . URLROOT . "/profile/read?id=$senderr'>" . (Users::coloredname($senderr) ? Users::coloredname($senderr) : "[Deleted]") . "</a>";
         } else {
             $sender = "System";
         }
@@ -38,7 +38,7 @@ class Admincontact
         if ($arr4["answered"] == '0') {
             $answered = "<font color=red><b>No</b></font>";
         } else {
-            $answered = "<font color=blue><b>Yes</b></font> by <a href='" . URLROOT . "/profile/read?id=$answeredby>" . Users::coloredname($arr5['username']) . "</a> (<a href=" . URLROOT . "/admincontact/viewanswer?pmid=$pmid>Show Answer</a>)";
+            $answered = "<font color=blue><b>Yes</b></font> by <a href='" . URLROOT . "/profile/read?id=$answeredby>" . Users::coloredname($answeredby) . "</a> (<a href=" . URLROOT . "/admincontact/viewanswer?pmid=$pmid>Show Answer</a>)";
         }
 
         if ($arr4["answered"] == '0') {

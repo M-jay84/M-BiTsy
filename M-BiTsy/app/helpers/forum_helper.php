@@ -184,7 +184,7 @@ function latestforumposts($sub_id = 0)
             $res = DB::raw('users', 'id,username', ['id'=>$userid]);
             if ($res->rowCount() == 1) {
                 $arr = $res->fetch(PDO::FETCH_ASSOC);
-                $username = "<a href='" . URLROOT . "/profile?id=$userid'>" . Users::coloredname($arr['username']) . "</a>";
+                $username = "<a href='" . URLROOT . "/profile?id=$userid'>" . Users::coloredname($userid) . "</a>";
             } else {
                 $username = "Unknown[$topic_userid]";
             }
@@ -192,7 +192,7 @@ function latestforumposts($sub_id = 0)
             $res = DB::raw('users', 'username', ['id'=>$topic_userid]);
             if ($res->rowCount() == 1) {
                 $arr = $res->fetch(PDO::FETCH_ASSOC);
-                $author = "<a href='" . URLROOT . "/profile?id=$topic_userid'>" . Users::coloredname($arr['username']) . "</a>";
+                $author = "<a href='" . URLROOT . "/profile?id=$topic_userid'>" . Users::coloredname($topic_userid) . "</a>";
             } else {
                 $author = "Unknown[$topic_userid]";
             }
@@ -237,7 +237,7 @@ function lastpostdetails($lastpostid)
         $lastpostdate = TimeDate::utc_to_tz($post_arr["added"]);
         $lasttopicid = $post_arr["topicid"];
         $user_arr = DB::select('users', 'username', ['id'=>$lastposterid]);
-        $lastposter = Users::coloredname($user_arr["username"]);
+        $lastposter = Users::coloredname($lastposterid);
         $topic_arr = DB::select('forum_topics', 'subject', ['id'=>$lasttopicid]);
         $lasttopic = stripslashes(htmlspecialchars($topic_arr['subject']));
         //cut last topic
@@ -311,7 +311,7 @@ function modoptions($topicid, $subject, $forumid, $locked, $sticky) {
 function posterdetails($userid) {
     $forumposts = DB::column('forum_posts', 'COUNT(*)', ['userid' =>$userid]);
     $arr2 = DB::select('users', '*', ['id' =>$userid]);
-    $postername = Users::coloredname($arr2["username"]);
+    $postername = Users::coloredname($userid);
     $quotename = $arr2["username"];
     if ($postername == "") {
         $by = "Deluser";

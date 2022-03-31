@@ -23,7 +23,7 @@ while ($row = $data['sql']->fetch(PDO::FETCH_LAZY)) {
     </td>
     <td class="shouttable">
     <a class="pull-left" href="<?php echo URLROOT ?>/profile?id=<?php echo $row['userid'] ?>" target="_parent">
-    <b><?php echo Users::coloredname($row['user']) ?>:</b></a>&nbsp;
+    <b><?php echo Users::coloredname($row['userid']) ?>:</b></a>&nbsp;
     <?php echo nl2br(format_comment($row['message'])); ?>
     <?php
     if (Users::get("edit_users") == "yes") {

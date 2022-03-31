@@ -24,7 +24,7 @@ class Warning
         
         // Get Warnings
         $warning = DB::raw('warnings', '*', ['userid'=>$id], 'ORDER BY id DESC');
-        $title = sprintf(Lang::T("USER_DETAILS_FOR"), Users::coloredname($user["username"]));
+        $title = sprintf(Lang::T("USER_DETAILS_FOR"), Users::coloredname($id));
         
         $data = [
             'title' => $title,

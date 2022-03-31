@@ -8,7 +8,7 @@ if ($data['sql']->rowCount() > 0) {
         $userid = $arr["userid"];
         $added = $arr["added"] . " GMT (" . (TimeDate::get_elapsed_time(TimeDate::sql_timestamp_to_unix_timestamp($arr["added"]))) . " ago)";
         $arr2 = DB::raw('users', 'username', ['id'=>$userid])->fetch();
-        $postername = Users::coloredname($arr2["username"]);
+        $postername = Users::coloredname($userid);
         if ($postername == "") {
             $by = "Unknown";
         } else {

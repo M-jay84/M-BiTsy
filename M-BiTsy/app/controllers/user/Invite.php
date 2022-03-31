@@ -98,7 +98,7 @@ class Invite
         if ($id != Users::get("id")) {
             $title = "Invite Tree for [<a href=" . URLROOT . "/profile?id=$id>" . $id . "</a>]";
         } else {
-            $title = "You have $invitees invitees " . Users::coloredname(Users::get("username")) . "";
+            $title = "You have $invitees invitees " . Users::coloredname(Users::get('id')) . "";
         }
 
         $data = [

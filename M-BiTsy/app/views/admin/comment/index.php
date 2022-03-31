@@ -1,7 +1,7 @@
 <?php
 foreach  ($data['res'] as $arr) {
     $userid = $arr->user;
-    $username = Users::coloredname($arr->username);
+    $username = Users::coloredname($arr->user);
     $data = $arr->added;
     $tid = $arr->torrent;
     $nid = $arr->news;

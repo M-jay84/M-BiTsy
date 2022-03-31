@@ -35,7 +35,7 @@ if ($data['count'] == 0) {
         print("<tbody><tr>
         <td>" . TimeDate::utc_to_tz($arr['added']) . "</td>
         <td>$arr[mail_domain]</td>
-        <td><a href='" . URLROOT . "/profile?id=$a4[id]'>".Users::coloredname($a4['username'])."" . "</a></td>
+        <td><a href='" . URLROOT . "/profile?id=$a4[id]'>".Users::coloredname($a4['id'])."" . "</a></td>
         <td>$arr[comment]</td>
         <td><a href='".URLROOT."/adminban/email?remove=$arr[id]'>Remove</a></td>
         </tr></tbody>");

@@ -14,14 +14,14 @@
 while ($arr = $data['res']->fetch(PDO::FETCH_ASSOC)) {
     $res3 = $res3 = DB::run("SELECT username FROM users WHERE id=$arr[sender]")->fetch(PDO::FETCH_ASSOC);
     if ($res3) {
-        $username = Users::coloredname($res3['username']);
+        $username = Users::coloredname($arr['sender']);
     } else {
         $username = 'Guest Message';
     }
     if ($arr['answered']) {
         $res3 = DB::raw('users', 'username', ['id'=>$arr['answeredby']]);
         $arr3 = $res3->fetch(PDO::FETCH_ASSOC);
-        $answered = "<font color=green><b>Yes - <a href=".URLROOT."/profile?id=$arr[answeredby]><b>" . Users::coloredname($arr3['username']) . "</b></a> (<a href=".URLROOT."/admincontact/viewanswer?pmid=$arr[id]>View Answer</a>)</b></font>";
+        $answered = "<font color=green><b>Yes - <a href=".URLROOT."/profile?id=$arr[answeredby]><b>" . Users::coloredname($arr['answeredby']) . "</b></a> (<a href=".URLROOT."/admincontact/viewanswer?pmid=$arr[id]>View Answer</a>)</b></font>";
     } else {
         $answered = "<font color=red><b>No</b></font>";
     }

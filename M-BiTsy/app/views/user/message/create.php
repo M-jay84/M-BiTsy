@@ -4,7 +4,7 @@ include APPROOT.'/views/user/message/messagenavbar.php'; ?><br>
 <center> <?php
 if ($data['id']) { ?>
     <input type="hidden" name="receiver" value="<?php echo $data['id']; ?>" />
-    <label for="receiver">Receiver:</label>&nbsp; <?php echo Users::coloredname($data['username']); ?><br><?php
+    <label for="receiver">Receiver:</label>&nbsp; <?php echo Users::coloredname($data['id']); ?><br><?php
 } else { ?>
     <label for="receiver">Receiver:</label>&nbsp;
     <input type="text" id="search-box" name="receiver" autocomplete="off" placeholder="User Name" />

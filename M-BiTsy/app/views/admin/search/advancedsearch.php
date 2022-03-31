@@ -605,7 +605,7 @@ echo "&nbsp;-&nbsp;[<a href='" . URLROOT . "/adminsearch/advancedsearch'>Reset</
                     $auxres = DB::raw('comments', 'count(*)', ['user'=>$user['id']]);
                     $n = $auxres->fetch();
                     $n_comments = $n[0];
-                    echo "<tr><td class='table_col1' align='center'><b><a href='" . URLROOT . "/profile?id=$user[id]'>" . Users::coloredname($user['username']) . "</a></b></td>" .
+                    echo "<tr><td class='table_col1' align='center'><b><a href='" . URLROOT . "/profile?id=$user[id]'>" . Users::coloredname($user['id']) . "</a></b></td>" .
                     "<td class='table_col2' align='center'>" . $ipstr . "</td><td class='table_col1' align='center'>" . $user['email'] . "</td>" .
                     "<td class='table_col2' align='center'>" . TimeDate::utc_to_tz($user['added']) . "</td>" .
                     "<td class='table_col1' align='center'>" . $user['last_access'] . "</td>" .

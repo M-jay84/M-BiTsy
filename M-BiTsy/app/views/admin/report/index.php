@@ -55,7 +55,7 @@ while ($row = $data['res']->fetch(PDO::FETCH_LAZY)):
     }
     ?>
     <tr>
-    <td><a href="<?php echo URLROOT; ?>/profile?id=<?php echo $row['addedby']; ?>"><?php echo Users::coloredname($row['username']); ?></a></td>
+    <td><a href="<?php echo URLROOT; ?>/profile?id=<?php echo $row['addedby']; ?>"><?php echo Users::coloredname($row['addedby']); ?></a></td>
     <td><a href="<?php echo $link; ?>"><?php echo CutName($r['name'], 40); ?></a></td>
     <td><?php echo $row['type']; ?></td>
     <td><?php echo htmlspecialchars($row['reason']); ?></td>

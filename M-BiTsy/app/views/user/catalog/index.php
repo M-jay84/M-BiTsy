@@ -23,7 +23,7 @@ if ($data['count']) { ?>
         }
         $donated = $arr["donated"];
         $warned = $arr["warned"];
-        $ca = "<a href='".URLROOT."/profile?id=$arr[owner]'>" . Users::coloredname($arr['username']) . "</a>";
+        $ca = "<a href='".URLROOT."/profile?id=$arr[owner]'>" . Users::coloredname($arr['owner']) . "</a>";
         if (($arr["anon"] == "yes" || $cat["privacy"] == "strong") && Users::get("id") != $arr["owner"] && Users::get("edit_torrents") != "yes") {
             $owner2 = "<b>" . Lang::T("ADDED_BY") . ": </b><i>" . Lang::T("ANONYMOUS") . "</i>";
         } else {

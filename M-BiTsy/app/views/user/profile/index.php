@@ -16,7 +16,7 @@ if ($selectedid["privacy"] != "strong" || (Users::get("control_panel") == "yes")
     </div>
     <div class="col-md-4">
         <b><?php echo Lang::T("PROFILE"); ?></b><br>
-        <?php echo Lang::T("USERNAME"); ?>: <a href="<?php echo URLROOT ?>/profile?id=<?php echo $selectedid['id'] ?>"><?php echo Users::coloredname($selectedid["username"]) ?></a><br />
+        <?php echo Lang::T("USERNAME"); ?>: <a href="<?php echo URLROOT ?>/profile?id=<?php echo $selectedid['id'] ?>"><?php echo Users::coloredname($selectedid["id"]) ?></a><br />
 	    <?php if (Users::get('class')  > _MODERATOR) { ?>
 	    <?php echo Lang::T("EMAIL"); ?>: <?php echo $selectedid["email"]; ?><br />
 		<?php echo Lang::T("PASSKEY"); ?>: <?php echo $selectedid["passkey"]; ?><br />
@@ -54,7 +54,7 @@ if ($selectedid["privacy"] != "strong" || (Users::get("control_panel") == "yes")
         if ($selectedid["invited_by"]) {
             $invited = $selectedid['invited_by'];
             $row = DB::raw('users', 'username', ['id' =>$invited])->fetch();
-            echo "<b>" . Lang::T("INVITED_BY") . ":</b> <a href=\"" . URLROOT . "/profile?id=$selectedid[invited_by]\">" . Users::coloredname($row['username']) . "</a><br />";
+            echo "<b>" . Lang::T("INVITED_BY") . ":</b> <a href=\"" . URLROOT . "/profile?id=$selectedid[invited_by]\">" . Users::coloredname($selectedid['invited_by']) . "</a><br />";
         }
         echo "<b>" . Lang::T("INVITES") . ":</b> " . number_format($selectedid["invites"]) . "<br />";
         $invitees = array_reverse(explode(" ", $selectedid["invitees"]));
@@ -62,7 +62,7 @@ if ($selectedid["privacy"] != "strong" || (Users::get("control_panel") == "yes")
         foreach ($invitees as $invitee) {
             $res = DB::raw('users', 'id, username', ['id' =>$invitee, 'status'=>'confirmed']);
             if ($row = $res->fetch()) {
-                $rows[] = "<a href=\"" . URLROOT . "/profile?id=$row[id]\">" . Users::coloredname($row['username']) . "</a>";
+                $rows[] = "<a href=\"" . URLROOT . "/profile?id=$row[id]\">" . Users::coloredname($row['id']) . "</a>";
             }
         }
         if ($rows) {

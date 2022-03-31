@@ -18,7 +18,7 @@ while ($row1 = $data['query']->fetch(PDO::FETCH_ASSOC)) {
     $percentcomp = sprintf("%.2f", 100 * (1 - ($row1["to_go"] / $data["size"])));
     if (Config::get('MEMBERSONLY')) {
         $arr = DB::select('users', 'id, username, privacy', ['id'=>$row1["userid"]]);
-        $arr["username"] = "<a href='".URLROOT."/profile?id=$arr[id]'>" . Users::coloredname($arr['username']) . "</a>";
+        $arr["username"] = "<a href='".URLROOT."/profile?id=$arr[id]'>" . Users::coloredname($arr['id']) . "</a>";
     }
     # With Config::get('MEMBERSONLY') off this will be shown.
     if (!$arr["username"]) {

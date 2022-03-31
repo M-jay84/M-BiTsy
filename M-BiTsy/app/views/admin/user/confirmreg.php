@@ -16,7 +16,7 @@ if ($data['count'] > 0): ?>
     <?php
     while ($row = $data['res']->fetch(PDO::FETCH_LAZY)): ?>
         <tr>
-        <td class="table_col1" align="center"><?php echo Users::coloredname($row["username"]); ?></td>
+        <td class="table_col1" align="center"><?php echo Users::coloredname($row["id"]); ?></td>
         <td class="table_col2" align="center"><?php echo $row["email"]; ?></td>
         <td class="table_col1" align="center"><?php echo TimeDate::utc_to_tz($row["added"]); ?></td>
         <td class="table_col2" align="center"><?php echo $row["ip"]; ?></td>

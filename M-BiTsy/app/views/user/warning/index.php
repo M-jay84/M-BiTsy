@@ -18,7 +18,7 @@ if ($data['res']->rowCount() > 0) {
         } else {
             $res2 = DB::raw('users', 'id,username', ['id'=>$arr['warnedby']]);
             $arr2 = $res2->fetch();
-            $wusername = Users::coloredname($arr2["username"]);
+            $wusername = Users::coloredname($arr['warnedby']);
         }
         $arr['added'] = TimeDate::utc_to_tz($arr['added']);
         $arr['expiry'] = TimeDate::utc_to_tz($arr['expiry']);

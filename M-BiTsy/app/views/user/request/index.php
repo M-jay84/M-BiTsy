@@ -23,14 +23,14 @@ for ($i = 0; $i < $data['num']; ++$i) {
     $res2 = DB::raw('users', 'username', ['id' =>$arr['filledby']]);
     $arr2 = $res2->fetch(PDO::FETCH_ASSOC);
     if ($arr2['username']) {
-        $filledby = Users::coloredname($arr2['username']);
+        $filledby = Users::coloredname($arr['filledby']);
     } else {
         $filledby = " ";
     }
     
     if ($privacylevel == "strong") {
         if (Users::get("class") >= 5) {
-            $addedby = "<td class=table_col2 align=center><a href=".URLROOT."/profile?id=$arr[userid]><b>".Users::coloredname($arr['username'])." (".get_ratio_color($userratio).")</b></a></td>";
+            $addedby = "<td class=table_col2 align=center><a href=".URLROOT."/profile?id=$arr[userid]><b>".Users::coloredname($arr['userid'])." (".get_ratio_color($userratio).")</b></a></td>";
         } else {
             $addedby = "<td class=table_col2 align=center><a href=".URLROOT."/profile?id=$arr[userid]><b>$arr[username] (----)</b></a></td>";
         }

@@ -9,12 +9,12 @@
 while ($arr = $data['res']->fetch(PDO::FETCH_ASSOC)) {
     $res2 = DB::raw('users', 'username', ['id'=>$arr["receiver"]]);
     if ($arr2 = $res2->fetch()) {
-        $receiver = "<a href='" . URLROOT . "/profile?id=" . $arr["receiver"] . "'><b>" . Users::coloredname($arr2["username"]) . "</b></a>";
+        $receiver = "<a href='" . URLROOT . "/profile?id=" . $arr["receiver"] . "'><b>" . Users::coloredname($arr["receiver"]) . "</b></a>";
     } else {
         $receiver = "<i>Deleted</i>";
     }
     $arr3 = DB::raw('users', 'username', ['id'=>$arr["sender"]])->fetch();
-    $sender = "<a href='" . URLROOT . "/profile?id=" . $arr["sender"] . "'><b>" . Users::coloredname($arr3["username"]) . "</b></a>";
+    $sender = "<a href='" . URLROOT . "/profile?id=" . $arr["sender"] . "'><b>" . Users::coloredname($arr["sender"]) . "</b></a>";
     if ($arr["sender"] == 0) {
         $sender = "<font class='error'><b>System</b></font>";
     }

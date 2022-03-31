@@ -92,7 +92,7 @@ class Comment
         if ($save) {
             $text = $_POST['text'];
             DB::update('comments', ['text'=>$text], ['id'=>$id]);
-            Logs::write(Users::coloredname(Users::get('username')) . " has edited comment: ID:$id");
+            Logs::write(Users::coloredname(Users::get('id')) . " has edited comment: ID:$id");
             Redirect::autolink(URLROOT."/comment?type=$type&id=$id", Lang::T("_SUCCESS_UPD_"));
         }
 
@@ -122,7 +122,7 @@ class Comment
         }
 
         DB::delete('comments', ['id'=>$id]);
-        Logs::write(Users::coloredname(Users::get('username')) . " has deleted comment: ID: $id");
+        Logs::write(Users::coloredname(Users::get('id')) . " has deleted comment: ID: $id");
         Redirect::autolink(URLROOT, Lang::T("_SUCCESS_DEL_"));
     }
 

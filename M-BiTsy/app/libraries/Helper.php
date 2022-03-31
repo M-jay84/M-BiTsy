@@ -91,7 +91,7 @@ class Helper
             $sender = "Yourself";
         } elseif (Validate::Id($arr["sender"])) {
             $arr2 = DB::select('users', 'username', ['id'=>$arr['sender']]);
-            $sender = "<a href=\"/profile?id=$arr[sender]\">" . ($arr2["username"] ? Users::coloredname($arr2["username"]) : "[Deleted]") . "</a>";
+            $sender = "<a href=\"/profile?id=$arr[sender]\">" . ($arr2["username"] ? Users::coloredname($arr["sender"]) : "[Deleted]") . "</a>";
         } else {
             $sender = Lang::T("SYSTEM");
         }
@@ -100,7 +100,7 @@ class Helper
             $receiver = "Yourself";
         } elseif (Validate::Id($arr["receiver"])) {
             $arr2 = DB::select('users', 'username', ['id'=>$arr['receiver']]);
-            $receiver = "<a href=\"" . URLROOT . "/profile?id=$arr[receiver]\">" . ($arr2["username"] ? Users::coloredname($arr2["username"]) : "[Deleted]") . "</a>";
+            $receiver = "<a href=\"" . URLROOT . "/profile?id=$arr[receiver]\">" . ($arr2["username"] ? Users::coloredname($arr2["receiver"]) : "[Deleted]") . "</a>";
         } else {
             $receiver = Lang::T("SYSTEM");
         }

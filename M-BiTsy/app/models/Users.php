@@ -41,9 +41,9 @@ class Users
         DB::delete('snatched', ['uid' => $userid]);
     }
 
-    public static function coloredname($name, $array = null)
+    public static function coloredname($id, $array = null)
     {
-        $classy = DB::run("SELECT u.class, u.id, u.username, u.last_access, u.country, u.age, u.gender, u.avatar,  u.donated, u.warned, u.enabled, g.Color, g.level, u.uploaded, u.downloaded FROM `users` `u` INNER JOIN `groups` `g` ON g.group_id=u.class WHERE username ='" . $name . "'")->fetch();
+        $classy = DB::run("SELECT u.class, u.id, u.username, u.last_access, u.country, u.age, u.gender, u.avatar,  u.donated, u.warned, u.enabled, g.Color, g.level, u.uploaded, u.downloaded FROM `users` `u` INNER JOIN `groups` `g` ON g.group_id=u.class WHERE id ='" . $id . "'")->fetch();
 
         if ($classy) {
             $gcolor = $classy['Color'];
@@ -63,6 +63,8 @@ class Users
                 $disabled = "";
             }
 
+            $name = htmlspecialchars($classy["username"]);
+            
             $avatar = htmlspecialchars($classy["avatar"]);
             if (!$avatar) {
                 $avatar = URLROOT . "/assets/images/misc/default_avatar.png";

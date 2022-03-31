@@ -36,7 +36,7 @@ forumheader('search');
             <td><a href='<?php echo URLROOT ?>/topic?topicid=<?php echo $row['topicid'] ?>'><?php echo $row['subject'] ?></a></td>
             <td><a href='<?php echo URLROOT ?>/forum/view&forumid=<?php echo $row['forumid'] ?>'><?php echo $forum['name'] ?></a></td>
             <td><?php echo $row['added'] ?></td>
-            <td><a href='<?php URLROOT ?>/profile?id=<?php echo $row['userid'] ?>'><?php echo Users::coloredname($user['username']) ?></a></td>
+            <td><a href='<?php URLROOT ?>/profile?id=<?php echo $row['userid'] ?>'><?php echo Users::coloredname($user['userid']) ?></a></td>
             </tr> <?php
         } ?>
     </table>

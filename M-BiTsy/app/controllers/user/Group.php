@@ -49,7 +49,7 @@ class Group
             $table[$row['class']] = ($table[$row['class']] ?? '') .
             "<td>
             <i class='fa fa-user' aria-hidden='true' style='" . ($row["last_access"] > $dt ? "color:" : "color:red") . "' title='Profile'></i> " .
-            "<a href='" . URLROOT . "/profile?id=" . $row["id"] . "'>" . Users::coloredname($row["username"]) . "</a> " .
+            "<a href='" . URLROOT . "/profile?id=" . $row["id"] . "'>" . Users::coloredname($row["id"]) . "</a> " .
                 "<a href='" . URLROOT . "/message/create?id=" . $row["id"] . "'><i class='fa fa-comment' title='Send PM'></i></a></td>";
             $col[$row['class']] = ($col[$row['class']] ?? 0) + 1;
             if ($col[$row["class"]] <= 4) {

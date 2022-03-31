@@ -34,7 +34,7 @@ class Shoutbox
             <td class="shouttable">
             <small class="pull-left time d-none d-sm-block" style="width:99px;font-size:11px"><i class="fa fa-clock-o"></i>&nbsp;<?php echo date('jS M,  g:ia', TimeDate::utc_to_tz_time($row['date'])); ?></small>
             <a class="pull-left d-none d-sm-block"><?php echo $av ?></a>&nbsp;
-            <a class="pull-left"><b><?php echo Users::coloredname($row['user']) ?>:</b></a>&nbsp;
+            <a class="pull-left"><b><?php echo Users::coloredname($row['userid']) ?>:</b></a>&nbsp;
             <?php echo nl2br(format_comment($row['message'])); ?>
             <?php
             if (Users::get("edit_users") =="yes") {

@@ -306,7 +306,7 @@ function array_flatten($array) {
 
 function userpostdetails($row, $type = null)
 {
-    $postername = Users::coloredname($row["username"]);
+    $postername = Users::coloredname($row["id"]);
     if ($postername == "") {
         $postername = Lang::T("DELUSER");
         $title = Lang::T("DELETED_ACCOUNT");

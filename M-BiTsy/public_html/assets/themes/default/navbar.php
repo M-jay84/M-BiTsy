@@ -81,7 +81,7 @@
         $useruploaded = mksize(Users::get("uploaded"));
         $privacylevel = Lang::T(Users::get("privacy")); ?>
 
-        <font color='#FFFFFF'><b>Hello</b>&nbsp;</font><a href="<?php echo URLROOT ?>/profile?id=<?php echo Users::get('id') ?>"><b><?php echo Users::coloredname(Users::get('username')); ?></b></a>&nbsp;&nbsp;
+        <font color='#FFFFFF'><b>Hello</b>&nbsp;</font><a href="<?php echo URLROOT ?>/profile?id=<?php echo Users::get('id') ?>"><b><?php echo Users::coloredname(Users::get('id')); ?></b></a>&nbsp;&nbsp;
         <a href="#"><i class="fa fa-download tticon"></i></a>&nbsp;<font color='#FFFFFF'><?php echo $userdownloaded ?></font>&nbsp;
         <a href="#"><i class="fa fa-upload tticon"></i></a>&nbsp;<font color='#FFFFFF'><?php echo $useruploaded ?></font>&nbsp;
         <a href="#"><i class="fa fa-cog tticon"></i></a>&nbsp;<font color='#FFFFFF'><?php echo $userratio ?></font>&nbsp;

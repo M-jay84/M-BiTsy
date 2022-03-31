@@ -18,10 +18,10 @@ if ($data['count'] > 0): ?>
     <?php
     while ($row = $data['res']->fetch(PDO::FETCH_ASSOC)): ?>
         <tr>
-        <td class="table_col1" align="center"><?php echo Users::coloredname($row["username"]); ?></td>
+        <td class="table_col1" align="center"><?php echo Users::coloredname($row["id"]); ?></td>
         <td class="table_col2" align="center"><?php echo $row["email"]; ?></td>
         <td class="table_col1" align="center"><?php echo TimeDate::utc_to_tz($row["added"]); ?></td>
-        <td class="table_col2" align="center"><a href="<?php echo URLROOT; ?>/profile?id=<?php echo $row["invited_by"]; ?>"><?php echo Users::coloredname($row["inviter"]); ?></a></td>
+        <td class="table_col2" align="center"><a href="<?php echo URLROOT; ?>/profile?id=<?php echo $row["invited_by"]; ?>"><?php echo Users::coloredname($row["invited_by"]); ?></a></td>
         <td class="table_col1" align="center"><input type="checkbox" name="users[]" value="<?php echo $row["id"]; ?>" /></td>
         </tr>
         <?php

@@ -7,7 +7,7 @@ while ($row = $data['stmt']->fetch(PDO::FETCH_ASSOC)) {
     } ?>
     <img src='<?php echo $avatar; ?>' width='15px' height='15px'>
     <a href="<?php echo URLROOT; ?>/profile?id=<?php echo $row["id"] ?>">
-    <small><b><?php echo Users::coloredname($row["username"], $row) ?></b></small></a>&nbsp;
+    <small><b><?php echo Users::coloredname($row["id"], $row) ?></b></small></a>&nbsp;
     <?php
 }
 Style::end();

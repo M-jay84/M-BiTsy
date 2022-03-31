@@ -24,7 +24,7 @@ class Friend
 
         // Template
         $data = [
-            'title' => "Friend Lists For ".Users::coloredname($user['username'])."",
+            'title' => "Friend Lists For ".Users::coloredname($userid)."",
             'sql' => $user,
             'username' => $user['username'],
             'userid' => $userid,

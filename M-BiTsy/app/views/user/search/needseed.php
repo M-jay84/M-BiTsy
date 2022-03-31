@@ -16,7 +16,7 @@ while ($row = $data['res']->fetch(PDO::FETCH_ASSOC)) {
     if ($row["anon"] == "yes" && (Users::get("edit_torrents") == "no" || Users::get("id") != $row["owner"])) {
         $owner = Lang::T("ANONYMOUS");
     } elseif ($row["username"]) {
-        $owner = "<a href='".URLROOT."/profile?id=" . $row["owner"] . "'>" . Users::coloredname($row["username"]) . "</a>";
+        $owner = "<a href='".URLROOT."/profile?id=" . $row["owner"] . "'>" . Users::coloredname($row["owner"]) . "</a>";
     } else {
         $owner = Lang::T("UNKNOWN_USER");
     } ?>
