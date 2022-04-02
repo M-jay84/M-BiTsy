@@ -221,40 +221,20 @@ if ($torr["nfo"] == "yes") {
 endforeach;
 
 // Similar Torrents mod
-$shortname = CutName(htmlspecialchars($torr["name"]), 50);
-$searchname = substr($torr['name'], 0, 8);
-$query1 = str_replace(" ", ".", sqlesc("%" . $searchname . "%"));
-$catid = str_replace(".", " ", sqlesc("%" . $data['category'] . "%"));
-$r = DB::run("SELECT torrents.id,  torrents.name,  torrents.size,  torrents.added,  torrents.seeders,  torrents.leechers,  torrents.category, categories.image 
-           FROM torrents 
-         LEFT JOIN categories ON torrents.category = categories.id 
-  WHERE (torrents.name LIKE {$query1}) 
-  OR (torrents.category LIKE {$catid}) 
-  LIMIT 10");
+$query = "SELECT torrents.id, torrents.anon, torrents.descr, torrents.announce, torrents.category, torrents.sticky,  torrents.vip,  torrents.tube,  torrents.tmdb, torrents.leechers, torrents.nfo, torrents.seeders, torrents.name, torrents.times_completed, torrents.size, torrents.added, torrents.comments, torrents.numfiles, torrents.filename, torrents.owner, torrents.external, torrents.freeleech, torrents.image1, torrents.image2,
+categories.name AS cat_name, categories.image AS cat_pic, categories.parent_cat AS cat_parent,
+users.username, users.privacy,
+IF(torrents.numratings < 1, NULL, ROUND(torrents.ratingsum / torrents.numratings, 1)) AS rating
+FROM torrents
+LEFT JOIN categories ON category = categories.id
+LEFT JOIN users ON torrents.owner = users.id
+WHERE visible = 'yes' AND banned = 'no' AND torrents.category = $torr[category] 
+ORDER BY sticky, added DESC, id DESC LIMIT 15";
+$res = DB::run($query);
 
-if ($r->rowCount() > 0) { ?> <br>
-    <center><b>Similar Torrents</b></center>
-    <div class="table-responsive">
-    <table class="table table-striped"><thead><tr>
-    <th>Type</th>
-    <th>Name</th>
-    <th>Size</th>
-    <th>Added</th>
-    <th>S</th>
-    <th>L</th></tr></thead><tbody> <?php
-    while ($a = $r->fetch(PDO::FETCH_ASSOC)) {
-        $cat = $a['image'] ? "<img class=glossy src=\"" . URLROOT . "/assets/images/categories/$a[image]\" alt=\"$a[name]\" title=\"$row[cat_parent] : $row[cat_name]\"\>" : '<i class="fa fa-question"></i>';
-        $name = $a["name"];
-         echo " <tr>
-                <td>$cat</td>
-                <td><a title=" . $a["name"] . " href=" . URLROOT . "/torrent?id=" . $a["id"] . "&hit=1><b>" . CutName(htmlspecialchars($a["name"]), 50) . "</b><br/></a></td>
-                <td>" . mksize($a['size']) . "</td>
-                <td>$a[added]</td>
-                <td><span style='color:green'>$a[seeders]</span></td>
-                <td><span style='color:red'>$a[leechers]</span></td>";
-    }
-    echo "<tr>";
-    echo "</tbody></table></div>";
+if ($res->rowCount() > 0) { 
+    echo '<br><center><b>Similar Torrents</b></center>';
+    torrenttable($res);
 } else {
     print(Lang::T("NO_SIMILAR_TORRENT_FOUND"));
 }

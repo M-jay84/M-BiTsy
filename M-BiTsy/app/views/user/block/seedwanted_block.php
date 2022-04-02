@@ -18,7 +18,7 @@ if ($_SESSION['loggedin'] == true) {
     } else {
         foreach ($rows as $row) {
             $smallname = htmlspecialchars(CutName($row["name"], 20));?>
-			<div class="pull-left"><a href="<?php echo URLROOT; ?>torrent?id=<?php echo $row["id"]; ?>" title="<?php echo htmlspecialchars($row["name"]); ?>"><?php echo $smallname; ?></a></div>
+			<div class="pull-left"><a href="<?php echo URLROOT; ?>/torrent?id=<?php echo $row["id"]; ?>" title="<?php echo htmlspecialchars($row["name"]); ?>"><?php echo $smallname; ?></a></div>
 			<div class="pull-right"><span class="label label-waring"><?php echo Lang::T("LEECHERS"); ?>: <?php echo number_format($row["leechers"]); ?></span></div>
 		    <?php
         }

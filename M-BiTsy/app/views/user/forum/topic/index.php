@@ -59,7 +59,15 @@ while ($arr = $data['res']->fetch(PDO::FETCH_ASSOC)) {
                 print("<br />\n");
             } else {
                print("<br /><hr /><br /><div class='f-sig' align='center'>$posterdetails[usersignature]</div>\n");
-            } ?>
+            }
+            $stmt = DB::run("SELECT user FROM thanks WHERE thanked = $arr[id] AND type = 'forum'")->fetchAll();
+            echo '<br>Thanks By<br>';
+            foreach ($stmt as $row) {
+                $test = Users::coloredname($row['user']);
+                $thankedname = $test == 'System' ? '' : "$test &nbsp;";
+                echo $thankedname;
+            }
+            ?>
         </div>
     </div><?php
     
@@ -74,9 +82,9 @@ while ($arr = $data['res']->fetch(PDO::FETCH_ASSOC)) {
                 <a href='<?php echo URLROOT; ?>/topic?topicid=<?php echo $data['topicid']; ?>&amp;page=<?php echo $_GET['page'] ?>#post<?php echo $arr["id"]; ?>'><i class='fa fa-anchor tticon' title='Direct Post Link'></i></a>
             </div>
             <div class="col-md-9 d-none d-sm-block"> <?php
-                // Hide Reply Mod
-                if (Users::get("id") !== $arr["userid"]) {
-                    //print("<a href='" . URLROOT . "/like/thanks?id=$topicid&type=thanksforum'><button class='btn btn-sm btn-success'>Say Thanks</button></a>&nbsp;");
+                // Thanks Mod
+                if (Users::get("id") !== $arr["userid"] && !$arr['thanked'] || $arr['user'] !== Users::get("id")) {
+                    print("<a href='" . URLROOT . "/like/thanks?id=$arr[id]&type=thanksforum'><i class='fa fa-thumbs-up tticon' title='Thanks'></i></a>&nbsp;");
                 }
                 //define buttons and who can use them
                 if (Users::get("id") == $arr["userid"] || Users::get("edit_forum") == "yes" || Users::get("delete_forum") == "yes") {
@@ -86,7 +94,7 @@ while ($arr = $data['res']->fetch(PDO::FETCH_ASSOC)) {
                     print("<a href='" . URLROOT . "/post/delete&amp;postid=$arr[id]&amp;sure=0'><i class='fa fa-trash-o tticon-red' title='Delete'></i></a>&nbsp;");
                 }
                 if (!$data['locked'] && $data['maypost']) {
-                    print("<a href=\"javascript:SmileIT('[quote=$posterdetails[quotename]] $quote [/quote]', 'Form', 'body');\"><i class='fa fa-quote-right tticon' title='". Lang::T("QUOTE") ."'></i> </a>&nbsp;");
+                    print("<a href=\"javascript:SmileIT('[quote=$posterdetails[quotename]] $quote [/quote]', 'Form', 'body');\"><i class='fa fa-quote-right tticon' title='". Lang::T("QUOTE") ."'></i></a>&nbsp;");
                     print("<a href='#bottom'><i class='fa fa-reply tticon' title='reply'></i></a>");
                } ?>
             </div>

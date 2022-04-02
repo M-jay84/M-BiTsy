@@ -20,8 +20,8 @@
     </div>
     <div class="col-md-2">
     <label for="SITENOTICEON">Site Notice on/off:</label><br>
-    <?php $checked = Config::get('SITENOTICEON') == 1;
-    print("<input name='SITENOTICEON' value='1' type='radio' " . ($checked ? " checked='checked'" : "") . " />True &nbsp;&nbsp;<input name='SITENOTICEON' value='0' type='radio' " . (!$checked ? " checked='checked'" : "") . " />False<br><br>");?>
+    <?php $checked = Config::get('SITENOTICEON') == true;
+    print("<input name='SITENOTICEON' value='true' type='radio' " . ($checked ? " checked='checked'" : "") . " />True &nbsp;&nbsp;<input name='SITENOTICEON' value='false' type='radio' " . (!$checked ? " checked='checked'" : "") . " />False<br><br>");?>
     </div>
     <div class="col-md-4">
     <label for="SITENOTICE">Site Notice:</label><br>
@@ -34,10 +34,10 @@
     <div class="col-md-2">
     <label for="OFFLINEMSG">Site Online:</label><br>
     <?php $checked = Config::get('SITE_ONLINE') == 1;
-    print("<input name='SITE_ONLINE' value='1' type='radio' " . ($checked ? " checked='checked'" : "") . " />True &nbsp;&nbsp;<input name='SITE_ONLINE' value='0' type='radio' " . (!$checked ? " checked='checked'" : "") . " />False<br><br>");?>
+    print("<input name='SITE_ONLINE' value='true' type='radio' " . ($checked ? " checked='checked'" : "") . " />True &nbsp;&nbsp;<input name='SITE_ONLINE' value='false' type='radio' " . (!$checked ? " checked='checked'" : "") . " />False<br><br>");?>
     <label for="WELCOMEPM_ON">Welcome PM On:</label><br>
     <?php $checked = Config::get('WELCOMEPM_ON') == 1;
-    print("<input name='WELCOMEPM_ON' value='1' type='radio' " . ($checked ? " checked='checked'" : "") . " />True &nbsp;&nbsp;<input name='WELCOMEPM_ON' value='0' type='radio' " . (!$checked ? " checked='checked'" : "") . " />False<br><br>");?>
+    print("<input name='WELCOMEPM_ON' value='true' type='radio' " . ($checked ? " checked='checked'" : "") . " />True &nbsp;&nbsp;<input name='WELCOMEPM_ON' value='false' type='radio' " . (!$checked ? " checked='checked'" : "") . " />False<br><br>");?>
     </div>
     <div class="col-md-2">
     <label for="OFFLINEMSG">Offline Messages:</label><br>
@@ -62,7 +62,7 @@
     <div class="col-md-2">
     <label for="CAPTCHA_ON">Google Captcha on/off :</label><br>
     <?php $checked = Config::get('CAPTCHA_ON') == 1;
-    print("<input name='CAPTCHA_ON' value='1' type='radio' " . ($checked ? " checked='checked'" : "") . " />True &nbsp;&nbsp;<input name='CAPTCHA_ON' value='0' type='radio' " . (!$checked ? " checked='checked'" : "") . " />False<br><br>");?>
+    print("<input name='CAPTCHA_ON' value='true' type='radio' " . ($checked ? " checked='checked'" : "") . " />True &nbsp;&nbsp;<input name='CAPTCHA_ON' value='false' type='radio' " . (!$checked ? " checked='checked'" : "") . " />False<br><br>");?>
     </div>
     <div class="col-md-2">
     <label for="CAPTCHA_KEY">Captcha Key:</label><br>
@@ -87,82 +87,82 @@
     <div class="col-md-2">
     <label for="MEMBERSONLY">Members Only:</label><br>
     <?php $checked = Config::get('MEMBERSONLY') == 1;
-    print("<input name='MEMBERSONLY' value='1' type='radio' " . ($checked ? " checked='checked'" : "") . " />True &nbsp;&nbsp;<input name='MEMBERSONLY' value='0' type='radio' " . (!$checked ? " checked='checked'" : "") . " />False<br><br>");?>
+    print("<input name='MEMBERSONLY' value='true' type='radio' " . ($checked ? " checked='checked'" : "") . " />True &nbsp;&nbsp;<input name='MEMBERSONLY' value='false' type='radio' " . (!$checked ? " checked='checked'" : "") . " />False<br><br>");?>
     </div>
     <div class="col-md-2">
     <label for="MEMBERSONLY_WAIT">Members Wait:</label><br>
     <?php $checked = Config::get('MEMBERSONLY_WAIT') == 1;
-    print("<input name='MEMBERSONLY_WAIT' value='1' type='radio' " . ($checked ? " checked='checked'" : "") . " />True &nbsp;&nbsp;<input name='MEMBERSONLY_WAIT' value='0' type='radio' " . (!$checked ? " checked='checked'" : "") . " />False<br><br>");?>
+    print("<input name='MEMBERSONLY_WAIT' value='true' type='radio' " . ($checked ? " checked='checked'" : "") . " />True &nbsp;&nbsp;<input name='MEMBERSONLY_WAIT' value='false' type='radio' " . (!$checked ? " checked='checked'" : "") . " />False<br><br>");?>
     </div>
     <div class="col-md-2">
     <label for="ALLOWEXTERNAL">Allow External:</label><br>
     <?php $checked = Config::get('ALLOWEXTERNAL') == 1;
-    print("<input name='ALLOWEXTERNAL' value='1' type='radio' " . ($checked ? " checked='checked'" : "") . " />True &nbsp;&nbsp;<input name='ALLOWEXTERNAL' value='0' type='radio' " . (!$checked ? " checked='checked'" : "") . " />False<br><br>");?>
+    print("<input name='ALLOWEXTERNAL' value='true' type='radio' " . ($checked ? " checked='checked'" : "") . " />True &nbsp;&nbsp;<input name='ALLOWEXTERNAL' value='false' type='radio' " . (!$checked ? " checked='checked'" : "") . " />False<br><br>");?>
     </div>
     <div class="col-md-2">
     <label for="UPLOADERSONLY">Uploader Only:</label><br>
     <?php $checked = Config::get('UPLOADERSONLY') == 1;
-    print("<input name='UPLOADERSONLY' value='1' type='radio' " . ($checked ? " checked='checked'" : "") . " />True &nbsp;&nbsp;<input name='UPLOADERSONLY' value='0' type='radio' " . (!$checked ? " checked='checked'" : "") . " />False<br><br>");?>
+    print("<input name='UPLOADERSONLY' value='true' type='radio' " . ($checked ? " checked='checked'" : "") . " />True &nbsp;&nbsp;<input name='UPLOADERSONLY' value='false' type='radio' " . (!$checked ? " checked='checked'" : "") . " />False<br><br>");?>
     </div>
     <div class="col-md-2">
     <label for="INVITEONLY">Invite Only:</label><br>
     <?php $checked = Config::get('INVITEONLY') == 1;
-    print("<input name='INVITEONLY' value='1' type='radio' " . ($checked ? " checked='checked'" : "") . " />True &nbsp;&nbsp;<input name='INVITEONLY' value='0' type='radio' " . (!$checked ? " checked='checked'" : "") . " />False<br><br>");?>
+    print("<input name='INVITEONLY' value='true' type='radio' " . ($checked ? " checked='checked'" : "") . " />True &nbsp;&nbsp;<input name='INVITEONLY' value='false' type='radio' " . (!$checked ? " checked='checked'" : "") . " />False<br><br>");?>
     </div>
     <div class="col-md-2">
     <label for="ENABLEINVITES">Enable Invites:</label><br>
     <?php $checked = Config::get('ENABLEINVITES') == 1;
-    print("<input name='ENABLEINVITES' value='1' type='radio' " . ($checked ? " checked='checked'" : "") . " />True &nbsp;&nbsp;<input name='ENABLEINVITES' value='0' type='radio' " . (!$checked ? " checked='checked'" : "") . " />False<br><br>");?>
+    print("<input name='ENABLEINVITES' value='true' type='radio' " . ($checked ? " checked='checked'" : "") . " />True &nbsp;&nbsp;<input name='ENABLEINVITES' value='false' type='radio' " . (!$checked ? " checked='checked'" : "") . " />False<br><br>");?>
     </div>
     <div class="col-md-2">
     <label for="CONFIRMEMAIL">Confirm Email:</label><br>
     <?php $checked = Config::get('CONFIRMEMAIL') == 1;
-    print("<input name='CONFIRMEMAIL' value='1' type='radio' " . ($checked ? " checked='checked'" : "") . " />True &nbsp;&nbsp;<input name='CONFIRMEMAIL' value='0' type='radio' " . (!$checked ? " checked='checked'" : "") . " />False<br><br>");?>
+    print("<input name='CONFIRMEMAIL' value='true' type='radio' " . ($checked ? " checked='checked'" : "") . " />True &nbsp;&nbsp;<input name='CONFIRMEMAIL' value='false' type='radio' " . (!$checked ? " checked='checked'" : "") . " />False<br><br>");?>
     </div>
     <div class="col-md-2">
     <label for="ACONFIRM">Admin Confirm:</label><br>
     <?php $checked = Config::get('ACONFIRM') == 1;
-    print("<input name='ACONFIRM' value='1' type='radio' " . ($checked ? " checked='checked'" : "") . " />True &nbsp;&nbsp;<input name='ACONFIRM' value='0' type='radio' " . (!$checked ? " checked='checked'" : "") . " />False<br><br>");?>
+    print("<input name='ACONFIRM' value='true' type='radio' " . ($checked ? " checked='checked'" : "") . " />True &nbsp;&nbsp;<input name='ACONFIRM' value='false' type='radio' " . (!$checked ? " checked='checked'" : "") . " />False<br><br>");?>
     </div>
     <div class="col-md-2">
     <label for="ANONYMOUSUPLOAD">Anon Uploads:</label><br>
     <?php $checked = Config::get('ANONYMOUSUPLOAD') == 1;
-    print("<input name='ANONYMOUSUPLOAD' value='1' type='radio' " . ($checked ? " checked='checked'" : "") . " />True &nbsp;&nbsp;<input name='ANONYMOUSUPLOAD' value='0' type='radio' " . (!$checked ? " checked='checked'" : "") . " />False<br><br>");?>
+    print("<input name='ANONYMOUSUPLOAD' value='true' type='radio' " . ($checked ? " checked='checked'" : "") . " />True &nbsp;&nbsp;<input name='ANONYMOUSUPLOAD' value='false' type='radio' " . (!$checked ? " checked='checked'" : "") . " />False<br><br>");?>
     </div>
     <div class="col-md-2">
     <label for="UPLOADSCRAPE">Upload Scrape:</label><br>
     <?php $checked = Config::get('UPLOADSCRAPE') == 1;
-    print("<input name='UPLOADSCRAPE' value='1' type='radio' " . ($checked ? " checked='checked'" : "") . " />True &nbsp;&nbsp;<input name='UPLOADSCRAPE' value='0' type='radio' " . (!$checked ? " checked='checked'" : "") . " />False<br><br>");?>
+    print("<input name='UPLOADSCRAPE' value='true' type='radio' " . ($checked ? " checked='checked'" : "") . " />True &nbsp;&nbsp;<input name='UPLOADSCRAPE' value='false' type='radio' " . (!$checked ? " checked='checked'" : "") . " />False<br><br>");?>
     </div>
     <div class="col-md-2">
     <label for="FORUMS">Forums on/off:</label><br>
     <?php $checked = Config::get('FORUMS') == 1;
-    print("<input name='FORUMS' value='1' type='radio' " . ($checked ? " checked='checked'" : "") . " />True &nbsp;&nbsp;<input name='FORUMS' value='0' type='radio' " . (!$checked ? " checked='checked'" : "") . " />False<br><br>");?>
+    print("<input name='FORUMS' value='true' type='radio' " . ($checked ? " checked='checked'" : "") . " />True &nbsp;&nbsp;<input name='FORUMS' value='false' type='radio' " . (!$checked ? " checked='checked'" : "") . " />False<br><br>");?>
     </div>
     <div class="col-md-2">
     <label for="FORUMS_GUESTREAD">Forum Guest Read:</label><br>
     <?php $checked = Config::get('FORUMS_GUESTREAD') == 1;
-    print("<input name='FORUMS_GUESTREAD' value='1' type='radio' " . ($checked ? " checked='checked'" : "") . " />True &nbsp;&nbsp;<input name='FORUMS_GUESTREAD' value='0' type='radio' " . (!$checked ? " checked='checked'" : "") . " />False<br><br>");?>
+    print("<input name='FORUMS_GUESTREAD' value='true' type='radio' " . ($checked ? " checked='checked'" : "") . " />True &nbsp;&nbsp;<input name='FORUMS_GUESTREAD' value='false' type='radio' " . (!$checked ? " checked='checked'" : "") . " />False<br><br>");?>
     </div>
     <div class="col-md-2">
     <label for="OLD_CENSOR">Old Censor:</label><br>
     <?php $checked = Config::get('OLD_CENSOR') == 1;
-    print("<input name='OLD_CENSOR' value='1' type='radio' " . ($checked ? " checked='checked'" : "") . " />True &nbsp;&nbsp;<input name='OLD_CENSOR' value='0' type='radio' " . (!$checked ? " checked='checked'" : "") . " />False<br><br>");?>
+    print("<input name='OLD_CENSOR' value='true' type='radio' " . ($checked ? " checked='checked'" : "") . " />True &nbsp;&nbsp;<input name='OLD_CENSOR' value='false' type='radio' " . (!$checked ? " checked='checked'" : "") . " />False<br><br>");?>
     </div>
     <div class="col-md-2">
     <label for="FORCETHANKS">Force Thanks:</label><br>
     <?php $checked = Config::get('FORCETHANKS') == 1;
-    print("<input name='FORCETHANKS' value='1' type='radio' " . ($checked ? " checked='checked'" : "") . " />True &nbsp;&nbsp;<input name='FORCETHANKS' value='0' type='radio' " . (!$checked ? " checked='checked'" : "") . " />False<br><br>");?>
+    print("<input name='FORCETHANKS' value='true' type='radio' " . ($checked ? " checked='checked'" : "") . " />True &nbsp;&nbsp;<input name='FORCETHANKS' value='false' type='radio' " . (!$checked ? " checked='checked'" : "") . " />False<br><br>");?>
     </div>
     <div class="col-md-2">
     <label for="ALLOWLIKES">Allow Likes:</label><br>
     <?php $checked = Config::get('ALLOWLIKES') == 1;
-    print("<input name='ALLOWLIKES' value='1' type='radio' " . ($checked ? " checked='checked'" : "") . " />True &nbsp;&nbsp;<input name='ALLOWLIKES' value='0' type='radio' " . (!$checked ? " checked='checked'" : "") . " />False<br><br>");?>
+    print("<input name='ALLOWLIKES' value='true' type='radio' " . ($checked ? " checked='checked'" : "") . " />True &nbsp;&nbsp;<input name='ALLOWLIKES' value='false' type='radio' " . (!$checked ? " checked='checked'" : "") . " />False<br><br>");?>
     </div>
     <div class="col-md-2">
     <label for="REQUESTSON">Request On:</label><br>
     <?php $checked = Config::get('REQUESTSON') == 1;
-    print("<input name='REQUESTSON' value='1' type='radio' " . ($checked ? " checked='checked'" : "") . " />True &nbsp;&nbsp;<input name='REQUESTSON' value='0' type='radio' " . (!$checked ? " checked='checked'" : "") . " />False<br><br>");?>
+    print("<input name='REQUESTSON' value='true' type='radio' " . ($checked ? " checked='checked'" : "") . " />True &nbsp;&nbsp;<input name='REQUESTSON' value='false' type='radio' " . (!$checked ? " checked='checked'" : "") . " />False<br><br>");?>
     </div>
   </div><br>
 
@@ -171,62 +171,62 @@
     <div class="col-md-2">
     <label for="LEFTNAV">Left Blocks on/off:</label><br>
     <?php $checked = Config::get('LEFTNAV') == 1;
-    print("<input name='LEFTNAV' value='1' type='radio' " . ($checked ? " checked='checked'" : "") . " />True &nbsp;&nbsp;<input name='LEFTNAV' value='0' type='radio' " . (!$checked ? " checked='checked'" : "") . " />False<br><br>");?>
+    print("<input name='LEFTNAV' value='true' type='radio' " . ($checked ? " checked='checked'" : "") . " />True &nbsp;&nbsp;<input name='LEFTNAV' value='false' type='radio' " . (!$checked ? " checked='checked'" : "") . " />False<br><br>");?>
     </div>
     <div class="col-md-2">
     <label for="RIGHTNAV">Right Blocks on/off:</label><br>
     <?php $checked = Config::get('RIGHTNAV') == 1;
-    print("<input name='RIGHTNAV' value='1' type='radio' " . ($checked ? " checked='checked'" : "") . " />True &nbsp;&nbsp;<input name='RIGHTNAV' value='0' type='radio' " . (!$checked ? " checked='checked'" : "") . " />False<br><br>");?>
+    print("<input name='RIGHTNAV' value='true' type='radio' " . ($checked ? " checked='checked'" : "") . " />True &nbsp;&nbsp;<input name='RIGHTNAV' value='false' type='radio' " . (!$checked ? " checked='checked'" : "") . " />False<br><br>");?>
     </div>
     <div class="col-md-2">
     <label for="MIDDLENAV">Middle Blocks on/off:</label><br>
     <?php $checked = Config::get('MIDDLENAV') == 1;
-    print("<input name='MIDDLENAV' value='1' type='radio' " . ($checked ? " checked='checked'" : "") . " />True &nbsp;&nbsp;<input name='MIDDLENAV' value='0' type='radio' " . (!$checked ? " checked='checked'" : "") . " />False<br><br>");?>
+    print("<input name='MIDDLENAV' value='true' type='radio' " . ($checked ? " checked='checked'" : "") . " />True &nbsp;&nbsp;<input name='MIDDLENAV' value='false' type='radio' " . (!$checked ? " checked='checked'" : "") . " />False<br><br>");?>
     </div>
     <div class="col-md-2">
     <label for="SHOUTBOX">Shoutbox on/off:</label><br>
     <?php $checked = Config::get('SHOUTBOX') == 1;
-    print("<input name='SHOUTBOX' value='1' type='radio' " . ($checked ? " checked='checked'" : "") . " />True &nbsp;&nbsp;<input name='SHOUTBOX' value='0' type='radio' " . (!$checked ? " checked='checked'" : "") . " />False<br><br>");?>
+    print("<input name='SHOUTBOX' value='true' type='radio' " . ($checked ? " checked='checked'" : "") . " />True &nbsp;&nbsp;<input name='SHOUTBOX' value='false' type='radio' " . (!$checked ? " checked='checked'" : "") . " />False<br><br>");?>
     </div>
     <div class="col-md-2">
     <label for="NEWSON">News on/off:</label><br>
     <?php $checked = Config::get('NEWSON') == 1;
-    print("<input name='NEWSON' value='1' type='radio' " . ($checked ? " checked='checked'" : "") . " />True &nbsp;&nbsp;<input name='NEWSON' value='0' type='radio' " . (!$checked ? " checked='checked'" : "") . " />False<br><br>");?>
+    print("<input name='NEWSON' value='true' type='radio' " . ($checked ? " checked='checked'" : "") . " />True &nbsp;&nbsp;<input name='NEWSON' value='false' type='radio' " . (!$checked ? " checked='checked'" : "") . " />False<br><br>");?>
     </div>
     <div class="col-md-2">
     <label for="DONATEON">Donate on/off:</label><br>
     <?php $checked = Config::get('DONATEON') == 1;
-    print("<input name='DONATEON' value='1' type='radio' " . ($checked ? " checked='checked'" : "") . " />True &nbsp;&nbsp;<input name='DONATEON' value='0' type='radio' " . (!$checked ? " checked='checked'" : "") . " />False<br><br>");?>
+    print("<input name='DONATEON' value='true' type='radio' " . ($checked ? " checked='checked'" : "") . " />True &nbsp;&nbsp;<input name='DONATEON' value='false' type='radio' " . (!$checked ? " checked='checked'" : "") . " />False<br><br>");?>
     </div>
     <div class="col-md-2">
     <label for="DISCLAIMERON">Discliamer on/off:</label><br>
     <?php $checked = Config::get('DISCLAIMERON') == 1;
-    print("<input name='DISCLAIMERON' value='1' type='radio' " . ($checked ? " checked='checked'" : "") . " />True &nbsp;&nbsp;<input name='DISCLAIMERON' value='0' type='radio' " . (!$checked ? " checked='checked'" : "") . " />False<br><br>");?>
+    print("<input name='DISCLAIMERON' value='true' type='radio' " . ($checked ? " checked='checked'" : "") . " />True &nbsp;&nbsp;<input name='DISCLAIMERON' value='false' type='radio' " . (!$checked ? " checked='checked'" : "") . " />False<br><br>");?>
     </div>
     <div class="col-md-2">
     <label for="FORUMONINDEX">Forum On Index:</label><br>
     <?php $checked = Config::get('FORUMONINDEX') == 1;
-    print("<input name='FORUMONINDEX' value='1' type='radio' " . ($checked ? " checked='checked'" : "") . " />True &nbsp;&nbsp;<input name='FORUMONINDEX' value='0' type='radio' " . (!$checked ? " checked='checked'" : "") . " />False<br><br>");?>
+    print("<input name='FORUMONINDEX' value='true' type='radio' " . ($checked ? " checked='checked'" : "") . " />True &nbsp;&nbsp;<input name='FORUMONINDEX' value='false' type='radio' " . (!$checked ? " checked='checked'" : "") . " />False<br><br>");?>
     </div>
     <div class="col-md-2">
     <label for="FORUMONINDEX">Latest Forum Post On Index:</label><br>
     <?php $checked = Config::get('LATESTFORUMPOSTONINDEX') == 1;
-    print("<input name='LATESTFORUMPOSTONINDEX' value='1' type='radio' " . ($checked ? " checked='checked'" : "") . " />True &nbsp;&nbsp;<input name='LATESTFORUMPOSTONINDEX' value='0' type='radio' " . (!$checked ? " checked='checked'" : "") . " />False<br><br>");?>
+    print("<input name='LATESTFORUMPOSTONINDEX' value='true' type='radio' " . ($checked ? " checked='checked'" : "") . " />True &nbsp;&nbsp;<input name='LATESTFORUMPOSTONINDEX' value='false' type='radio' " . (!$checked ? " checked='checked'" : "") . " />False<br><br>");?>
     </div>
     <div class="col-md-2">
     <label for="IPCHECK">IP Check:</label><br>
     <?php $checked = Config::get('IPCHECK') == 1;
-    print("<input name='IPCHECK' value='1' type='radio' " . ($checked? " checked='checked'" : "") . " />True &nbsp;&nbsp;<input name='IPCHECK' value='0' type='radio' " . (!$checked ? " checked='checked'" : "") . " />False<br><br>");?>
+    print("<input name='IPCHECK' value='true' type='radio' " . ($checked? " checked='checked'" : "") . " />True &nbsp;&nbsp;<input name='IPCHECK' value='false' type='radio' " . (!$checked ? " checked='checked'" : "") . " />False<br><br>");?>
     </div>
     <div class="col-md-2">
     <label for="YOU_TUBE">Youtube:</label><br>
     <?php $checked = Config::get('YOU_TUBE') == 1;
-    print("<input name='YOU_TUBE' value='1' type='radio' " . ($checked ? " checked='checked'" : "") . " />True &nbsp;&nbsp;<input name='YOU_TUBE' value='0' type='radio' " . (!$checked ? " checked='checked'" : "") . " />False<br><br>");?>
+    print("<input name='YOU_TUBE' value='true' type='radio' " . ($checked ? " checked='checked'" : "") . " />True &nbsp;&nbsp;<input name='YOU_TUBE' value='false' type='radio' " . (!$checked ? " checked='checked'" : "") . " />False<br><br>");?>
     </div>
     <div class="col-md-2">
     <label for="FREELEECHGBON">Free Leech On:</label><br>
     <?php $checked = Config::get('FREELEECHGBON') == 1;
-    print("<input name='FREELEECHGBON' value='1' type='radio' " . ($checked ? " checked='checked'" : "") . " />True &nbsp;&nbsp;<input name='FREELEECHGBON' value='0' type='radio' " . (!$checked? " checked='checked'" : "") . " />False<br><br>");?>
+    print("<input name='FREELEECHGBON' value='true' type='radio' " . ($checked ? " checked='checked'" : "") . " />True &nbsp;&nbsp;<input name='FREELEECHGBON' value='false' type='radio' " . (!$checked? " checked='checked'" : "") . " />False<br><br>");?>
     </div>
     <div class="col-md-2">
     <label for="FREELEECHGB">Free Leech GB:</label><br>
@@ -235,7 +235,7 @@
     <div class="col-md-2">
     <label for="HIDEBBCODE">Hide BBcode:</label><br>
     <?php $checked = Config::get('HIDEBBCODE') == 1;
-    print("<input name='HIDEBBCODE' value='1' type='radio' " . ($checked ? " checked='checked'" : "") . " />True &nbsp;&nbsp;<input name='HIDEBBCODE' value='0' type='radio' " . (!$checked ? " checked='checked'" : "") . " />False<br><br>");?>
+    print("<input name='HIDEBBCODE' value='true' type='radio' " . ($checked ? " checked='checked'" : "") . " />True &nbsp;&nbsp;<input name='HIDEBBCODE' value='false' type='radio' " . (!$checked ? " checked='checked'" : "") . " />False<br><br>");?>
     </div>
   </div><br>
 
@@ -328,12 +328,12 @@
     <div class="col-md-1">
     <label for="mail_smtp_ssl">SMTP SSL:</label><br>
     <?php $checked = Config::get('mail_smtp_ssl') == 1;
-    print("<input name='mail_smtp_ssl' value='1' type='radio' " . ($checked ? " checked='checked'" : "") . " />True &nbsp;&nbsp;<input name='mail_smtp_ssl' value='0' type='radio' " . (!$checked ? " checked='checked'" : "") . " />False<br><br>");?>
+    print("<input name='mail_smtp_ssl' value='true' type='radio' " . ($checked ? " checked='checked'" : "") . " />True &nbsp;&nbsp;<input name='mail_smtp_ssl' value='false' type='radio' " . (!$checked ? " checked='checked'" : "") . " />False<br><br>");?>
     </div>
     <div class="col-md-1">
     <label for="mail_smtp_auth">SMTP Auth:</label><br>
     <?php $checked = Config::get('mail_smtp_auth') == 1;
-    print("<input name='mail_smtp_auth' value='1' type='radio' " . ($checked ? " checked='checked'" : "") . " />True &nbsp;&nbsp;<input name='mail_smtp_auth' value='0' type='radio' " . (!$checked ? " checked='checked'" : "") . " />False<br><br>");?>
+    print("<input name='mail_smtp_auth' value='true' type='radio' " . ($checked ? " checked='checked'" : "") . " />True &nbsp;&nbsp;<input name='mail_smtp_auth' value='false' type='radio' " . (!$checked ? " checked='checked'" : "") . " />False<br><br>");?>
     </div>
     <div class="col-md-2">
     <label for="mail_smtp_user">SMTP User:</label><br>
@@ -350,7 +350,7 @@
     <div class="col-md-3">
     <label for="RATIOWARNENABLE">Ratio Warn Enable:</label><br>
     <?php $checked = Config::get('RATIOWARNENABLE') == 1;
-    print("<input name='RATIOWARNENABLE' value='1' type='radio' " . ($checked ? " checked='checked'" : "") . " />True &nbsp;&nbsp;<input name='RATIOWARNENABLE' value='0' type='radio' " . (!$checked ? " checked='checked'" : "") . " />False<br><br>");?>
+    print("<input name='RATIOWARNENABLE' value='true' type='radio' " . ($checked ? " checked='checked'" : "") . " />True &nbsp;&nbsp;<input name='RATIOWARNENABLE' value='false' type='radio' " . (!$checked ? " checked='checked'" : "") . " />False<br><br>");?>
     </div>
     <div class="col-md-3">
     <label for="RATIOWARNMINRATIO">Warn Min Ration:</label><br>
@@ -409,7 +409,7 @@
     <div class="col-md-2">
     <label for="HNR_ON">Hit & Run on/off:</label><br>
     <?php $checked = Config::get('HNR_ON') == 1;
-    print("<input name='HNR_ON' value='1' type='radio' " . ($checked ? " checked='checked'" : "") . " />True &nbsp;&nbsp;<input name='HNR_ON' value='0' type='radio' " . (!$checked ? " checked='checked'" : "") . " />False<br><br>");?>
+    print("<input name='HNR_ON' value='true' type='radio' " . ($checked ? " checked='checked'" : "") . " />True &nbsp;&nbsp;<input name='HNR_ON' value='false' type='radio' " . (!$checked ? " checked='checked'" : "") . " />False<br><br>");?>
   	</div>
     <div class="col-md-2">
     <label for="HNR_DEADLINE">Deadline:</label><br>

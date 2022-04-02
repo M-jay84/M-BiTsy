@@ -97,9 +97,6 @@ class Import
                     $announcelist = serialize($multi);
                 }
 
-                $multi = array_flatten($filelist);
-                $fileliststring = serialize($multi);
-
                 if (!Config::get('ALLOWEXTERNAL') && $external == 'yes') {
                     $message .= Lang::T("UPLOAD_NO_TRACKER_ANNOUNCE");
                     echo $message;
@@ -118,9 +115,9 @@ class Import
                     $anon = "no";
                 }
 
-                $ret = DB::run("INSERT INTO torrents (filename, owner, name, descr, category, added, info_hash, size, numfiles, save_as, announce, external, torrentlang, anon, last_action, announcelist, filelist)
-                          VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
-                    [$fname, Users::get('id'), $name, $descr, $catid, TimeDate::get_date_time(), $infohash, $torrentsize, $filecount, $fname, $announce, $external, $langid, $anon, TimeDate::get_date_time(), $announcelist, $fileliststring]);
+                $ret = DB::run("INSERT INTO torrents (filename, owner, name, descr, category, added, info_hash, size, numfiles, save_as, announce, external, torrentlang, anon, last_action, announcelist)
+                          VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                    [$fname, Users::get('id'), $name, $descr, $catid, TimeDate::get_date_time(), $infohash, $torrentsize, $filecount, $fname, $announce, $external, $langid, $anon, TimeDate::get_date_time(), $announcelist]);
                 $id = DB::lastInsertId();
 
                 if ($ret->errorCode() == 1062) {

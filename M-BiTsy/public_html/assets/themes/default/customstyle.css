@@ -326,3 +326,8 @@ button, input, optgroup, select, textarea {
 .ttpadbottom {
     margin-bottom: 15px !important;
 }
+
+.scaleA {
+    width: 100%;
+    max-width: max-content;
+}

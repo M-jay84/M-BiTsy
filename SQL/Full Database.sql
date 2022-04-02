@@ -1010,8 +1010,7 @@ INSERT INTO `tags` (`id`, `name`, `type`, `torrentid`) VALUES
 (2, 'action', 'torrent', NULL),
 (3, 'adventure', 'torrent', NULL),
 (4, 'thriller', 'torrent', NULL),
-(5, 'comedy', 'torrent', NULL),
-(6, 'thriller', 'torrent', 28);
+(5, 'comedy', 'torrent', NULL);
 
 -- --------------------------------------------------------
 

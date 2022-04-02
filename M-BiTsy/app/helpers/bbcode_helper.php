@@ -17,14 +17,13 @@ function textbbcode($form, $name, $content = "")
     print("<i class='fa fa-quote-right ttbbcode' id='BBCode' name='Quote' height:20px; width:20px;\"	onclick=\"bbcomment('[quote]', '[/quote]')\" title='Quote'	/></i>&nbsp;");
     print("<i class='fa fa-code ttbbcode' id='BBCode' name='Code'  height:20px; width:20px;\" onclick=\"bbcomment('[code]', '[/code]')\" title='Code' /></i>&nbsp;");
     print("<i class='fa fa-link ttbbcode' id='BBCode' name='Url' height:20px; width:20px;\" onclick=\"bbcomment('[url]', '[/url]')\"	title='Link' /></i>&nbsp;");
-    print("<i class='fa fa-picture-o ttbbcode' id='BBCode' name='Image' height:20px; width:20px;\" onclick=\"bbcomment('[img]', '[/img]')\" title='Image' /></i>&nbsp;");
     print("<i class='fa fa-bolt ttbbcode' id='BBCode' name='scroller' height:20px; width:20px;\"	onclick=\"bbcomment('[df]', '[/df]')\" title='scroller' /></i>&nbsp;");
     print("<i class='fa fa-arrow-left ttbbcode' id='BBCode' name='Align Leftt' height:20px; width:20px;\" onclick=\"bbcomment('[align=left]','[/align]')\" title='Align Left' /></i>&nbsp;");
     print("<i class='fa fa-align-center ttbbcode' id='BBCode' name='Align Center' height:20px; width:20px;\" onclick=\"bbcomment('[align=center]','[/align]')\" title='Align Center' /></i>&nbsp;");
     print("<i class='fa fa-arrow-right ttbbcode' id='BBCode' name='Align Right'height:20px; width:20px;\"	onclick=\"bbcomment('[align=right]','[/align]')\" title='Align Right' /></i>&nbsp;");
     print("<a href='https://imgur.com/upload' target='_blank' style=\"background: url('" . URLROOT . "/assets/images/bbcodes/imgur.gif');  height:20px; width:20px;\" title='Upload Image' /></a>");
     print("<a href='http://www.youtube.com'	target='_blank'	style=\"background: url('" . URLROOT . "/assets/images/bbcodes/youtube.gif');  height:20px; width:20px;\" title='YouTube' /></a>");
-    print("<i class='fa fa-file-image-o ttbbcode' id='BBCode' name='Image' height:20px; width:20px;\" onclick=\"bbcomment('[img]', '[/img]')\" title='Image' /></i>&nbsp;");
+    print("<i class='fa fa-picture-o ttbbcode' id='BBCode' name='Image' height:20px; width:20px;\" onclick=\"bbcomment('[img]', '[/img]')\" title='Image' /></i>&nbsp;");
     print("<i class='fa fa-video-camera ttbbcode' id='BBCode' name='Video' height:20px; width:20px;\" onclick=\"bbcomment('[video]', '[/video]')\"  title='Video' /></i>&nbsp;");
     print("<i class='fa fa-ban ttbbcode' id='BBCode' name='Hide'   height:20px; width:20px;\" onclick=\"bbcomment('[hide]','[/hide]')\"  title='Hide' /></i>&nbsp;");
     // Smiley

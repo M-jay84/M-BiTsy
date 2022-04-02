@@ -310,7 +310,7 @@ function torrenttable($res)
                     } else {
                         $rating = "<a title='$row[rating]/5'>" . ratingpic($row["rating"]) . "</a>";
                     }
-                    $rating = $row["rating"] . "/5)";
+                    //$rating = $row["rating"] . "/5)";
                     print("<td class='ttable_col$x' align='center'>$rating</td>");
                     break;
                 case 'admin':

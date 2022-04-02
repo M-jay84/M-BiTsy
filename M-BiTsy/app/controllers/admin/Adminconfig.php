@@ -28,6 +28,13 @@ class Adminconfig
         View::render('admincp/config', $data, 'admin');
     }
 
+    // Load The Form
+    public function checkiftrue($var)
+    {
+        $check = $var == 'true' ? true : false;
+        return $check;
+    }
+
     // I'M LAZY SO LETS UPDATE ALL AT ONCE
     public function submit()
     {
@@ -38,77 +45,87 @@ class Adminconfig
         }
 
         $data = array (
-            'CAPTCHA_ON' => (int) $_POST['CAPTCHA_ON'],
-            'CAPTCHA_KEY' => $_POST['CAPTCHA_KEY'],
-            'CAPTCHA_SECRET' => $_POST['CAPTCHA_SECRET'],
             'SITENAME' => $_POST['SITENAME'],
             '_SITEDESC' => $_POST['_SITEDESC'],
             'SITEEMAIL' => $_POST['SITEEMAIL'],
-            'CACHE_TYPE' => $_POST['CACHE_TYPE'],
-            'MEMCACHE_HOST' => $_POST['MEMCACHE_HOST'],
-            'MEMCACHE_PORT' => (int) $_POST['MEMCACHE_PORT'],
-            'SITENOTICEON' => (int) $_POST['SITENOTICEON'],
+            'SITENOTICEON' => $this->checkiftrue($_POST['SITENOTICEON']),
             'SITENOTICE' => $_POST['SITENOTICE'],
+
+            'SITE_ONLINE' => $this->checkiftrue($_POST['SITE_ONLINE']),
+            'OFFLINEMSG' => $_POST['OFFLINEMSG'],
+            'WELCOMEPM_ON' => $this->checkiftrue($_POST['WELCOMEPM_ON']),
+            'WELCOMEPM_MSG' => $_POST['WELCOMEPM_MSG'],
+            'UPLOADRULES' => $_POST['UPLOADRULES'],
+            'TORRENTTABLE_COLUMNS' => $_POST['TORRENTTABLE_COLUMNS'],
+
+            'CAPTCHA_ON' => $this->checkiftrue($_POST['CAPTCHA_ON']),
+            'CAPTCHA_KEY' => $_POST['CAPTCHA_KEY'],
+            'CAPTCHA_SECRET' => $_POST['CAPTCHA_SECRET'],
             'DEFAULTLANG' => $_POST['DEFAULTLANG'],
             'DEFAULTTHEME' => $_POST['DEFAULTTHEME'],
-            'MEMBERSONLY' => (int) $_POST['MEMBERSONLY'],
-            'MEMBERSONLY_WAIT' => (int) $_POST['MEMBERSONLY_WAIT'],
-            'ALLOWEXTERNAL' => (int) $_POST['ALLOWEXTERNAL'],
-            'UPLOADERSONLY' => (int) $_POST['UPLOADERSONLY'],
-            'INVITEONLY' => (int) $_POST['INVITEONLY'],
-            'ENABLEINVITES' => (int) $_POST['ENABLEINVITES'],
-            'CONFIRMEMAIL' => (int) $_POST['CONFIRMEMAIL'],
-            'ACONFIRM' => (int) $_POST['ACONFIRM'],
-            'ANONYMOUSUPLOAD' => (int) $_POST['ANONYMOUSUPLOAD'],
-            'UPLOADSCRAPE' => (int) $_POST['UPLOADSCRAPE'],
-            'FORUMS' => (int) $_POST['FORUMS'],
-            'FORUMS_GUESTREAD' => (int) $_POST['FORUMS_GUESTREAD'],
-            'OLD_CENSOR' => (int) $_POST['OLD_CENSOR'],
+
+            'MEMBERSONLY' => $this->checkiftrue($_POST['MEMBERSONLY']),
+            'MEMBERSONLY_WAIT' => $this->checkiftrue($_POST['MEMBERSONLY_WAIT']),
+            'ALLOWEXTERNAL' => $this->checkiftrue($_POST['ALLOWEXTERNAL']),
+            'UPLOADERSONLY' => $this->checkiftrue($_POST['UPLOADERSONLY']),
+            'INVITEONLY' => $this->checkiftrue($_POST['INVITEONLY']),
+            'ENABLEINVITES' => $this->checkiftrue($_POST['ENABLEINVITES']),
+            'CONFIRMEMAIL' => $this->checkiftrue($_POST['CONFIRMEMAIL']),
+            'ACONFIRM' => $this->checkiftrue($_POST['ACONFIRM']),
+            'ANONYMOUSUPLOAD' => $this->checkiftrue($_POST['ANONYMOUSUPLOAD']),
+            'UPLOADSCRAPE' => $this->checkiftrue($_POST['UPLOADSCRAPE']),
+            'FORUMS' => $this->checkiftrue($_POST['FORUMS']),
+            'FORUMS_GUESTREAD' => $this->checkiftrue($_POST['FORUMS_GUESTREAD']),
+            'OLD_CENSOR' => $this->checkiftrue($_POST['OLD_CENSOR']),
+            'FORCETHANKS' => $this->checkiftrue($_POST['FORCETHANKS']),
+            'ALLOWLIKES' => $this->checkiftrue($_POST['ALLOWLIKES']),
+            'REQUESTSON' => $this->checkiftrue($_POST['REQUESTSON']),
+
+            'LEFTNAV' => $this->checkiftrue($_POST['LEFTNAV']),
+            'RIGHTNAV' => $this->checkiftrue($_POST['RIGHTNAV']),
+            'MIDDLENAV' => $this->checkiftrue($_POST['MIDDLENAV']),
+            'SHOUTBOX' => $this->checkiftrue($_POST['SHOUTBOX']),
+            'NEWSON' => $this->checkiftrue($_POST['NEWSON']),
+            'DONATEON' => $this->checkiftrue($_POST['DONATEON']),
+            'DISCLAIMERON' => $this->checkiftrue($_POST['DISCLAIMERON']),
+            'FORUMONINDEX' => $this->checkiftrue($_POST['FORUMONINDEX']),
+            'LATESTFORUMPOSTONINDEX' => $this->checkiftrue($_POST['LATESTFORUMPOSTONINDEX']),
+            'IPCHECK' => $this->checkiftrue($_POST['IPCHECK']),
+            'YOU_TUBE' => $this->checkiftrue($_POST['YOU_TUBE']),
+            'FREELEECHGBON' => $this->checkiftrue($_POST['FREELEECHGBON']),
+            'FREELEECHGB' => (int) $_POST['FREELEECHGB'],
+            'HIDEBBCODE' => $this->checkiftrue($_POST['HIDEBBCODE']),
+
+            'ACCOUNTMAX' => (int) $_POST['ACCOUNTMAX'],
             'MAXUSERS' => (int) $_POST['MAXUSERS'],
             'MAXUSERSINVITE' => (int) $_POST['MAXUSERSINVITE'],
             'CURRENCYSYMBOL' => $_POST['CURRENCYSYMBOL'],
             'BONUSPERTIME' => (float) $_POST['BONUSPERTIME'],
             'ADDBONUS' => (int) $_POST['ADDBONUS'],
-            'FORCETHANKS' => (int) $_POST['FORCETHANKS'],
-            'ALLOWLIKES' => (int) $_POST['ALLOWLIKES'],
-            'SITE_ONLINE' => (int) $_POST['SITE_ONLINE'],
-            'OFFLINEMSG' => $_POST['OFFLINEMSG'],
-            'WELCOMEPM_ON' => (int) $_POST['WELCOMEPM_ON'],
-            'WELCOMEPM_MSG' => $_POST['WELCOMEPM_MSG'],
-            'UPLOADRULES' => $_POST['UPLOADRULES'],
-            'LEFTNAV' => (int) $_POST['LEFTNAV'],
-            'RIGHTNAV' => (int) $_POST['RIGHTNAV'],
-            'MIDDLENAV' => (int) $_POST['MIDDLENAV'],
-            'SHOUTBOX' => (int) $_POST['SHOUTBOX'],
-            'NEWSON' => (int) $_POST['NEWSON'],
-            'DONATEON' => (int) $_POST['DONATEON'],
-            'DISCLAIMERON' => (int) $_POST['DISCLAIMERON'],
+
+            'CACHE_TYPE' => $_POST['CACHE_TYPE'],
+            'MEMCACHE_HOST' => $_POST['MEMCACHE_HOST'],
+            'MEMCACHE_PORT' => (int) $_POST['MEMCACHE_PORT'],
+
             'PEERLIMIT' => (int) $_POST['PEERLIMIT'],
             'AUTOCLEANINTERVAL' => (int) $_POST['AUTOCLEANINTERVAL'],
             'ANNOUNCEINTERVAL' => (int) $_POST['ANNOUNCEINTERVAL'],
             'SIGNUPTIMEOUT' => (int) $_POST['SIGNUPTIMEOUT'],
             'MAXDEADTORRENTTIMEOUT' => (int) $_POST['MAXDEADTORRENTTIMEOUT'],
-            'RATIOWARNENABLE' => (int) $_POST['RATIOWARNENABLE'],
-            'RATIOWARNMINRATIO' => (float) $_POST['RATIOWARNMINRATIO'],
-            'RATIOWARN_MINGIGS' => (int) $_POST['RATIOWARN_MINGIGS'],
-            'RATIOWARN_DAYSTOWARN' => (int) $_POST['RATIOWARN_DAYSTOWARN'],
-            'TORRENTTABLE_COLUMNS' => $_POST['TORRENTTABLE_COLUMNS'],
+            'LOGCLEAN' => (int) $_POST['LOGCLEAN'],
+
             'mail_type' => $_POST['mail_type'],
             'mail_smtp_host' => $_POST['mail_smtp_port'],
             'mail_smtp_port' => (int) $_POST['mail_smtp_port'],
-            'mail_smtp_ssl' => (int) $_POST['mail_smtp_ssl'],
-            'mail_smtp_auth' => (int) $_POST['mail_smtp_auth'],
+            'mail_smtp_ssl' => $this->checkiftrue($_POST['mail_smtp_ssl']),
+            'mail_smtp_auth' => $this->checkiftrue($_POST['mail_smtp_auth']),
             'mail_smtp_user' => $_POST['mail_smtp_user'],
             'mail_smtp_pass' => $_POST['mail_smtp_pass'],
-            'FORUMONINDEX' => (int) $_POST['FORUMONINDEX'],
-            'LATESTFORUMPOSTONINDEX' => (int) $_POST['LATESTFORUMPOSTONINDEX'],
-            'IPCHECK' => (int) $_POST['IPCHECK'],
-            'ACCOUNTMAX' => (int) $_POST['ACCOUNTMAX'],
-            'YOU_TUBE' => (int) $_POST['YOU_TUBE'],
-            'FREELEECHGBON' => (int) $_POST['FREELEECHGBON'],
-            'FREELEECHGB' => (int) $_POST['FREELEECHGB'],
-            'REQUESTSON' => (int) $_POST['REQUESTSON'],
-            'HIDEBBCODE' => (int) $_POST['HIDEBBCODE'],
+
+            'RATIOWARNENABLE' => $this->checkiftrue($_POST['RATIOWARNENABLE']),
+            'RATIOWARNMINRATIO' => (float) $_POST['RATIOWARNMINRATIO'],
+            'RATIOWARN_MINGIGS' => (int) $_POST['RATIOWARN_MINGIGS'],
+            'RATIOWARN_DAYSTOWARN' => (int) $_POST['RATIOWARN_DAYSTOWARN'],
 
             'CLASS_WAIT' => (int) $_POST['CLASS_WAIT'],
             'GIGSA' => (int) $_POST['GIGSA'],
@@ -123,14 +140,15 @@ class Adminconfig
             'GIGSD' => (int) $_POST['GIGSD'],
             'RATIOD' => (float) $_POST['RATIOD'],
             'D_WAIT' => (int) $_POST['D_WAIT'],
-            'LOGCLEAN' => (int) $_POST['LOGCLEAN'],
-            'HNR_ON' => (int) $_POST['HNR_ON'],
+            
+            'HNR_ON' => $this->checkiftrue($_POST['HNR_ON']),
             'HNR_DEADLINE' => (int) $_POST['HNR_DEADLINE'],
             'HNR_SEEDTIME' => (int) $_POST['HNR_SEEDTIME'],
             'HNR_WARN' => (int) $_POST['HNR_WARN'],
             'HNR_STOP_DL' => (int) $_POST['HNR_STOP_DL'],
             'HNR_BAN' => (int) $_POST['HNR_BAN'],
             );
+
         file_put_contents(APPROOT.'/config/settings.php', "<?php\nreturn " . var_export($data, true) . "\n?>");
         Redirect::autolink(URLROOT . "/adminconfig", 'Settings Saved');
     }
