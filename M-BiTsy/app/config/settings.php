@@ -54,7 +54,7 @@ return array (
   'RATIOWARNMINRATIO' => 0.4,
   'RATIOWARN_MINGIGS' => 4,
   'RATIOWARN_DAYSTOWARN' => 14,
-  'TORRENTTABLE_COLUMNS' => 'category,name,dl,magnet,tube,tmdb,uploader,comments,size,seeders,leechers,health,external,added',
+  'TORRENTTABLE_COLUMNS' => 'category,name,dl,magnet,tube,tmdb,uploader,comments,size,seeders,leechers,health,external,added,admin',
   'mail_type' => 'php',
   'mail_smtp_host' => '25',
   'mail_smtp_port' => 25,

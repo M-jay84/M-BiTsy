@@ -16,7 +16,7 @@ class Ajax
                 ?>
                 <ul id="country-list">
                 <?php foreach($result as $user) { ?>
-                    <li onClick="userCountry('<?php echo $user["username"]; ?>');"><?php echo $user["username"]; ?></li>
+                    <li onClick="userCountry('<?php echo $user["id"]; ?>');"><?php echo $user["username"]; ?></li>
                 <?php } ?>
                 </ul>
                 <?php

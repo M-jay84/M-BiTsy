@@ -82,7 +82,7 @@ class Helper
         }
         return $tmp;
     }
-	
+
 	// try move message detail array
     public static function msgdetails($type, $arr = [])
     {
@@ -90,8 +90,7 @@ class Helper
         if ($arr["sender"] == Users::get('id')) {
             $sender = "Yourself";
         } elseif (Validate::Id($arr["sender"])) {
-            $arr2 = DB::select('users', 'username', ['id'=>$arr['sender']]);
-            $sender = "<a href=\"/profile?id=$arr[sender]\">" . ($arr2["username"] ? Users::coloredname($arr["sender"]) : "[Deleted]") . "</a>";
+            $sender = "<a href=\"/profile?id=$arr[sender]\">" . ($arr["sender"] ? Users::coloredname($arr["sender"]) : "[Deleted]") . "</a>";
         } else {
             $sender = Lang::T("SYSTEM");
         }
@@ -99,8 +98,7 @@ class Helper
         if ($arr["receiver"] == Users::get('id')) {
             $receiver = "Yourself";
         } elseif (Validate::Id($arr["receiver"])) {
-            $arr2 = DB::select('users', 'username', ['id'=>$arr['receiver']]);
-            $receiver = "<a href=\"" . URLROOT . "/profile?id=$arr[receiver]\">" . ($arr2["username"] ? Users::coloredname($arr2["receiver"]) : "[Deleted]") . "</a>";
+            $receiver = "<a href=\"" . URLROOT . "/profile?id=$arr[receiver]\">" . ($arr["receiver"] ? Users::coloredname($arr["receiver"]) : "[Deleted]") . "</a>";
         } else {
             $receiver = Lang::T("SYSTEM");
         }
