@@ -3,13 +3,13 @@ if ($_SESSION['loggedin'] == true) {
     $TTCache = new Cache();
     $expires = 120; // Cache time in seconds 2 mins
     Style::block_begin(Lang::T("ONLINE_USERS"));
-    if (($rows = $TTCache->Get("usersonline_block", $expires)) === false) {
+    if (($rows = $TTCache->Get("block/usersonline_block", $expires)) === false) {
         $res = DB::run("SELECT id, username FROM users WHERE enabled = 'yes' AND status = 'confirmed' AND privacy !='strong' AND UNIX_TIMESTAMP('" . TimeDate::get_date_time() . "') - UNIX_TIMESTAMP(users.last_access) <= 900");
         $rows = array();
         while ($row = $res->fetch(PDO::FETCH_ASSOC)) {
             $rows[] = $row;
         }
-        $TTCache->Set("usersonline_block", $rows, $expires);
+        $TTCache->Set("block/usersonline_block", $rows, $expires);
     }
 
     if (!$rows) { ?>

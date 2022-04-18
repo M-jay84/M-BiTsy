@@ -1,96 +1,54 @@
 <?php
-$test = DB::raw('forum_forums', 'sub', ['id'=>$data['forumid']])->fetch(); // sub forum mod
-$test1 = DB::raw('forum_forums', 'name,id', ['id'=>$test['sub']])->fetch(); // sub forum mod
+forumheader($data['forumname'], $data['subforum'], $data['subforumid']);
 
-forumheader($data['forumname'], $test1['name'], $test1['id']);
+if ($data['testz']) { ?>
+    <div class="row frame-header">
+        <div class="col-md-8"> Sub Forums </div>
+        <div class="col-md-1 d-none d-sm-block"> Topics </div>
+        <div class="col-md-1 d-none d-sm-block"> Posts </div>
+        <div class="col-md-2 d-none d-sm-block"> Last post </div>
+    </div> <?php
 
-$testz = DB::all('forum_forums', '*', ['sub'=>$data['forumid']]); // sub forum mod
-if ($testz) { 
-?>
-<div class="row frame-header">
-<div class="col-md-8">
-Sub Forums
-</div>
-<div class="col-md-1 d-none d-sm-block">
-    Topics
-</div>
-<div class="col-md-1 d-none d-sm-block">
-    Posts
-</div>
-<div class="col-md-2 d-none d-sm-block">
-    Last post
-</div>
-</div>
-<?php foreach ($testz as $testy) { ?>
-<div class="row border ttborder">
-    <div class="col-md-8">
-    <a href='<?php echo URLROOT ?>/forum/view&amp;forumid=<?php echo $testy['id'] ?>'><b><?php echo $testy['name'] ?></b></a>
-    </div>
-    <div class="col-md-1 d-none d-sm-block">
-        <?php
-    $topiccount = number_format(get_row_count("forum_topics", "WHERE forumid = $testy[id]"));
-    echo $topiccount;
-        ?>
-    </div>
-    <div class="col-md-1 d-none d-sm-block">
-    <?php
-    $postcount = number_format(get_row_count("forum_posts", "WHERE topicid IN (SELECT id FROM forum_topics WHERE forumid=$testy[id])"));
-    echo $postcount;
-        ?>
-    </div>
-    <div class="col-md-2 d-none d-sm-block">
-    <?php
-    $lastpostid = get_forum_last_post($testy['id']);
-    // Get last post info in a array return img & lastpost
-    $detail = lastpostdetails($lastpostid);
-    echo $detail['lastpost'];
-        ?>
-    </div>
-</div>
-<?php } ?><br><?php
+    foreach ($data['testz'] as $testy) { ?>
+        <div class="row border ttborder">
+            <div class="col-md-8">
+                <a href='<?php echo URLROOT ?>/forum/view&amp;forumid=<?php echo $testy['id'] ?>'><b><?php echo $testy['name'] ?></b></a>
+            </div>
+            <div class="col-md-1 d-none d-sm-block"> <?php
+                $topiccount = number_format(get_row_count("forum_topics", "WHERE forumid = $testy[id]"));
+                echo $topiccount; ?>
+            </div>
+            <div class="col-md-1 d-none d-sm-block"> <?php
+                $postcount = number_format(get_row_count("forum_posts", "WHERE topicid IN (SELECT id FROM forum_topics WHERE forumid=$testy[id])"));
+                echo $postcount; ?>
+            </div>
+            <div class="col-md-2 d-none d-sm-block"> <?php
+                $lastpostid = get_forum_last_post($testy['id']);
+                // Get last post info in a array return img & lastpost
+                $detail = lastpostdetails($lastpostid);
+                echo $detail['lastpost']; ?>
+            </div>
+        </div> <?php
+    } ?><br><?php
+} ?>
 
-latestforumposts($data['forumid']); // mod
+<div class="d-flex flex-row-reverse"><a href='<?php echo URLROOT; ?>/topic/add?forumid=<?php echo $data['forumid']; ?>'  class='btn btn-sm ttbtn'>New Post</a></div><br> <?php
 
-}
-
-if (!$testz) {
-    ?>
-    <div class="d-flex flex-row-reverse"><a href='<?php echo URLROOT; ?>/topic/add?forumid=<?php echo $data['forumid']; ?>'  class='btn btn-sm ttbtn'>New Post</a></div><br>
-    <?php
-}
-if ($data['topicsres'] > 0) {
-    ?>
+if ($data['topicsres'] > 0) { ?>
     <div class="row">
     <div class="col-lg-12">
     <div class="wrapper wrapper-content animated fadeInRight">
 
     <div class="row frame-header">
-    <div class="col-md-1">
-    Read
-    </div>
-    <div class="col-md-4">
-    Topic
-    </div>
-    <div class="col-md-1 d-none d-sm-block">
-    Replies
-    </div>
-    <div class="col-md-1 d-none d-sm-block">
-    Views
-    </div>
-    <div class="col-md-1 d-none d-sm-block">
-    Author
-    </div>
-    <div class="col-md-2 d-none d-sm-block">
-    Last Post
-    </div>
-    <?php
-    if (Users::get("edit_forum") == "yes" || Users::get("delete_forum") == "yes") {
-        ?>
-        <div class="col-md-2 d-none d-sm-block">
-        Moderate
-        </div>
-        <?php
-    }
+        <div class="col-md-1"> Read </div>
+        <div class="col-md-4"> Topic </div>
+        <div class="col-md-1 d-none d-sm-block"> Replies </div>
+        <div class="col-md-1 d-none d-sm-block"> Views </div> 
+        <div class="col-md-1 d-none d-sm-block"> Author </div>
+        <div class="col-md-2 d-none d-sm-block"> Last Post </div> <?php
+        if (Users::get("edit_forum") == "yes" || Users::get("delete_forum") == "yes") { ?>
+            <div class="col-md-2 d-none d-sm-block"> Moderate </div> <?php
+        }
     print("</div>");
 
     foreach ($data['topicsres'] as $topicarr) {
@@ -124,7 +82,6 @@ if ($data['topicsres'] > 0) {
         }
         //------ Get author
         if ($topic_userid > 0) {
-            $res = DB::raw('users', 'username', ['id' =>$topic_userid]);
             if ($res->rowCount() == 1) {
                 $arr = $res->fetch(PDO::FETCH_ASSOC);
                 $lpauthor = "<a href='" . URLROOT . "/profile?id=$topic_userid'>" . Users::coloredname($topic_userid) . "</a>";
@@ -150,7 +107,7 @@ if ($data['topicsres'] > 0) {
         $topicpic = $new ? "<i class='fa fa-file-text tticon-red' title='Read'></i>" : "<i class='fa fa-file-text' title='Read'></i>";
 
         $subject = ($sticky ? "<b>" . Lang::T("FORUMS_STICKY") . ": </b>" : "") . "<a href='" . URLROOT . "/topic?topicid=$topicid'><b>" .
-        encodehtml(stripslashes($topicarr["subject"])) . "</b></a>$topicpages";
+        encodehtml(stripslashes($topicarr["subject"])) . "</b></a>";
         ?>
         <div class="row border ttborder">
         <div class="col-md-1 d-none d-sm-block">
@@ -197,13 +154,12 @@ if ($data['topicsres'] > 0) {
 } else {
     print("<p align='center'>No topics found</p>\n");
 }
-
-print("<table cellspacing='5' cellpadding='0'><tr valign='middle'>\n");
-print("<td><i class='fa fa-file-text tticon-red' title='UnRead'></td><td >New posts&nbsp;&nbsp;</td>\n");
-print("<td><i class='fa fa-file-text' title='Read'>&nbsp;&nbsp;" .
-    "</td><td>No New posts&nbsp;&nbsp;</td>\n");
-print("<td><i class='fa fa-lock' title='Lock'></i>&nbsp;&nbsp;
-</td><td>" . Lang::T("FORUMS_LOCKED") . " </td></tr></tbody></table>\n");
-print("<table cellspacing='0' cellpadding='0'><tr>\n");
-print("</tr></table>\n");
+?>
+<div container><br>
+    <i class='fa fa-file-text tticon-red' title='UnRead'></i>&nbsp;New posts &nbsp;
+    <i class='fa fa-file-text' title='Read'></i>&nbsp;No New posts &nbsp;
+    <i class='fa fa-lock' title='Lock Topic'></i>&nbsp;<?php echo Lang::T("FORUMS_LOCKED"); ?>&nbsp;
+    <i class='fa fa-exclamation' title='<?php echo Lang::T("FORUMS_STICKY"); ?>'></i>&nbsp;<?php echo Lang::T("FORUMS_STICKY"); ?>
+</div>
+<?php
 insert_quick_jump_menu($data['forumid']);

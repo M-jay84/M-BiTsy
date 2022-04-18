@@ -1,54 +1,50 @@
 <?php
-class Login
+
+class Login 
 {
 
     public function __construct()
     {
-        Auth::ipBanned();
-        Auth::isClosed();
-        $this->token = Cookie::csrf_token();
-        Cookie::destroyAll();
-    }
-
-    public function index()
-    {
-        $data = [
-            'token' => $this->token,
-            'title' => Lang::T("LOGIN"),
-        ];
-        View::render('login/index', $data, 'user');
-    }
-
-    public function submit()
-    {
-        // check if using google captcha
-        (new Captcha)->response(Input::get('g-recaptcha-response'));
-        if (Input::exist() && Cookie::csrf_check()) {
-            $username = Input::get("username");
-            $password = Input::get("password");
-            
-            $sql = DB::raw('users', 'id, password, secret, status, enabled', ['username' =>$username])->fetch();
-            if (!$sql || !password_verify($password, $sql['password'])) {
-                Redirect::autolink(URLROOT . "/logout", Lang::T("LOGIN_INCORRECT"));
-            } elseif ($sql['status'] == "pending") {
-                Redirect::autolink(URLROOT . "/logout", Lang::T("ACCOUNT_PENDING"));
-            } elseif ($sql['enabled'] == "no") {
-                Redirect::autolink(URLROOT . "/logout", Lang::T("ACCOUNT_DISABLED"));
-            }
-            
-            Cookie::setAll($sql['id'], $sql['password'], $this->loginString());
-            DB::update('users', ['last_login'=>TimeDate::get_date_time(), 'token'=>$this->loginString()], ['id'=>$sql['id']]);
-            Redirect::to(URLROOT);
-        } else {
-            Redirect::to(URLROOT . "/logout");
+        // Verify User/Guest
+        Auth::user(0, 0);
+        
+        // Verify User Already Logged In
+        if (isset($_SESSION['loggedin'])) {
+            Redirect::autolink(URLROOT, Lang::T("Already Logged In"));
         }
     }
 
-    private function loginString()
+    // Login Default Page
+    public function index()
     {
-        $ip = Ip::getIP();
-        $browser = Ip::agent();
-        return md5($browser . $browser);
+        // Init Data
+        $data = [
+            'title' => Lang::T("LOGIN"),
+        ];
+
+        // Load View
+        View::render('login/index', $data, 'user');
     }
 
+    // Login Form Submit
+    public function submit()
+    {
+        // Check Input Else Return To Form
+        if (Input::exist() && Cookie::csrf_check()) {
+
+            // Check Google Captcha
+            (new Captcha)->response(Input::get('g-recaptcha-response'));
+                    
+            // Check User Input
+            $username = Input::get("username");
+            $password = Input::get("password");
+        
+            // Check If User
+            Users::login($username, $password);
+        
+        } else {
+            Redirect::to(URLROOT . "/login");
+        }
+    }
+    
 }

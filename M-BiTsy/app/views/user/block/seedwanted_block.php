@@ -3,13 +3,13 @@ if ($_SESSION['loggedin'] == true) {
     Style::block_begin(Lang::T("SEEDERS_WANTED"));
     $TTCache = new Cache();
     $expires = 600; // Cache time in seconds
-    if (($rows = $TTCache->Get("seedwanted_block", $expires)) === false) {
+    if (($rows = $TTCache->Get("block/seedwanted_block", $expires)) === false) {
         $res = DB::raw('torrents', 'id, name, seeders, leechers', ['seeders' =>0, 'leechers' =>0, 'banned' =>'no', 'external' =>'no'], 'ORDER BY leechers DESC LIMIT 5');
         $rows = array();
         while ($row = $res->fetch(PDO::FETCH_ASSOC)) {
             $rows[] = $row;
         }
-        $TTCache->Set("seedwanted_block", $rows, $expires);
+        $TTCache->Set("block/seedwanted_block", $rows, $expires);
     }
 
     if (!$rows) { ?>

@@ -18,9 +18,9 @@
 <div class="ttform">
 <div class="text-center">
     <a id="searchMovie"><h3>Search Movie</h3></a> <?php
-$movies = $data['tmdb']->searchMovie($data['name']);
-foreach ($movies as $movie) {
-    echo $movie->getTitle() . ' <a href="'.URLROOT.'/moviedatabase/movies?id=' . $movie->getID() . '"><b>Link</b></a><br>';
-} ?>
+    $movies = $data['tmdb']->searchMovie($data['name']);
+    foreach ($movies as $movie) {
+        echo $movie->getTitle() . ' <a href="'.URLROOT.'/moviedatabase/movies?id=' . $movie->getID() . '"><b>Link</b></a><br>';
+    } ?>
 </div>
 </div>

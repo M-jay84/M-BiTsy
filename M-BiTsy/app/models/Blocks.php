@@ -4,13 +4,13 @@ class Blocks
     public static function left()
     {
         $TTCache = new Cache();
-        if (($blocks = $TTCache->get("blocks_left", 900)) === false) {
+        if (($blocks = $TTCache->get("block/blocks_left", 900)) === false) {
             $res = DB::run("SELECT * FROM blocks WHERE position='left' AND enabled=1 ORDER BY sort");
             $blocks = array();
             while ($result = $res->fetch(PDO::FETCH_LAZY)) {
                 $blocks[] = $result["name"];
             }
-            $TTCache->Set("blocks_left", $blocks, 900);
+            $TTCache->Set("block/blocks_left", $blocks, 900);
         }
         foreach ($blocks as $blockfilename) {
             $url = $_GET['url'] ?? '';
@@ -23,13 +23,13 @@ class Blocks
     public static function right()
     {
         $TTCache = new Cache();
-        if (($blocks = $TTCache->get("blocks_right", 900)) === false) {
+        if (($blocks = $TTCache->get("block/blocks_right", 900)) === false) {
             $res = DB::run("SELECT * FROM blocks WHERE position='right' AND enabled=1 ORDER BY sort");
             $blocks = array();
             while ($result = $res->fetch(PDO::FETCH_LAZY)) {
                 $blocks[] = $result["name"];
             }
-            $TTCache->Set("blocks_right", $blocks, 900);
+            $TTCache->Set("block/blocks_right", $blocks, 900);
         }
         foreach ($blocks as $blockfilename) {
             $url = $_GET['url'] ?? '';
@@ -42,13 +42,13 @@ class Blocks
     public static function middle()
     {
         $TTCache = new Cache();
-        if (($blocks = $TTCache->get("blocks_middle", 900)) === false) {
+        if (($blocks = $TTCache->get("block/blocks_middle", 900)) === false) {
             $res = DB::run("SELECT * FROM blocks WHERE position='middle' AND enabled=1 ORDER BY sort");
             $blocks = array();
             while ($result = $res->fetch(PDO::FETCH_LAZY)) {
                 $blocks[] = $result["name"];
             }
-            $TTCache->Set("blocks_middle", $blocks, 900);
+            $TTCache->Set("block/blocks_middle", $blocks, 900);
         }
         foreach ($blocks as $blockfilename) {
             $url = $_GET['url'] ?? '';

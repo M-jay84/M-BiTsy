@@ -1,33 +1,46 @@
 <?php
+
 class Adminshoutbox
 {
 
     public function __construct()
     {
+        // Verify User/Staff
         Auth::user(_MODERATOR, 2);
     }
 
+    // Shoutbox Default Page
+    public function index()
+    {
+        // Init Data
+        $data = [
+            'title' => 'Staff Chat',
+        ];
+
+        // Load View
+        View::render('shoutbox/index', $data, 'admin');
+    }
+
+    // Shoutbox History Default Page
     public function history()
     {
+        // Get Shoutbox Data
         $result = DB::select('shoutbox', '*', ['staff' =>1], 'ORDER BY msgid DESC LIMIT 80');
 
+        // Init Data
         $data = [
             'title' => 'Staff History',
             'sql' => $result,
         ];
+
+        // Load View
         View::render('shoutbox/history', $data, 'admin');
     }
 
-    public function index()
-    {
-        $data = [
-            'title' => 'Staff Chat',
-        ];
-        View::render('shoutbox/index', $data, 'admin');
-    }
-
+    // Ajax Shoutbox Load
     public function loadchat()
     {
+        // Get Shoutbox Data
         $result = DB::raw('shoutbox', '*', ['staff' =>1], 'ORDER BY msgid DESC LIMIT 20');
         ?>
         <div class='shoutbox_contain'><table class='table table-striped'>
@@ -62,6 +75,7 @@ class Adminshoutbox
         <?php
     }
 
+    // Add Shout Form Submit
     public function add()
     {
         if (Users::get("shoutboxpos") == 'no') {
@@ -78,9 +92,13 @@ class Adminshoutbox
         Redirect::to(URLROOT . '/adminshoutbox');
     }
 
+    // Clear Shoutbox Default Page
     public function clear()
     {
+        // Check User Input
         $do = $_GET['do'];
+
+        // Clear All Shouts
         if ($do == "delete") {
             DB::truncate('shoutbox');
             Logs::write("Shoutbox cleared by ".Users::get('username')."");
@@ -89,9 +107,12 @@ class Adminshoutbox
             Redirect::autolink(URLROOT . "/admincp", "<b><font color='#ff0000'>Shoutbox Cleared....</font></b>");
         }
 
+        // Init Data
         $data = [
             'title' => Lang::T("CLEAR_SHOUTBOX"),
         ];
+
+        // Load View
         View::render('shoutbox/clear', $data, 'admin');
     }
 

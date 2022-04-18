@@ -1,194 +1,215 @@
 <?php
+
 class Signup
 {
+
     public function __construct()
     {
+        // Verify User/Guest
         Auth::user(0, 0);
     }
 
+    // Signup Default Page
     public function index()
     {
-        //check if IP is already a peer
+        // Check User IP
         if (Config::get('IPCHECK')) {
-            $ip = $_SERVER['REMOTE_ADDR'];
-            $ipq = get_row_count("users", "WHERE ip = '$ip'");
-            if ($ipq >= Config::get('ACCOUNTMAX')) {
-                Redirect::autolink(URLROOT . '/login', "This IP is already in use !");
-            }
+            Ip::checkIP();
         }
 
-        // Check if we're signing up with an invite
+        // Check If Invite
         $invite = Input::get("invite");
         $secret = Input::get("secret");
 
+        // Check Invite
         $invite_row = 0;
         if (!Validate::Id($invite) || strlen($secret) != 20) {
             if (Config::get('INVITEONLY')) {
-                Redirect::autolink(URLROOT . '/home', "<center>" . Lang::T("INVITE_ONLY_MSG") . "<br></center>");
+                Redirect::autolink(URLROOT, "<center>" . Lang::T("INVITE_ONLY_MSG") . "<br></center>");
             }
         } else {
             $invite_row = DB::select('users', 'id', ['id'=>$invite, 'secret'=>$secret]);
             if (!$invite_row) {
-                Redirect::autolink(URLROOT . '/home', Lang::T("INVITE_ONLY_NOT_FOUND") . "" . (Config::get('SIGNUPTIMEOUT') / 86400) . "days.");
+                Redirect::autolink(URLROOT, Lang::T("INVITE_ONLY_NOT_FOUND") . "" . (Config::get('SIGNUPTIMEOUT') / 86400) . "days.");
             }
         }
         
+        // Init Data
         $data = [
             'title' => Lang::T("SIGNUP"),
             'invite' => $invite_row,
         ];
+
+        // Load View
         View::render('signup/index', $data, 'user');
     }
 
+    // Signup Form Submit
     public function submit()
     {
-        if (Input::exist()) {
+        // Check Input Else Return To Form
+        if (Input::exist() && Cookie::csrf_check()) {
+            
+            // Check Google Captcha
             (new Captcha)->response($_POST['g-recaptcha-response']);
-            $wantusername = Input::get("wantusername");
-            $email = Input::get("email");
-            $wantpassword = Input::get("wantpassword");
+            
+            // Check Input
             $passagain = Input::get("passagain");
-            $country = Input::get("country");
-            $gender = Input::get("gender");
-            $client = Input::get("client");
-            $age = Input::get("age");
-            // Is It A Invite
             $invite = Input::get("invite");
-            $secret = Input::get("secret");
 
-            if (strlen($secret) == 20 || !is_numeric($invite)) {
-                $invite_row = DB::select('users', 'id', ['id'=>$invite, 'secret'=>$secret]);
+            // Init Data
+            $data = [
+                'username' => Input::get("wantusername"),
+                'email' => Input::get("email"),
+                'password' => Input::get("wantpassword"),
+                'country' => Input::get("country"),
+                'gender' => Input::get("gender"),
+                'client' => Input::get("client"),
+                'age' => Input::get("age"),
+                'secret' => Input::get("secret")
+            ];
+
+            // Check User Invite
+            if (strlen($data['secret']) == 20 || !is_numeric($invite)) {
+                $invite_row = DB::select('users', 'id', ['id'=>$invite, 'secret'=>$data['secret']]);
             }
 
-            $message = $this->validSign($wantusername, $email, $wantpassword, $passagain, $invite_row);
+            // Check User Input
+            $message = $this->validSign($passagain, $data, $invite_row);
             
             if ($message == "") {
                 // If NOT Invite Check
                 if (!$invite_row) {
-                    // get max members, and check how many users there is
+                    // Check Max Users
                     $numsitemembers = get_row_count("users");
                     if ($numsitemembers >= Config::get('MAXUSERS')) {
                         $msg = Lang::T("SITE_FULL_LIMIT_MSG") . number_format(Config::get('MAXUSERS')) . " " . Lang::T("SITE_FULL_LIMIT_REACHED_MSG") . " " . number_format($numsitemembers) . " members";
-                        Redirect::autolink(URLROOT . '/home', $msg);
+                        Redirect::autolink(URLROOT, $msg);
                     }
-                    // check email isnt banned
-                    $maildomain = (substr($email, strpos($email, "@") + 1));
-                    $a = DB::column('email_bans', 'COUNT(*)', ['mail_domain'=>$email]);
-                    if ($a != 0) {
-                        $message = sprintf(Lang::T("EMAIL_ADDRESS_BANNED_S"), $email);
-                    }
-                    $a = DB::run("SELECT count(*) FROM email_bans where mail_domain LIKE '%$maildomain%'")->fetchColumn();
-                    if ($a != 0) {
-                        $message = sprintf(Lang::T("EMAIL_ADDRESS_BANNED_S"), $email);
-                    }
-                    // check if email addy is already in use
-                    $a = DB::column('users', 'COUNT(*)', ['email'=>$email]);
-                    if ($a != 0) {
-                        $message = sprintf(Lang::T("EMAIL_ADDRESS_INUSE_S"), $email);
-                    }
+
+                    // Check Email Not Banned
+                    $message = Bans::checkemail($data['email']);
                 }
 
-                //check username isnt in use
-                $count = DB::column('users', 'COUNT(*)', ['username'=>$wantusername]);
+                // Check Username NOT In Use
+                $count = DB::column('users', 'COUNT(*)', ['username'=>$data['username']]);
                 if ($count != 0) {
-                    $message = sprintf(Lang::T("USERNAME_INUSE_S"), $wantusername);
+                    $message = sprintf(Lang::T("USERNAME_INUSE_S"), $data['username']);
                 }
 
-                $secret = Helper::mksecret(); //generate secret field
-                $wantpassword = password_hash($wantpassword, PASSWORD_BCRYPT); // hash the password
+                // Generate Secret
+                $data['secret'] = Security::mksecret();
+                
+                // Hash Password
+                $data['password'] = password_hash($data['password'], PASSWORD_BCRYPT); // hash the password
             }
 
-            // Checks Returns Message
+            // Check Message Error
             if ($message != "") {
                 Redirect::autolink(URLROOT . '/login', $message);
             }
 
+            // No Message So Proceed
             if ($message == "") {
                 // Invited User
                 if ($invite_row) {
-                    DB::update('users', ['username'=>$wantusername, 'password'=>$wantpassword, 'secret'=>$secret, 'status'=>'confirmed', 'added'=>TimeDate::get_date_time()], ['id'=>$invite_row['id']]);
-                    
+                    DB::update('users', ['username'=>$data['username'], 'password'=>$data['password'], 'secret'=>$data['secret'], 'status'=>'confirmed', 'added'=>TimeDate::get_date_time()], ['id'=>$invite_row['id']]);
+                    // Welcome PM
                     if (Config::get('WELCOMEPM_ON')) {
-                        $dt = TimeDate::get_date_time();
-                        $msg = Config::get('WELCOMEPM_MSG');
-                        Messages::insert(['sender'=>0, 'receiver'=>$invite_row['id'], 'added'=>$dt, 'subject'=>'Welcome', 'msg'=>$msg, 'unread'=>'yes', 'location'=>'in']);
+                        Messages::insert(['sender'=>0, 'receiver'=>$invite_row['id'], 'added'=>TimeDate::get_date_time(), 'subject'=>'Welcome', 'msg'=>Config::get('WELCOMEPM_MSG'), 'unread'=>'yes', 'location'=>'in']);
                     }
-                    
-                    $msg_shout = "New User: " . $wantusername . " has joined.";
-                    DB::insert('shoutbox', ['userid'=>0, 'date'=>TimeDate::get_date_time(), 'user'=>'System', 'message'=>$msg_shout]);
+                    // Post Shout
+                    DB::insert('shoutbox', ['userid'=>0, 'date'=>TimeDate::get_date_time(), 'user'=>'System', 'message'=>"New User: " . $data['username'] . " has joined."]);
+                    // Invite Activated
                     Redirect::autolink(URLROOT . '/login', Lang::T("ACCOUNT_ACTIVATED"));
                 }
 
+                // Check To Confirm
                 if (Config::get('CONFIRMEMAIL') || Config::get('ACONFIRM')) {
-                    $status = "pending";
+                    $data['status'] = "pending";
                 } else {
-                    $status = "confirmed";
+                    $data['status'] = "confirmed";
                 }
                 
+                // Set Class
                 if ($numsitemembers == '0') {
-                    $signupclass = '7';
+                    $data['class'] = '7';
                 } else {
-                    $signupclass = '1';
+                    $data['class'] = '1';
                 }
 
-                DB::run("
-                    INSERT INTO users
-                    (username, password, secret, email, status, added, last_login,
-                    last_access, age, country, gender, client, stylesheet, language, class, ip)
-                    VALUES
-                    (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
-                    [$wantusername, $wantpassword, $secret, $email, $status, TimeDate::get_date_time(),
-                        TimeDate::get_date_time(), TimeDate::get_date_time(), $age, $country, $gender,
-                        $client, Config::get('DEFAULTTHEME'), Config::get('DEFAULTLANG'), $signupclass, Ip::getIP()]);
+                // Standard Inputs
+                $data['added'] = TimeDate::get_date_time();
+                $data['last_login'] = TimeDate::get_date_time();
+                $data['last_access'] = TimeDate::get_date_time();
+                $data['stylesheet'] = Config::get('DEFAULTTHEME');
+                $data['language'] = Config::get('DEFAULTLANG');
+                $data['ip'] = Ip::getIP();
+
+                // Insert User 
+                DB::insert('users', $data);
                 $id = DB::lastInsertId();
     
-                $msg_shout = "New User: " . $wantusername . " has joined.";
-                DB::insert('shoutbox', ['userid'=>0, 'date'=>TimeDate::get_date_time(), 'user'=>'System', 'message'=>$msg_shout]);
+                // Post Shout
+                DB::insert('shoutbox', ['userid'=>0, 'date'=>TimeDate::get_date_time(), 'user'=>'System', 'message'=>"New User: " . $data['username'] . " has joined."]);
 
+                // Welcome PM
                 if (Config::get('WELCOMEPM_ON')) {
-                    $dt = TimeDate::get_date_time();
-                    $mess = Config::get('WELCOMEPM_MSG');
-                    Messages::insert(['sender'=>0, 'receiver'=>$id, 'added'=>$dt, 'subject'=>'Welcome', 'msg'=>$mess, 'unread'=>'yes', 'location'=>'in']);
+                    Messages::insert(['sender'=>0, 'receiver'=>$id, 'added'=>TimeDate::get_date_time(), 'subject'=>'Welcome', 'msg'=>Config::get('WELCOMEPM_MSG'), 'unread'=>'yes', 'location'=>'in']);
                 }
 
+                // Admin Confirm
                 if (Config::get('ACONFIRM')) {
                     $body = Lang::T("YOUR_ACCOUNT_AT") . " " . Config::get('SITENAME') . " " . Lang::T("HAS_BEEN_CREATED_YOU_WILL_HAVE_TO_WAIT") . "\n\n" . Config::get('SITENAME') . " " . Lang::T("ADMIN");
                 } else {
-                    $body = Lang::T("YOUR_ACCOUNT_AT") . " " . Config::get('SITENAME') . " " . Lang::T("HAS_BEEN_APPROVED_EMAIL") . "\n\n	" . URLROOT . "/confirmemail/signup?id=$id&secret=$secret\n\n" . Lang::T("HAS_BEEN_APPROVED_EMAIL_AFTER") . "\n\n	" . Lang::T("HAS_BEEN_APPROVED_EMAIL_DELETED") . "\n\n" . URLROOT . " " . Lang::T("ADMIN");
+                    $body = Lang::T("YOUR_ACCOUNT_AT") . " " . Config::get('SITENAME') . " " . Lang::T("HAS_BEEN_APPROVED_EMAIL") . "\n\n	" . URLROOT . "/confirmemail/signup?id=$id&secret=$data[secret]\n\n" . Lang::T("HAS_BEEN_APPROVED_EMAIL_AFTER") . "\n\n	" . Lang::T("HAS_BEEN_APPROVED_EMAIL_DELETED") . "\n\n" . URLROOT . " " . Lang::T("ADMIN");
                 }
 
+                // Confirm Account
                 if (Config::get('CONFIRMEMAIL') || Config::get('ACONFIRM')) {
                     $TTMail = new TTMail();
-                    $TTMail->Send($email, "Your " . Config::get('SITENAME') . " User Account", $body, "", "-f" . Config::get('SITEEMAIL') . "");
-                    Redirect::autolink(URLROOT . '/login', Lang::T("A_CONFIRMATION_EMAIL_HAS_BEEN_SENT") . " (" . htmlspecialchars($email) . "). " . Lang::T("ACCOUNT_CONFIRM_SENT_TO_ADDY_REST") . " <br/ >");
+                    $TTMail->Send($data['email'], "Your " . Config::get('SITENAME') . " User Account", $body, "", "-f" . Config::get('SITEEMAIL') . "");
+                    Redirect::autolink(URLROOT . '/login', Lang::T("A_CONFIRMATION_EMAIL_HAS_BEEN_SENT") . " (" . htmlspecialchars($data['email']) . "). " . Lang::T("ACCOUNT_CONFIRM_SENT_TO_ADDY_REST") . " <br/ >");
                 } else {
                     Redirect::autolink(URLROOT . '/login', Lang::T("ACCOUNT_ACTIVATED"));
                 }
             }
+
         } else {
             Redirect::to(URLROOT . "/signup");
         }
     }
 
-    public function validSign($wantusername, $email, $wantpassword, $passagain, $invite_row)
+    // Check User Input
+    public function validSign($passagain, $data, $invite_row = false)
     {
-        if (Validate::isEmpty($wantpassword) || (Validate::isEmpty($email) && !$invite_row) || Validate::isEmpty($wantusername)) {
+        $message = "";
+
+        if (Validate::isEmpty($data['password']) || (Validate::isEmpty($data['email']) && !$invite_row) || Validate::isEmpty($data['username'])) {
             $message = Lang::T("DONT_LEAVE_ANY_FIELD_BLANK");
-        } elseif (strlen($wantusername) > 50) {
+
+        } elseif (strlen($data['username']) > 50) {
             $message = sprintf(Lang::T("USERNAME_TOO_LONG"), 16);
-        } elseif ($wantpassword != $passagain) {
+
+        } elseif ($data['password'] != $passagain) {
             $message = Lang::T("PASSWORDS_NOT_MATCH");
-        } elseif (strlen($wantpassword) < 6) {
+
+        } elseif (strlen($data['password']) < 6) {
             $message = sprintf(Lang::T("PASS_TOO_SHORT_2"), 6);
-        } elseif (strlen($wantpassword) > 16) {
+
+        } elseif (strlen($data['password']) > 16) {
             $message = sprintf(Lang::T("PASS_TOO_LONG_2"), 16);
-        } elseif ($wantpassword == $wantusername) {
+
+        } elseif ($data['password'] == $data['username']) {
             $message = Lang::T("PASS_CANT_MATCH_USERNAME");
-        } elseif (!Validate::username($wantusername)) {
-              $message = "Invalid username.";
-        } elseif (!$invite_row && !Validate::Email($email)) {
+
+        } elseif (!Validate::username($data['username'])) {
+            $message = "Invalid username.";
+
+        } elseif (!$data['invite_row'] && !Validate::Email($data['email'])) {
             $message = "That doesn't look like a valid email address.";
         }
+        
         return $message;
     }
 

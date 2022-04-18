@@ -47,7 +47,7 @@ class TMDB
         return (array) json_decode(($results), true);
     }
 
-    // Get Imange From Url
+    // Get Image From Url
     public static function url_get_contents($Url)
     {
         if (!function_exists('curl_init')) {

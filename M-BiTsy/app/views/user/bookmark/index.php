@@ -51,4 +51,4 @@ foreach ($data['res'] as $row) {
 }
 
 print("</tr></tbody>");
-print("</table></div><br />");
+print("</table>$data[pager]</div><br />");

@@ -17,7 +17,7 @@ if (Users::get('class') == _ADMINISTRATOR) { ?>
     <center><b>Community</b></center>
     <ul class="list-group">
     <li class="list-group-item"><a href="<?php echo URLROOT; ?>/adminfaq"><img src="<?php echo URLROOT; ?>/assets/images/admin/faq.png" border="0" width="20" height="20" alt="" />&nbsp;<b><?php echo Lang::T("FAQ"); ?></b></a></li>
-    <li class="list-group-item"><a href="<?php echo URLROOT; ?>/adminforum"><img src="<?php echo URLROOT; ?>/assets/images/admin/forums.png" border="0" width="20" height="20" alt="" />&nbsp;<b><?php echo Lang::T("FORUM_MANAGEMENT"); ?></b></a></li>
+    <li class="list-group-item"><a href="<?php echo URLROOT; ?>/adminforumcat"><img src="<?php echo URLROOT; ?>/assets/images/admin/forums.png" border="0" width="20" height="20" alt="" />&nbsp;<b><?php echo Lang::T("FORUM_MANAGEMENT"); ?></b></a></li>
 	<li class="list-group-item"><a href="<?php echo URLROOT; ?>/adminmessage/masspm"><img src="<?php echo URLROOT; ?>/assets/images/admin/mass_pm.png" border="0" width="20" height="20" alt="" />&nbsp;<b><?php echo Lang::T("MASS_PM"); ?></b></a></li>
     <li class="list-group-item"><a href="<?php echo URLROOT; ?>/adminnews"><img src="<?php echo URLROOT; ?>/assets/images/admin/news.png" border="0" width="20" height="20" alt="" />&nbsp;<b><?php echo Lang::T("NEWS"); ?></b></a></li>
     <li class="list-group-item"><a href="<?php echo URLROOT; ?>/adminteam"><img src="<?php echo URLROOT; ?>/assets/images/admin/teams.png" border="0" width="20" height="20" alt="" />&nbsp;<b><?php echo Lang::T("TEAMS"); ?></b></a></li>

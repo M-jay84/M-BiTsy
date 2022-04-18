@@ -18,10 +18,7 @@ if ($data['res']->rowCount() != 0) {
        <th><input type="checkbox" name="checkall" onclick="checkAll(this.form.id)" /></th>
        </tr></thead><tbody> <?php
     while ($row = $data['res']->fetch(PDO::FETCH_ASSOC)) {
-        if (Config::get('MEMBERSONLY')) {
-            $result1 = DB::raw('users', 'id, username', ['id'=>$row['uid']]);
-            $row1 = $result1->fetch(PDO::FETCH_ASSOC);
-        }
+        
         if ($row1['username']) {
             print '<tr><td><a href="' . URLROOT . '/profile?id=' . $row['uid'] . '"><b>' . Users::coloredname($row['uid']) . '</b></a></td>';
         } else {

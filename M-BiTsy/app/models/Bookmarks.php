@@ -3,11 +3,11 @@ class Bookmarks
 {
     public static function select($target, $type = 'torrent')
     {
-        $bookt = DB::column('bookmarks', 'COUNT(*)', ['targetid' =>$target, 'type' =>$type, 'userid'=>Users::get('id')]);
+        $bookt = DB::column('bookmarks', 'COUNT(*)', ['targetid' => $target, 'type' => $type, 'userid' => Users::get('id')]);
         if ($bookt > 0) {
-            print("<a href=".URLROOT."/bookmark/delete?target=$target><button type='button' class='btn btn-sm ttbtn'>Delete Bookmark</button></a>");
+            print("<a href=" . URLROOT . "/bookmark/delete?target=$target><button type='button' class='btn btn-sm ttbtn'>Delete Bookmark</button></a>");
         } else {
-            print("<a href=".URLROOT."/bookmark/add?target=$target><button type='button' class='btn btn-sm ttbtn'>Add Bookmark</button></a>");
+            print("<a href=" . URLROOT . "/bookmark/add?target=$target><button type='button' class='btn btn-sm ttbtn'>Add Bookmark</button></a>");
         }
     }
 
@@ -38,5 +38,17 @@ class Bookmarks
         $limit", [$id]);
 
         return $stmt;
+    }
+
+    public static function switch($type, $target)
+    {
+        if ($type === 'torrent') {
+            if ((get_row_count("torrents", "WHERE id=$target")) > 0) {
+                DB::insert('bookmarks', ['userid' => Users::get('id'), 'targetid' => $target, 'type' => 'torrent']);
+                Redirect::autolink(URLROOT . "/torrent?id=$target", "Torrent was successfully bookmarked.");
+            }
+        } else {
+            // if type forum ???
+        }
     }
 }

@@ -1,8 +1,11 @@
 <div class="ttform">
-<form method="post" class="form-horizontal" action="<?php echo URLROOT; ?>/signup/submit"> <?php
+<form method="post" class="form-horizontal" action="<?php echo URLROOT; ?>/signup/submit">
+
+<input type="hidden" name="csrf_token" value="<?php echo Cookie::csrf_token() ?>" /> <?php
 if ($data['invite'] != 0) { ?>
     <input type="hidden" name="invite" value="<?php echo $_GET["invite"]; ?>" />
-    <input type="hidden" name="secret" value="<?php echo htmlspecialchars($_GET["secret"]); ?>" /> <?php
+    <input type="hidden" name="secret" value="<?php echo htmlspecialchars($_GET["secret"]); ?>" />
+    <?php
 } ?>
 
 <p class="text-center"><?php echo Lang::T("COOKIES"); ?></p>

@@ -88,7 +88,7 @@ foreach ($data['selecttor'] as $torr) :
         <a href="<?php echo URLROOT; ?>/report/torrent?torrent=<?php echo $torr['id']; ?>"><button type='button' class='btn btn-sm ttbtn'><?php echo Lang::T("REPORT") ?></button></a>&nbsp;<?php
 
         if ($torr["seeders"] <= 1) { ?>
-            <a href='<?php echo URLROOT ?>/torrent/reseed?id=<?php echo $torr['id']; ?>'><button type='button' class='btn btn-sm ttbtn'><?php echo Lang::T("Reseed"); ?></button></a><br><?php
+            <a href='<?php echo URLROOT ?>/search/reseed?id=<?php echo $torr['id']; ?>'><button type='button' class='btn btn-sm ttbtn'><?php echo Lang::T("Reseed"); ?></button></a><br><?php
         }
 		
 		// LIKE MOD
@@ -210,7 +210,7 @@ if ($torr["nfo"] == "yes") {
     $filegetcontents = file_get_contents($nfofilelocation);
     $nfo = $filegetcontents;
     if ($nfo) {
-        $nfo = Helper::my_nfo_translate($nfo);
+        $nfo = my_nfo_translate($nfo);
         echo "<br /><br /><b>NFO:</b><br />";
         print("<div><textarea class='nfo' style='width:98%;height:100%;' rows='20' cols='20' readonly='readonly'>" . stripslashes($nfo) . "</textarea></div>");
     } else {

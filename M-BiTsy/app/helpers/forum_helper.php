@@ -1,5 +1,5 @@
 <?php
-// setup the forum header
+// Setup Forum Header
 function forumheader($location, $subforum = '', $subforumid = 0)
 {
     echo "<div>
@@ -264,6 +264,7 @@ function lastpostdetails($lastpostid)
     return $detail;
 }
 
+// Display Mod Options
 function modoptions($topicid, $subject, $forumid, $locked, $sticky) {
     print("<div class='f-border f-mod_options' align='center'><table width='100%' cellspacing='0'><tr class='f-title'><th><center>" . Lang::T("FORUMS_MOD_OPTIONS") . "</center></th></tr>\n");
     print("<tr><td class='ttable_col2'>\n");
@@ -271,27 +272,26 @@ function modoptions($topicid, $subject, $forumid, $locked, $sticky) {
     print("<input type='hidden' name='topicid' value='$topicid' />\n");
     print("<input type='hidden' name='returnto' value='topic?topicid=$topicid' />\n");
 
-            print("<div align='center'  style='padding:3px'>Rename topic:
-            <div class='row justify-content-md-center'>
-            <div class='col col-lg-4'>
-            <input class='form-control' type='text' name='subject' value='" . stripslashes(htmlspecialchars($subject)) . "' />
-            </div>
-            </div>
-            \n");
-            print("<input type='submit' value='Apply' />");
-            print("</div></form>\n");
+    print("<div align='center'  style='padding:3px'>Rename topic:
+           <div class='row justify-content-md-center'>
+           <div class='col col-lg-4'>
+           <input class='form-control' type='text' name='subject' value='" . stripslashes(htmlspecialchars($subject)) . "' />
+           </div>
+           </div>\n");
+    print("<input type='submit' value='Apply' />");
+    print("</div></form>\n");
 
-            print("<form method='post' action='" . URLROOT . "/topic/move?topicid=$topicid'>\n");
-            print("<div align='center' style='padding:3px'>");
-            print("Move this thread to: <select name='forumid'>");
-            $res = DB::raw('forum_forums', 'id,name,minclasswrite', '', 'ORDER BY name');
-            while ($arr = $res->fetch(PDO::FETCH_ASSOC)) {
-                if ($arr["id"] != $forumid && Users::get("class") >= $arr["minclasswrite"]) {
-                    print("<option value='" . $arr["id"] . "'>" . $arr["name"] . "</option>\n");
-                }
-            }
-            print("</select>");
-            print("<input type='submit' value='Apply' /></div></form>\n");
+    print("<form method='post' action='" . URLROOT . "/topic/move?topicid=$topicid'>\n");
+    print("<div align='center' style='padding:3px'>");
+    print("Move this thread to: <select name='forumid'>");
+    $res = DB::raw('forum_forums', 'id,name,minclasswrite', '', 'ORDER BY name');
+    while ($arr = $res->fetch(PDO::FETCH_ASSOC)) {
+        if ($arr["id"] != $forumid && Users::get("class") >= $arr["minclasswrite"]) {
+            print("<option value='" . $arr["id"] . "'>" . $arr["name"] . "</option>\n");
+        }
+    }
+    print("</select>");
+    print("<input type='submit' value='Apply' /></div></form>\n");
             
     print("<p class='text-center'>\n");
     if ($locked) {
@@ -308,6 +308,7 @@ function modoptions($topicid, $subject, $forumid, $locked, $sticky) {
     print("</p></td></tr></table></div>\n");
 }
 
+// Get Poster Details
 function posterdetails($userid) {
     $forumposts = DB::column('forum_posts', 'COUNT(*)', ['userid' =>$userid]);
     $arr2 = DB::select('users', '*', ['id' =>$userid]);

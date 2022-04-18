@@ -37,12 +37,9 @@ function format_comment($text)
     $s = preg_replace("/\[u\]((\s|.)+?)\[\/u\]/", "<u>\\1</u>", $s);
     // [s]Line[/s]
     $s = preg_replace("#\[s\](.+)\[/s\]#isU", "<span style='text-decoration:line-through;'>$1</span>", $s);
-
-    // Links
-    // [url=http://www.example.com]
-    $s = preg_replace("#\[url=((?:ftp|https?)://.*?)\](.*?)\[/url\]#i", "<a href='$1'>$2</a>", $s);
-    // [url]
+    // [url]Links[/url]
     $s = preg_replace("#\[url\]((?:ftp|https?)://.*?)\[/url\]#i", "<a href='$1'>$1</a>", $s);
+    $s = preg_replace("#\[url=((?:ftp|https?)://.*?)\](.*?)\[/url\]#i", "<a href='$1'>$2</a>", $s);
     
     ?><style>
     .scaleA {
@@ -50,39 +47,19 @@ function format_comment($text)
       max-width: max-content;
     }
     </style> <?php
-    // [img=http://www/image.gif]
-    $s = preg_replace("#\[img=((?:ftp|https?)://[a-z0-9._/-]+(\.gif|\.jpg|\.png|\.bmp|\.jpeg))\]\[/img\]#isU", "<img src='$1' class='scaleA'/>", $s);
-    // [img]
-    $s = preg_replace("#\[img\]((?:ftp|https?)://[a-z0-9._/-]+(\.gif|\.jpg|\.png|\.bmp|\.jpeg))\[/img\]#isU", "<img src='$1' class='scaleA'/>", $s);
     
-    // Extract the Code
-    $s = preg_replace("#\[code\](.+)\[/code\]#isU", "<b> Code : </b>
-                      <pre><code>
-                      <div class='scaleA' style='max-height:400px;white-space: nowrap;'  readonly='readonly'>$1</div>
-                      </code></pre>", $s);
-    // Quote 1
+    // [img]Image[/img]
+    $s = preg_replace("#\[img\]((?:ftp|https?)://[a-z0-9._/-]+(\.gif|\.jpg|\.png|\.bmp|\.jpeg))\[/img\]#isU", "<img src='$1' class='scaleA'/>", $s);
+    $s = preg_replace("#\[img=((?:ftp|https?)://[a-z0-9._/-]+(\.gif|\.jpg|\.png|\.bmp|\.jpeg))\]\[/img\]#isU", "<img src='$1' class='scaleA'/>", $s);
+    // [Code]Code[/Code]
+    $s = preg_replace("#\[code\](.+)\[/code\]#isU", "<b> Code : </b><pre><code><div class='scaleA' style='max-height:400px;white-space: nowrap;'  readonly='readonly'>$1</div></code></pre>", $s);
+    // [Quote]Quote[/Quote]
     while (preg_match("#\[quote\](.+)\[/quote\]#isU", $s)) {
         $s = preg_replace("#\[quote\](.+)\[/quote\]#isU", "<blockquote><strong> Quote : </strong></blockquote><div class='scaleA' style='padding:5px; border: 1px black dotted'>$1</div><br />", $s);
     }
-    // Quote 2
     while (preg_match("#\[quote=(.+)\](.+)\[/quote\]#isU", $s)) {
         $s = preg_replace("#\[quote=(.+)\](.+)\[/quote\]#isU", "<blockquote><strong>$1 Quote : </strong></blockquote><div class='scaleA' style='padding:5px; border: 1px black dotted'>$2</div><br />", $s);
     }
-    /*
-    // Quote 1
-    while (preg_match("#\[quote\](.+)\[/quote\]#isU", $s)) {
-        $s = preg_replace("#\[quote\](.+)\[/quote\]#isU", "<blockquote><strong> Quote : </strong></blockquote><table class='main' border='1' cellspacing='0' cellpadding='10'><tr><td style='border: 1px black dotted'>$1</td></tr></table><br />", $s);
-    }
-    // Quote 2
-    while (preg_match("#\[quote=(.+)\](.+)\[/quote\]#isU", $s)) {
-        $s = preg_replace("#\[quote=(.+)\](.+)\[/quote\]#isU", "<blockquote><strong>$1 Quote : </strong></blockquote><table class='main' border='1' cellspacing='0' cellpadding='10'><tr><td style='border: 1px black dotted'>$2</td></tr></table><br />", $s);
-    }
-    */
-    // [img=http://www/image.gif]
-    //$s = preg_replace("#\[img=((?:ftp|https?)://[a-z0-9._/-]+(\.gif|\.jpg|\.png|\.bmp|\.jpeg))\]\[/img\]#isU", "<img src='$1' />", $s);
-    // [img]
-    //$s = preg_replace("#\[img\]((?:ftp|https?)://[a-z0-9._/-]+(\.gif|\.jpg|\.png|\.bmp|\.jpeg))\[/img\]#isU", "<div class='table-responsive ttmobile'><img src='$1' /></div>", $s);
-    
     // [video]
     $s = preg_replace("#\[video\](https://www.youtube.com.*v=.+)\[\/video\]#isU", "<center><embed src='https://www.youtube.com/v/$1' type='video' height='140'></embed></center>", $s);
     // [audio]

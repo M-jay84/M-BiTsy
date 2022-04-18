@@ -1,4 +1,5 @@
 <?php
+
 class Cleanup
 {
     // Automatic System Update Function
@@ -22,6 +23,7 @@ class Cleanup
         self::run();
     }
 
+    // Run Cleanup Operations
     public static function run() {
         self::deletepeers();
         self::makeinvisible();
@@ -39,28 +41,28 @@ class Cleanup
         if (Config::get('HNR_ON')) {
             self::hitnrun();
         }
-        //self::autopromote();
+        //self::autopromote(); todo
     }
 
+    // LOCAL TORRENTS - DELETE OLD NON-ACTIVE PEERS
     public static function deletepeers()
     {
-        // LOCAL TORRENTS - DELETE OLD NON-ACTIVE PEERS
         $deadtime = TimeDate::get_date_time(TimeDate::gmtime() - Config::get('ANNOUNCEINTERVAL'));
         DB::run("DELETE FROM peers WHERE last_action < ?", [$deadtime]);
     }
 
+    // LOCAL TORRENTS - MAKE NON-ACTIVE/OLD TORRENTS INVISIBLE
     public static function makeinvisible()
     {
-        // LOCAL TORRENTS - MAKE NON-ACTIVE/OLD TORRENTS INVISIBLE
         $deadtime = TimeDate::gmtime() - Config::get('MAXDEADTORRENTTIMEOUT');
         DB::run("UPDATE torrents SET visible=?
                  WHERE visible=? AND last_action < FROM_UNIXTIME(?) AND seeders = ? AND leechers = ? AND external !=?",
                  ['no', 'yes', $deadtime, 0, 0, 'yes']);
     }
 
+    // Set Bonus every hour
     public static function bonus()
     {
-        // every hour
         $row = DB::select('tasks', 'last_time', ['task'=>'bonus']);
         if (!$row) {
             DB::insert('tasks', [ 'task'=>'bonus','last_time'=>TimeDate::gmtime()]);
@@ -79,6 +81,7 @@ class Cleanup
         }
     }
 
+    // Reset VIP Until
     public static function vipuntil()
     {
         $rowv = DB::run("SELECT id, oldclass FROM users WHERE vipuntil < ? AND oldclass != ?", [TimeDate::get_date_time(), 0])->fetchAll();
@@ -88,19 +91,21 @@ class Cleanup
         }
     }
 
+    // DELETE PENDING USER ACCOUNTS OVER TIMOUT AGE
     public static function pendinguser()
     {
-        // DELETE PENDING USER ACCOUNTS OVER TIMOUT AGE
         $deadtime = TimeDate::gmtime() - Config::get('SIGNUPTIMEOUT');
         DB::run("DELETE FROM users WHERE status = ? AND added < FROM_UNIXTIME(?)", ['pending', $deadtime]);
     }
 
+    // Delete Old Logs
     public static function deletelogs()
     {
         $ts = TimeDate::gmtime() - Config::get('LOGCLEAN')  * 86400;
         DB::run("DELETE FROM log WHERE added < FROM_UNIXTIME(?)", [$ts]);
     }
 
+    // Set Free Leech
     public static function freeleech()
     {
         if (Config::get('FREELEECHGBON'));{
@@ -114,9 +119,9 @@ class Cleanup
         }
     }
 
+    // LEECH WARN USERS WITH LOW RATIO
     public static function ratiowarn()
     {
-        // LEECH WARN USERS WITH LOW RATIO
         $downloaded = Config::get('RATIOWARN_MINGIGS') * 1024 * 1024 * 1024;
         // ADD RATIO WARNING
         $res = DB::run("SELECT id,username FROM users WHERE class <= ? AND warned = ? AND enabled= ? AND uploaded / downloaded < ? AND downloaded >= ?", [_UPLOADER, 'no', 'yes', Config::get('RATIOWARNMINRATIO'), $downloaded])->fetchAll();
@@ -155,6 +160,7 @@ class Cleanup
         }
     }
 
+    // Warning Expired
     public static function expiredwarn()
     {
         // REMOVE EXPIRED WARNINGS
@@ -169,6 +175,7 @@ class Cleanup
         }
     }
 
+    // Set User Warned
     public static function iswarned()
     {
         // UPDATE USERS THAT STILL HAVE ACTIVE WARNINGS
@@ -198,12 +205,13 @@ class Cleanup
         }
     }
 
+    // GIVE INVITES ACCORDING TO RATIO/GIGS (max 20)
     public static function autoinvite()
     {
-        // GIVE INVITES ACCORDING TO RATIO/GIGS (max 20)
         self::autoinvites(14, 1, 4, 0.90, 2, 20);
     }
 
+    // Set Hit & Runs
     public static function hitnrun()
     {
         $timenow = TimeDate::gmtime();
@@ -268,6 +276,7 @@ class Cleanup
         endif;
     }
     
+    // Set Auto Promotion / Demotion
     public static function autopromote() {
         $minratio = 0.9; # ratio for demotion to LEECHE
         $gigs = 50 * 1073741824; # 50 GB

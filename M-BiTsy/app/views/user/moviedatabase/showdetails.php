@@ -17,20 +17,24 @@
 
 <div class="ttform">
 <div class="text-center"> <?php
-       
-       echo '<a id="tvShowInfo"><h3>Full TVShow Info</h3></a>';
-        $tvShow = $data['tmdb']->getTVShow($data['id']);
-        echo '<b>' . $tvShow->getName() . '</b><br>';
-        echo 'ID<br>' . $tvShow->getID() . '</br>';
-        echo 'Overview<br>' . $tvShow->getOverview() . '<br>';
-        echo 'Number of Seasons<br>' . $tvShow->getNumSeasons() . '</br>';
-        echo 'Seasons<br>';
-        $seasons = $tvShow->getSeasons();
-        foreach ($seasons as $season) {
-            echo '<a href="'.URLROOT.'/moviedatabase/season?id=' . $season->getID() . '">Season ' . $season->getSeasonNumber() . '</a><br>';
-        }
-        echo '<img src="' . $data['tmdb']->getImageURL('w185') . $tvShow->getPoster() . '"/>';
-
-?>
+    TMDBS::getSerie($data['id']); ?>
+                
+    <b> Plot : </b><?php echo $_data["plot"] ?><br><br>
+    <b> Actors : </b><br>
+    <div class='row'>  <?php
+       $casting = explode('&', $_data["actor"]);
+       for ($i = 0; $i <= 3; $i++) {
+         list($pseudo, $role, $image) = explode("*", $casting[$i]);;
+         print("<div class='col-3'>".$pseudo . "<br>");
+         print(" <img class='avatar3' src='" . $image . "' /><br>");
+         print("".$role . "<br></div>");
+       } ?>
+    </div>
+    <b> Status : </b><?php echo $_data["status"] ?> <br>
+    <b> Date : </b><?php echo $_data["date"] ?> <br>
+    <b> Creator : </b><?php echo $_data["creator"] ?><br>
+    <b> Genre : </b><?php echo $_data["genre"] ?><br>
+    <b> Seasons : </b><?php echo $_data["season"] ?> (<?php echo $_data["episode"] ?> épisodes) <br>
+    <br>
 </div>
 </div>

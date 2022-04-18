@@ -12,13 +12,13 @@ if ($data['id']) { ?>
 } ?>
     <label for="template">Template:</label>&nbsp;
     <select name="template">
-    <?php  Helper::echotemplates(); ?>
+    <?php  Messages::echotemplates(); ?>
     </select><br>
     
     <label for="subject">Subject:</label>&nbsp;
     <input type="text" name="subject" size="50" placeholder="Subject" id="subject"><br>
     </center>
-    <?php print textbbcode("form", "body", "$body");?><br>
+    <?php print textbbcode("form", "body");?><br>
 <center>
     <button type="submit" class="btn-sm ttbtn" name="Update" value="create">Create</button>&nbsp;
     <label>Save Copy In Outbox</label>

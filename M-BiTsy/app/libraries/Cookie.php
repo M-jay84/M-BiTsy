@@ -1,17 +1,20 @@
 <?php
+
 class Cookie
 {
+
+    // Destroy All Cookies
     public static function destroyAll()
     {
-        setcookie("id", null, time() - 7000000, "/");
-        setcookie("password", null, time() - 7000000, "/");
-        setcookie("key_token", null, time() - 7000000, "/");
-        setcookie("PHPSESSID", null, time() - 7000000, "/");
+        setcookie("id", "", time() - 7000000, "/");
+        setcookie("password", "", time() - 7000000, "/");
+        setcookie("PHPSESSID", "", time() - 7000000, "/");
         $_SESSION = array();
         unset($_SESSION);
         @session_destroy();
     }
 
+    // Set Cookie Values
     public static function set($name, $value, $expiry)
     {
         if (setcookie($name, $value, time() + $expiry, "/")) {
@@ -20,13 +23,14 @@ class Cookie
         return false;
     }
 
-    public static function setAll($id, $pass, $token)
+    // Set All Cookie Values
+    public static function setAll($id, $pass)
     {
         self::set('id', $id, 5485858, "/");
         self::set('password', $pass, 5485858, "/");
-        self::set("key_token", $token, 5485858, "/");
     }
 
+    // Create CSRF Cookie
     public static function csrf_token()
 	{
 		// Check if a token is present for the current session
@@ -39,24 +43,30 @@ class Cookie
         return $token;
     }
 
+    // Check CSRF Cookie
     public static function csrf_check()
 	{
-		if (!$_POST["csrf_token"] == $_COOKIE["csrf_token"]) {
+		// return true;
+        
+        if (!$_POST["csrf_token"] == $_COOKIE["csrf_token"]) {
             // Reset token
-            setcookie("csrf_token", null, time() - 7000000, "/");
+            setcookie("csrf_token", "", time() - 7000000, "/");
             Redirect::autolink(URLROOT . "/logout", Lang::T("CSRF token validation failed"));
             return false;
         } else {
-            setcookie("csrf_token", null, time() - 7000000, "/");
+            setcookie("csrf_token", "", time() - 7000000, "/");
             return true;
-        } 
+        }
+        
     }
 
-	public static function get($name) {
+	// Get Cookie
+    public static function get($name) {
 		if (isset($_COOKIE[$name])) {
             return $_COOKIE[$name];
         } else {
             return false;
         }
 	}
+
 }

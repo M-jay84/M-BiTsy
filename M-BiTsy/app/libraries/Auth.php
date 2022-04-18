@@ -3,17 +3,19 @@
 class Auth
 {
 
+    // Authorize User
     public static function user($class = 0, $force = 0, $autoclean = false)
-    {
+    {  
         // Check Ip
         self::ipBanned();
-        // Check Token
-        Cookie::csrf_token();
+
         // Check Cookies
-        if (strlen(Cookie::get("password")) != 60 || !is_numeric($_COOKIE["id"]) || $_COOKIE["key_token"] != self::loginString()) {
+        if (strlen(Cookie::get("password")) != 60 || !is_numeric($_COOKIE["id"])) {
             self::isLoggedIn($force);
             return;
+
         } else {
+
             // Is User A Member
             try {
                 $row = DB::run("SELECT * FROM `users` 
@@ -26,8 +28,10 @@ class Auth
                 Cookie::destroyAll();
                 Redirect::autolink(URLROOT . "/logout", 'Issue With User Auth');
             }
+
 			// Site closeed
 			self::isClosed($row['class']);
+
             // Now Compare Checks
             if ($row['password'] != $_COOKIE['password']) {
                 Redirect::to(URLROOT . "/logout");
@@ -38,7 +42,8 @@ class Auth
             if ($class != 0 && $class > $row['class']) {
                 Redirect::autolink(URLROOT . "/index", Lang::T("SORRY_NO_RIGHTS_TO_ACCESS"));
             }
-            // User So Update & Set Seesion
+
+            // User So Update & Set Session
             if ($row) {
                 $where = Users::where($_SERVER['REQUEST_URI'], $row["id"], 0);
                 DB::update('users', ['last_access' =>TimeDate::get_date_time(), 'ip' =>Ip::getIP(),'page' =>$where], ['id' => $row["id"]]);
@@ -47,21 +52,17 @@ class Auth
                 $_SESSION["loggedin"] = true;
                 unset($row);
             }
+
             // Run Cleanup
             if ($autoclean) {
                 Cleanup::autoclean();
             }
+
         }
 
     }
 
-    private static function loginString()
-    {
-        $ip = Ip::getIP();
-        $browser = Ip::agent();
-        return md5($browser . $browser);
-    }
-
+    // Check Ip Banned
     public static function ipBanned()
     {
         $ip = Ip::getIP();
@@ -71,6 +72,7 @@ class Auth
         Ip::checkipban($ip);
     }
 
+    // Check Logged In Level
     public static function isLoggedIn($force = 0)
     {
         // If force 0 guest view, force 1 use config Config::get('MEMBERSONLY'], force 2 always hidden from guest
@@ -85,6 +87,7 @@ class Auth
         }
     }
 
+    // Check Site Closed
     public static function isClosed($class = false)
     {
         if (!Config::get('SITE_ONLINE')) {

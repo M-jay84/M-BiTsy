@@ -17,7 +17,6 @@ $GLOBALS['tstart'] = array_sum(explode(" ", microtime()));
     <link href="<?php echo URLROOT; ?>/assets/font-awesome/css/font-awesome.css" rel="stylesheet">
     <!-- TT Custom CSS, any edits must go here-->
     <link href="<?php echo URLROOT; ?>/assets/themes/<?php echo (Users::get('stylesheet') ?: Config::get('DEFAULTTHEME')) ?>/customstyle.css" rel="stylesheet">
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/monokai-sublime.min.css">
   </head>
 <body>
   

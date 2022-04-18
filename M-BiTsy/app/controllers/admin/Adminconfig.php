@@ -1,13 +1,15 @@
 <?php
+
 class Adminconfig
 {
 
     public function __construct()
     {
+        // Verify User/Staff
         Auth::user(_ADMINISTRATOR, 2);
     }
 
-    // Check admin name !!!
+    // Check Admin !!!
     public function check()
     {
         if (!in_array(Users::get("username"), _OWNERS)) {
@@ -18,32 +20,40 @@ class Adminconfig
         }
     }
 
-    // Load The Form
+    // Config Default Page
     public function index()
     {
+        // Check Admin !!!
         $this->check();
+
+        // Init Data
         $data = [
             'title' => 'Config',
         ];
-        View::render('admincp/config', $data, 'admin');
+
+        // Load View
+        View::render('config/index', $data, 'admin');
     }
 
-    // Load The Form
+    // Check Input For True/False
     public function checkiftrue($var)
     {
         $check = $var == 'true' ? true : false;
         return $check;
     }
 
-    // I'M LAZY SO LETS UPDATE ALL AT ONCE
+    // Config Form Submit
     public function submit()
     {
-        //var_dump($_POST);die();
+        // Check Admin !!!
         $this->check();
+        
+        // Check Input
         if (!$_POST) {
             Redirect::to(URLROOT . "/logout");
         }
 
+        // Init Data
         $data = array (
             'SITENAME' => $_POST['SITENAME'],
             '_SITEDESC' => $_POST['_SITEDESC'],
@@ -153,12 +163,17 @@ class Adminconfig
         Redirect::autolink(URLROOT . "/adminconfig", 'Settings Saved');
     }
 
+    // Backup Form Submit
     public function backup()
     {
+        // Check Admin !!!
         $this->check();
+
+        // Get Files
         $file = APPROOT.'/config/settings.php';
         $newfile = APPROOT.'/config/settings.php.bak';
         
+        // Create Backup
         if (!copy($file, $newfile)) {
             Redirect::autolink(URLROOT . "/adminconfig", 'Backup Failed');
         }

@@ -4,7 +4,7 @@ if ($_SESSION['loggedin'] === true && Users::get("control_panel") == "yes") {
     ?>
     <select name="admin" style="width: 95%" onchange="if(this.options[this.selectedIndex].value != -1){ window.location = this.options[this.selectedIndex].value; }">
     <option value="-1">Navigation</option>
-    <option value="<?php echo URLROOT; ?>/adminuser/advancedsearch">Advanced User Search</option>
+    <option value="<?php echo URLROOT; ?>/adminsearch/advanced">Advanced User Search</option>
     <option value="<?php echo URLROOT; ?>/adminavatar">Avatar Log</option>
     <option value="<?php echo URLROOT; ?>/adminbackup">Backups</option>
     <option value="<?php echo URLROOT; ?>/adminban/ip">Banned Ip's</option>
@@ -30,9 +30,9 @@ if ($_SESSION['loggedin'] === true && Users::get("control_panel") == "yes") {
     <option value="<?php echo URLROOT; ?>/admintorrent">Torrents</option>
     <option value="<?php echo URLROOT; ?>/admingroup&amp;do=view">Usergroups View</option>
     <option value="<?php echo URLROOT; ?>/adminwarning">Warned Users</option>
-    <option value="<?php echo URLROOT; ?>/adminuser/whoswhere">Who's Where</option>
+    <option value="<?php echo URLROOT; ?>/adminwhoswhere">Who's Where</option>
     <option value="<?php echo URLROOT; ?>/admincensor">Word Censor</option>
-    <option value="<?php echo URLROOT; ?>/adminforum">Forum Management</option>
+    <option value="<?php echo URLROOT; ?>/adminforumcat">Forum Management</option>
     </select>
     <?php
     Style::block_end();

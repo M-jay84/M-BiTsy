@@ -12,7 +12,7 @@ $acceptpms = $selectedid['acceptpms'] == "yes";
     print("&nbsp;&nbsp;<b>" . Lang::T("ACCEPT_PMS") . ":</b> <br>&nbsp;<input type='radio' name='acceptpms'" . ($acceptpms ? " checked='checked'" : "") .
     " value='yes' />&nbsp;&nbsp;<b>" . Lang::T("FROM_ALL") . "</b> <input type='radio' name='acceptpms'" .
     ($acceptpms ? "" : " checked='checked'") . " value='no' /><b>" . Lang::T("FROM_STAFF_ONLY") . "</b><br />&nbsp;&nbsp;<i>" . Lang::T("ACCEPTPM_WHICH_USERS") . "</i><br>");
-    print("<br>&nbsp;&nbsp;<b>" . Lang::T("ACCOUNT_PRIVACY_LVL") . ":</b> <br>&nbsp;&nbsp;" . Helper::priv("normal", "<b>" . Lang::T("NORMAL") . "</b>") . " " . Helper::priv("low", "<b>" . Lang::T("LOW") . "</b>") . " " . Helper::priv("strong", "<b>" . Lang::T("STRONG") . "</b>") . "<br />&nbsp;&nbsp;<i>" . Lang::T("ACCOUNT_PRIVACY_LVL_MSG") . "</i><br>");
+    print("<br>&nbsp;&nbsp;<b>" . Lang::T("ACCOUNT_PRIVACY_LVL") . ":</b> <br>&nbsp;&nbsp;" . Security::priv("normal", "<b>" . Lang::T("NORMAL") . "</b>") . " " . Security::priv("low", "<b>" . Lang::T("LOW") . "</b>") . " " . Security::priv("strong", "<b>" . Lang::T("STRONG") . "</b>") . "<br />&nbsp;&nbsp;<i>" . Lang::T("ACCOUNT_PRIVACY_LVL_MSG") . "</i><br>");
     print("<br>&nbsp;&nbsp;<b>" . Lang::T("EMAIL_NOTIFICATION") . ":</b><br>&nbsp;&nbsp;<input type='checkbox' name='pmnotif' " . (strpos($selectedid['notifs'], "[pm]") !== false ? " checked='checked'" : "") .
     " value='yes' /><b>" . Lang::T("PM_NOTIFY_ME") . "</b><br />&nbsp;&nbsp;<i>" . Lang::T("EMAIL_WHEN_PM") . "</i><br>");
     print("<br>&nbsp;&nbsp;<b>" . Lang::T("THEME") . ":</b><br>&nbsp;&nbsp;<select name='stylesheet'>$data[stylesheets]</select><br>");
@@ -27,7 +27,7 @@ $acceptpms = $selectedid['acceptpms'] == "yes";
 <div class="col-6"><br>
     <?php
     print("<b>" . Lang::T("AVATAR_LINK") . ":</b> &nbsp;<input type='text' class='form-control' name='avatar' size='50' value=\"" . htmlspecialchars($selectedid["avatar"]) .
-    "\" />&nbsp;&nbsp;\n<a href=" . URLROOT . "/account/avatar?id=".$data['id']."><b>Or upload file (90px x 90px)</b></a><br />");
+    "\" />&nbsp;&nbsp;\n<a href=" . URLROOT . "/avatar?id=".$data['id']."><b>Or upload file (90px x 90px)</b></a><br />");
     print("<br><b>" . Lang::T("CUSTOM_TITLE") . ":</b><input type='text' class='form-control' name='title' size='50' value=\"" . strip_tags($selectedid["title"]) .
     "\" />&nbsp;&nbsp;\n <i>" . Lang::T("HTML_NOT_ALLOWED") . "</i><br>");
     print("<br><b>" . Lang::T("SIGNATURE") . ":</b><textarea name='signature'  class='form-control' >" . htmlspecialchars($selectedid["signature"]) .

@@ -1,7 +1,9 @@
 <?php
+
 class Input
 {
 
+    // Check Input Exist
     public static function exist($type = "POST")
     {
         switch ($type) {
@@ -19,6 +21,7 @@ class Input
         }
     }
 
+    // Get Input Value
     public static function get($value)
     {
         if (isset($_POST[$value])) {

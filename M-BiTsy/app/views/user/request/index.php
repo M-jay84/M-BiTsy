@@ -20,13 +20,7 @@ for ($i = 0; $i < $data['num']; ++$i) {
     $arr = $data['res']->fetch(PDO::FETCH_ASSOC);
     $privacylevel = $arr["privacy"];
     $userratio = $arr["downloaded"] > 0 ? number_format($arr["uploaded"] / $arr["downloaded"], 1) : "---";
-    $res2 = DB::raw('users', 'username', ['id' =>$arr['filledby']]);
-    $arr2 = $res2->fetch(PDO::FETCH_ASSOC);
-    if ($arr2['username']) {
-        $filledby = Users::coloredname($arr['filledby']);
-    } else {
-        $filledby = " ";
-    }
+    $filledby = Users::coloredname($arr['filledby']);
     
     if ($privacylevel == "strong") {
         if (Users::get("class") >= 5) {

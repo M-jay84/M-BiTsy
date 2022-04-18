@@ -1,6 +1,6 @@
 <?php
 forumheader('New Topics');
-
+$n = 0;
 foreach ($data['res'] as $arr) {
     $topicid = $arr['id'];
     $forumid = $arr['forumid'];
@@ -8,20 +8,20 @@ foreach ($data['res'] as $arr) {
     if ($_SESSION['loggedin'] == true) {
         $a = DB::run("SELECT lastpostread FROM forum_readposts WHERE userid=? AND topicid=?", [Users::get('id'), $topicid])->fetch();
     }
-    if ($a && $a[0] == $arr['lastpost']) {
+    if ($a && $a['lastpostread'] == $arr['lastpost']) {
         continue;
     }
-    // Check access & get forum name
+    // Check access & get forum name // todo move sql
     $a = DB::run("SELECT name, minclassread, guest_read FROM forum_forums WHERE id=$forumid")->fetch();
     if (Users::get("class") < $a['minclassread'] && $a["guest_read"] == "no") {
         continue;
     }
-    ++$data['n'];
-    if ($data['n'] > 25) {
+    ++$n;
+    if ($n > 25) {
         break;
     }
     $forumname = $a['name'];
-    if ($data['n'] == 1) {
+    if ($n == 1) {
         ?>
         <div class='table'><table class='table table-striped' >
         <thead>
@@ -36,12 +36,12 @@ foreach ($data['res'] as $arr) {
     <td align='left'><a href='<?php echo URLROOT ?>/forum/view&amp;forumid=<?php echo $forumid ?>'><b><?php echo $forumname ?></b></a></td></tr>
     <?php
 }
-if ($data['n'] > 0) {
+if ($n > 0) {
     print("</tbody></table></div>\n");
-    if ($n > $data['n']) {
+    if ($n > $n) {
         print("<p>More than 25 items found, displaying first 25.</p>\n");
     }
-    print("<center><a href='" . URLROOT . "/forum?catchup=do'><b>Mark All Forums Read.</b></a></center>\n");
+    print("<center><a href='" . URLROOT . "/forum?do=catchup'><b>Mark All Forums Read.</b></a></center>\n");
 } else {
-    print("<b>Nothing found</b>");
+    print("<br><center><b>Nothing found</b></center>");
 }

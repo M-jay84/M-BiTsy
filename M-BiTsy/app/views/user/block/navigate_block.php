@@ -19,14 +19,14 @@ if ($_SESSION['loggedin'] || !Config::get('MEMBERSONLY')) {
 	}
     if ($_SESSION['loggedin'] == true && Users::get("view_users") == "yes") { ?>
 	<a href='<?php echo URLROOT; ?>/team/index' class="list-group-item"><i class="fa fa-chevron-right"></i> <?php echo Lang::T("TEAMS"); ?></a>
-	<a href='<?php echo URLROOT; ?>/group/members' class="list-group-item"><i class="fa fa-chevron-right"></i> <?php echo Lang::T("MEMBERS"); ?></a>
+	<a href='<?php echo URLROOT; ?>/members' class="list-group-item"><i class="fa fa-chevron-right"></i> <?php echo Lang::T("MEMBERS"); ?></a>
     <?php
 	} ?>
 	<a href='<?php echo URLROOT; ?>/rule' class="list-group-item"><i class="fa fa-chevron-right"></i> <?php echo Lang::T("SITE_RULES"); ?></a>
 	<a href='<?php echo URLROOT; ?>/faq' class="list-group-item"><i class="fa fa-chevron-right"></i> <?php echo Lang::T("FAQ"); ?></a>
     <?php
 	if ($_SESSION['loggedin'] == true && Users::get("view_users") == "yes") {?>
-	<a href='<?php echo URLROOT; ?>/group/staff' class="list-group-item"><i class="fa fa-chevron-right"></i> <?php echo Lang::T("STAFF"); ?></a>
+	<a href='<?php echo URLROOT; ?>/staff' class="list-group-item"><i class="fa fa-chevron-right"></i> <?php echo Lang::T("STAFF"); ?></a>
     <?php
 	} ?>
     </ul>

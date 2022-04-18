@@ -1,19 +1,24 @@
 <?php
+
 class Peer
 {
+
     public function __construct()
     {
+        // Verify User/Guest
         Auth::user(0, 2);
     }
 
+    // No Default Page
     public function index()
     {
         Redirect::to(URLROOT);
     }
 
-    // seeding on profile
+    // User Seeding (Profile) Default Page
     public function seeding()
     {
+        // Check User Input
         $id = (int) Input::get("id");
 
         if (!Validate::Id($id)) {
@@ -24,18 +29,22 @@ class Peer
             Redirect::autolink(URLROOT, Lang::T("NO_USER_VIEW"));
         }
 
+        // Check User Input
         $user =  DB::raw('users', '*', ['id'=>$id])->fetch();
         if (!$user) {
             Redirect::autolink(URLROOT, Lang::T("NO_USER_WITH_ID") . " $id.");
         }
+
         if (($user["enabled"] == "no" || ($user["status"] == "pending"))) {
             Redirect::autolink(URLROOT, Lang::T("NO_ACCESS_ACCOUNT_DISABLED"));
         }
 
+        // Get Peer Data
         $res = DB::raw('peers', 'torrent, uploaded, downloaded', ['userid'=>$id,'seeder'=>'yes']);
         if ($res->rowCount() > 0) {
             $seeding = peerstable($res) ?? '';
         }
+
         $res = DB::raw('peers', 'torrent, uploaded, downloaded', ['userid'=>$id,'seeder'=>'no']);
         if ($res->rowCount() > 0) {
             $leeching = peerstable($res);
@@ -43,6 +52,7 @@ class Peer
 
         $title = sprintf(Lang::T("USER_DETAILS_FOR"), Users::coloredname($id));
         
+        // Init Data
         $data = [
             'id' => $id,
             'title' => $title,
@@ -52,16 +62,17 @@ class Peer
             'username' => $user["username"],
             'privacy' => $user["privacy"],
         ];
+
+        // Load View
         View::render('peer/seeding', $data, 'user');
     }
 
-    // uploaded on profile
+    // User Uploading (Profile) Default Page
     public function uploaded()
     {
-        // Get Id
+        // Check User Input
         $id = (int) Input::get("id");
 
-        // Run Some Checks
         if (!Validate::Id($id)) {
             Redirect::autolink(URLROOT, "Bad ID.");
         }
@@ -84,7 +95,7 @@ class Peer
             $where = "AND anon='no'";
         }
 
-        // Count For Pager
+        // Pagination
         $count = DB::run("SELECT COUNT(*) FROM torrents WHERE owner='$id' $where")->fetchColumn();
         unset($where);
         $orderby = "ORDER BY id DESC";
@@ -99,7 +110,7 @@ class Peer
         // Set Title
         $title = sprintf(Lang::T("USER_DETAILS_FOR"), Users::coloredname($id));
 
-        // Send Data To View
+        // Init Data
         $data = [
             'id' => $id,
             'title' => $title,
@@ -107,23 +118,27 @@ class Peer
             'res' => $res,
             'pager' => $pager,
         ];
+
+        // Load View
         View::render('peer/uploaded', $data, 'user');
     }
 
-    // peers on torrent
+    // Torrent Peers (Torrent) Default Page
     public function peerlist()
     {
+        // Check User Input
         $id = (int) Input::get("id");
 
         if (!Validate::Id($id)) {
             Redirect::autolink(URLROOT, Lang::T("THATS_NOT_A_VALID_ID"));
         }
 
+        // Check User Input
         if (Users::get("view_torrents") == "no" && Config::get('MEMBERSONLY')) {
             Redirect::autolink(URLROOT, Lang::T("NO_TORRENT_VIEW"));
         }
 
-        //GET ALL MYSQL VALUES FOR THIS TORRENT
+        // Get Torrent Data
         $res = DB::run("SELECT torrents.anon, torrents.seeders, torrents.banned, torrents.tmdb, torrents.tube, torrents.leechers, torrents.info_hash, torrents.filename, torrents.nfo, torrents.last_action, torrents.numratings, torrents.name, torrents.owner, torrents.save_as, torrents.descr, torrents.visible, torrents.size, torrents.added, torrents.views, torrents.hits, torrents.times_completed, torrents.id, torrents.type, torrents.external, torrents.image1, torrents.image2, torrents.announce, torrents.numfiles, torrents.freeleech, IF(torrents.numratings < 2, NULL, ROUND(torrents.ratingsum / torrents.numratings, 1)) AS rating, torrents.numratings, categories.name AS cat_name, torrentlang.name AS lang_name, torrentlang.image AS lang_image, categories.parent_cat as cat_parent, users.username, users.privacy FROM torrents LEFT JOIN categories ON torrents.category = categories.id LEFT JOIN torrentlang ON torrents.torrentlang = torrentlang.id LEFT JOIN users ON torrents.owner = users.id WHERE torrents.id = $id");
         $row = $res->fetch(PDO::FETCH_ASSOC);
         $size = $row['size'];
@@ -131,18 +146,22 @@ class Peer
         $title = Lang::T("TORRENT_DETAILS_FOR") . " \"" . $shortname . "\"";
 
         if ($row["external"] != 'yes') {
+            // Get Peer Data
             $query = DB::raw('peers', '*', ['torrent'=>$id], 'ORDER BY seeder DESC');
             $result = $query->rowCount();
             
             if ($result == 0) {
                 Redirect::autolink(URLROOT, Lang::T("NO_ACTIVE_PEERS") . " $id.");
             } else {
+                // Init Data
                 $data = [
                     'id' => $id,
                     'title' => $title,
                     'query' => $query,
                     'size' => $size,
                 ];
+
+                // Load View
                 View::render('peer/peerlist', $data, 'user');
             }
         } else {
@@ -150,15 +169,17 @@ class Peer
         }
     }
 
-    // navbar popout seeding
+    // User Seeding (navbar) Popout Window
     public function popoutseed()
     {
+        // Check User Input
         $id = (int) Input::get("id");
 
         if ($id != Users::get("id")) {
             echo Lang::T("FORUMS_NOT_ALLOWED");
         }
 
+        // Get Peer Data
         $res = Peers::seedingTorrent($id, 'yes');
         if ($res->rowCount() > 0) {
             $seeding = peerstable($res);
@@ -173,15 +194,17 @@ class Peer
         }
     }
 
-    // popout leech
+    // User Leeching (navbar) Popout Window
     public function popoutleech()
     {
+        // Check User Input
         $id = (int) Input::get("id");
 
         if ($id != Users::get("id")) {
             echo Lang::T("FORUMS_NOT_ALLOWED");
         }
         
+        // Get Peer Data
         $res = Peers::seedingTorrent($id, 'no');
         if ($res->rowCount() > 0) {
             $leeching = peerstable($res);

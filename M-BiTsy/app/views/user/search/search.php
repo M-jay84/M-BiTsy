@@ -50,7 +50,7 @@ if (Config::get('ALLOWEXTERNAL')) { ?>
     <select name="lang">
     <option value="0"><?php echo "(" . Lang::T("ALL") . ")"; ?></option>
     <?php
-    $lang = Lang::langlist();
+    $lang = Torrentlang::langlist();
     $langdropdown = "";
     foreach ($lang as $lang) {
         $langdropdown .= "<option value=\"" . $lang["id"] . "\"";

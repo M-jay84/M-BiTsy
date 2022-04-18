@@ -1,11 +1,15 @@
 <?php
+
 class Scrape
 {
+    
     public function __construct()
     {
+        // Verify User/Guest
         Auth::user(0, 0);
     }
     
+    // Scrape Torrent Submit
     public function index()
     {
         //disable error reporting
@@ -58,6 +62,7 @@ class Scrape
         ob_end_flush();
     }
 
+    // Scrape External Torrent Submit
     public function external()
     {
         $id = Input::get('id');
@@ -114,4 +119,5 @@ class Scrape
             }
         }
     }
+
 }

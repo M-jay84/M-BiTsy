@@ -17,16 +17,20 @@
 
 <div class="ttform">
 <div class="text-center"> <?php
-        // Full Movie Info
-        echo '<a id="movieInfo"><h3>Full Movie Info</h3></a>';
-        $movie = $data['tmdb']->getMovie($data['id']);
-        echo '<b>' . $movie->getTitle() . '</b><br>';
-        echo 'ID<br>' . $movie->getID() . '<br>';
-        echo 'Tagline<br>' . $movie->getTagline() . '<br>';
-        echo 'cast<br>';
-        echo 'Trailer<br> <a href="https://www.youtube.com/watch?v=' . $movie->getTrailer() . '">link</a><br>';
-        echo '<img src="' . $data['tmdb']->getImageURL('w185') . $movie->getPoster() . '"/><br>';
-
-?>
+    $_data = TMDBS::getFilm($id_tmdb); ?>
+                
+    <b> Plot : </b><?php echo $_data["plot"] ?> <br><br>
+    <b> Actors : </b><br>
+    <div class='row'>  <?php
+    $casting = explode('&', $_data["actors"]);
+    for ($i = 0; $i <= 3; $i++) {
+        list($pseudo, $role, $image) = explode("*", $casting[$i]);;
+        print("<div class='col-3'>".$pseudo . "<br>");
+        print(" <img class='avatar3' src='" . $image . "' /><br>");
+        print("".$role . "<br></div>");
+    } ?>
+    </div><br>
+    <b> Duration : </b><?php echo $_data["duration"] ?> <br>
+    <b> Genre : </b><?php echo $_data["genre"] ?> <br>
 </div>
 </div>

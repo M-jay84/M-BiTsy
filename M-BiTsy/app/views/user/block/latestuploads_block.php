@@ -3,13 +3,13 @@ if ($_SESSION['loggedin'] == true || !Config::get('MEMBERSONLY')) {
     Style::block_begin(Lang::T("LATEST_TORRENTS"));
     $expire = 900; // time in seconds
     $TTCache = new Cache();
-    if (($latestuploadsrecords = $TTCache->Get("latestuploadsblock", $expire)) === false) {
+    if (($latestuploadsrecords = $TTCache->Get("block/latestuploadsblock", $expire)) === false) {
         $latestuploadsquery = DB::raw('torrents', 'id, name, size, seeders, leechers', ['banned'=>'no','visible' =>'yes'], ' ORDER BY id DESC LIMIT 5');
         $latestuploadsrecords = array();
         while ($latestuploadsrecord = $latestuploadsquery->fetch(PDO::FETCH_ASSOC)) {
             $latestuploadsrecords[] = $latestuploadsrecord;
         }
-        $TTCache->Set("latestuploadsblock", $latestuploadsrecords, $expire);
+        $TTCache->Set("block/latestuploadsblock", $latestuploadsrecords, $expire);
     }
 
     if ($latestuploadsrecords) {

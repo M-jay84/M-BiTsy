@@ -89,9 +89,9 @@ function strtobytes($str)
 }
 
 // Active Link
-function activelink($page, $define = false)
+function activelink($page, $test = '')
 {
-    if ($define == true && $_GET['type'] == $page) {
+    if ($test == $page && isset($_GET['type']) == $page) {
         $active = 'btn btn-sm ttbtnactive';
         return $active;
     }
@@ -109,9 +109,9 @@ function usermenu($id, $page = false)
     <a href='<?php echo URLROOT; ?>/profile/edit?id=<?php echo $id; ?>'><button type="button" class="<?php echo activelink('profile/edit'); ?>">Edit</button></a>&nbsp;
     <?php }?>
     <?php if (Users::get("id") == $id) {?>
-    <a href='<?php echo URLROOT; ?>/account/password?id=<?php echo $id; ?>'><button type="button" class="<?php echo activelink('account/password'); ?>">Password</button></a>
-    <a href='<?php echo URLROOT; ?>/account/email?id=<?php echo $id; ?>'><button type="button" class="<?php echo activelink('account/email'); ?>">Email</button></a>
-    <a href='<?php echo URLROOT; ?>/message/overview'><button type="button" class="<?php echo $messageactive; ?>">Messages</button></a>
+    <a href='<?php echo URLROOT; ?>/changepass?id=<?php echo $id; ?>'><button type="button" class="<?php echo activelink('changepass'); ?>">Password</button></a>
+    <a href='<?php echo URLROOT; ?>/confirmemail?id=<?php echo $id; ?>'><button type="button" class="<?php echo activelink('confirmemail'); ?>">Email</button></a>
+    <a href='<?php echo URLROOT; ?>/mailbox/overview'><button type="button" class="<?php echo $messageactive; ?>">Messages</button></a>
     <a href='<?php echo URLROOT; ?>/bonus'><button type="button" class="<?php echo activelink('bonus'); ?>">Seed Bonus</button></a>
     <a href='<?php echo URLROOT; ?>/bookmark'><button type="button" class="<?php echo activelink('bookmarks'); ?>">Bookmarks</button></a>
     <?php }?>
@@ -190,6 +190,7 @@ function sqlesc($x)
     return $x;
 }
 
+// Display Extension Icon
 function getexttype($ext = '')
 {
     $ext = strtolower($ext);
@@ -211,6 +212,7 @@ function getexttype($ext = '')
     return $filetype_icon;
 }
 
+// Get Attachment
 function get_attachment($id)
 {
     $sql = DB::raw('attachments', '*', ['content_id' =>$id]);
@@ -221,7 +223,7 @@ function get_attachment($id)
             if ($extension == 'zip') {
                 $daimage = UPLOADDIR . "/attachment/$row7[file_hash].data";
                 if (file_exists($daimage)) {
-                    print(" <a class='btn btn-sm ttbtn' href=\"" . URLROOT . "/download/attachment?id=$row7[id]&amp;hash=" . rawurlencode($row7["file_hash"]) . "\"><i class='fa fa-file-archive-o tticon' ></i>Download</a><br>");
+                    print(" <a class='btn btn-sm ttbtn' href=\"" . URLROOT . "/attachment?id=$row7[id]&amp;hash=" . rawurlencode($row7["file_hash"]) . "\"><i class='fa fa-file-archive-o tticon' ></i>Download</a><br>");
                 } else {
                     print("no zip<br>");
                 }
@@ -229,15 +231,16 @@ function get_attachment($id)
                 $daimage = "uploads/thumbnail/$row7[file_hash].jpg";
                 if (file_exists($daimage)) {
 					$switchimage = UPLOADDIR . "/attachment/$row7[file_hash].data"; ?> 
-					<a href='<?php echo URLROOT ?>/download/images?hash=<?php echo $row7['file_hash'] ?>'><img alt="test image" src="<?php echo data_uri($switchimage, $row7['filename']); ?>" height="100px" width="100px" ></a> <?php
+					<a href='<?php echo URLROOT ?>/attachment/images?hash=<?php echo $row7['file_hash'] ?>'><img alt="test image" src="<?php echo data_uri($switchimage, $row7['filename']); ?>" height="100px" width="100px" ></a> <?php
                 } else {
-                    print("<a href=\"" . URLROOT . "/download/attachment?id=$row7[id]&amp;hash=" . rawurlencode($row7["file_hash"]) . "\"><img src='" . URLROOT . "/thumb/$row7[file_hash].jpg' height='110px' width='110px' border='0' alt='' /></a><br>");
+                    print("<a href=\"" . URLROOT . "/attachment?id=$row7[id]&amp;hash=" . rawurlencode($row7["file_hash"]) . "\"><img src='" . URLROOT . "/thumb/$row7[file_hash].jpg' height='110px' width='110px' border='0' alt='' /></a><br>");
                 }
             }
         }
     }
 }
 
+// Check If File Array Exist
 function any_uploaded($name) {
   foreach ($_FILES[$name]['error'] as $ferror) {
     if ($ferror != UPLOAD_ERR_NO_FILE) {
@@ -247,6 +250,7 @@ function any_uploaded($name) {
   return false;
 }
 
+// Set Attachment
 function set_attachmnent($topicid, $postid)
 {
     if (any_uploaded('upfile')):
@@ -287,7 +291,7 @@ function set_attachmnent($topicid, $postid)
     endif;
 }
 
-//convert multi to single array
+// Convert Multi Array To Assoc
 function array_flatten($array) {
     if (!is_array($array)) {
       return FALSE;
@@ -304,6 +308,7 @@ function array_flatten($array) {
     return $result;
 }
 
+// Get Comment Details
 function userpostdetails($row, $type = null)
 {
     $postername = Users::coloredname($row["id"]);
@@ -332,12 +337,12 @@ function userpostdetails($row, $type = null)
 
     $edit = null;
     if (Users::get("edit_torrents") == "yes" || Users::get("edit_news") == "yes" || Users::get('id') == $row['user']) {
-        $edit = '<a href="' . URLROOT . '/post/edit&amp;postid=' . $row['id'] . '"><i class="fa fa-pencil" title="Edit" aria-hidden="true"></i></a>&nbsp;';
+        $edit = '<a href="' . URLROOT . '/post/edit?postid=' . $row['id'] . '"><i class="fa fa-pencil" title="Edit" aria-hidden="true"></i></a>&nbsp;';
     }
 
     $delete = null;
     if (Users::get("delete_torrents") == "yes" || Users::get("delete_news") == "yes") {
-        $delete = '<a href="' . URLROOT . '/post/delete&amp;postid=' . $row['id'] . '&sure=0"><i class="fa fa-trash" title="Delete" aria-hidden="true"></i></a>&nbsp;';
+        $delete = '<a href="' . URLROOT . '/post/delete?postid=' . $row['id'] . '&sure=0"><i class="fa fa-trash" title="Delete" aria-hidden="true"></i></a>&nbsp;';
     }
 
     $editcomment = null;
@@ -368,6 +373,7 @@ function userpostdetails($row, $type = null)
 
 }
 
+// Comments Title
 function commentlinktitle($row)
 {
     if ($row['type'] == 'torrent' && $row['torrent'] > 0) {

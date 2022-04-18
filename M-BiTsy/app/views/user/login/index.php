@@ -6,7 +6,7 @@ if (Config::get('MEMBERSONLY')) { ?>
 <div class="ttform">
 
 <form method="post" class="form-horizontal" action="<?php echo URLROOT; ?>/login/submit" autocomplete="off"><br>
-    <input type="hidden" name="csrf_token" value="<?php echo $data['token'] ?>" />
+    <input type="hidden" name="csrf_token" value="<?php echo Cookie::csrf_token() ?>" />
 
     <div class="form-group row">
         <label for="username" class="col-form-label col-3"><?php echo Lang::T("USERNAME"); ?>:</label>

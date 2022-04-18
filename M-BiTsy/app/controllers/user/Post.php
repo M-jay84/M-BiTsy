@@ -1,15 +1,15 @@
 <?php
+
 class Post
 {
 
     public function __construct()
     {
+        // Verify User/Guest
         Auth::user(0, 1);
     }
 
-    /**
-     * Lets show the validation in one place so we dont have to repeat :)
-     */
+    // Validate User/Guest
     private function validForumUser($extra = false)
     {
         if (!Config::get('FORUMS')) {
@@ -23,116 +23,143 @@ class Post
         }
     }
 
+    // No Default Page
     public function index()
     {
         Redirect::to(URLROOT . "/forum");
     }
 
-    /**
-     *Reply To Post.
-     */
+    // Post Reply Default Page
     public function reply()
     {
+        // Validate User/Guest
         $this->validForumUser();
+
+        // Check User Input
         $topicid = Input::get("topicid");
 
         if (!Validate::Id($topicid)) {
             Redirect::autolink(URLROOT . "/forum", sprintf(Lang::T("FORUMS_NO_ID_FORUM")));
         }
 
+        // Get Topic Data
         $arr = DB::all('forum_topics', '*', ['id'=>$topicid]);
 
+        // Init Data
         $data = [
             'title' => Lang::T("Reply"),
             'topicid' => $topicid,
             'arr' => $arr,
         ];
-        View::render('forum/post/reply', $data, 'user');
+
+        // Load View
+        View::render('post/reply', $data, 'user');
     }
 
-    /**
-     * Edit a Post.
-     */
+    // Post Edit Default Page
     public function edit()
     {
+        // Validate User/Guest
         $this->validForumUser();
+
+        // Check User Input
         $postid = Input::get("postid");
 
         if (!Validate::Id($postid)) {
             Redirect::autolink(URLROOT . "/forum", Lang::T("FORUMS_DENIED"));
         }
 
+        // Get Topic Data
         $res = DB::raw('forum_posts', '*', ['id'=>$postid]);
         if ($res->rowCount() != 1) {
             Redirect::autolink(URLROOT . "/forum", "Where is id $postid");
         }
         $arr = $res->fetch(PDO::FETCH_ASSOC);
+
+        // Check User
         if (Users::get("id") != $arr["userid"] && Users::get("delete_forum") != "yes" && Users::get("edit_forum") != "yes") {
             Redirect::autolink(URLROOT . "/forum", Lang::T("FORUMS_DENIED"));
         }
 
+        // Init Data
         $data = [
             'title' => Lang::T('Edit Post'),
             'postid' => $postid,
             'body' => $arr['body'],
         ];
-        View::render('forum/post/edit', $data, 'user');
+
+        // Load View
+        View::render('post/edit', $data, 'user');
     }
 
-    /**
-     * Edit Submit.
-     */
+    // Post Edit Form Submit
     public function submit()
     {
+        // Validate User/Guest
         $this->validForumUser();
+
+        // Check User Input
         $postid = Input::get("postid");
 
+        // Check Input Else Return To Form
         if (Input::exist()) {
+            // Check User Input
             $body = $_POST['body'];
+            $body = htmlspecialchars_decode($body);
+
+            // Check Correct Input
             if ($body == "") {
                 Redirect::autolink(URLROOT . "/forum", "Body cannot be empty!");
             }
 
+            // Get Topic Data
             $res = DB::raw('forum_posts', '*', ['id'=>$postid]);
             if ($res->rowCount() != 1) {
                 Redirect::autolink(URLROOT . "/forum", "Where is this id $postid");
             }
             $arr = $res->fetch(PDO::FETCH_ASSOC);
+            
+            // Check User
             if (Users::get("id") != $arr["userid"] && Users::get("delete_forum") != "yes" && Users::get("edit_forum") != "yes") {
                 Redirect::autolink(URLROOT . "/forum", Lang::T("FORUMS_DENIED"));
             }
 
-            $body = htmlspecialchars_decode($body);
-            $editedat = TimeDate::get_date_time();
-            DB::update('forum_posts', ['body'=>$body, 'editedat'=>$editedat, 'editedby'=>Users::get('id')], ['id'=>$postid]);
+            
+            // Edit Post
+            DB::update('forum_posts', ['body'=>$body, 'editedat'=>TimeDate::get_date_time(), 'editedby'=>Users::get('id')], ['id'=>$postid]);
             set_attachmnent($arr['topicid'], $postid);
             Redirect::autolink(URLROOT . "/topic?topicid=$arr[topicid]&page=$_POST[page]#post$postid", "Post was edited successfully.");
+
         } else {
             Redirect::autolink(URLROOT, Lang::T("YOU_DID_NOT_ENTER_ANYTHING"));
         }
     }
 
     
-    /**
-     * Delete a Post.
-     */
+    // Post Delete Submit
     public function delete()
     {
+        // Validate User/Guest
         $this->validForumUser();
+
+        // Check User Input
         $postid = Input::get("postid");
         $sure = Input::get("sure");
 
+        // Check User
         if (Users::get("delete_forum") != "yes" || !Validate::Id($postid)) {
             Redirect::autolink(URLROOT . '/forum', Lang::T("FORUMS_DENIED"));
         }
         
-	    if ($sure == "0") {
+	    // Double Check
+        if ($sure == "0") {
 		    Redirect::autolink(URLROOT . '/forum', "Sanity check: You are about to delete a post. Click <a href='" . URLROOT . "/post/delete?postid=$postid&sure=1'>here</a> if you are sure.");
         }
 
         // Get topic id
         $arr = DB::raw('forum_posts', 'topicid', ['id'=>$postid])->fetch(PDO::FETCH_LAZY) ;
         $topicid = $arr[0];
+
         // We can not delete the post if it is the only one of the topic
         $arr = DB::column('forum_posts', 'COUNT(*)', ['topicid'=>$topicid]);
         if ($arr < 2) {
@@ -142,6 +169,7 @@ class Post
 
         // Delete post
         DB::delete('forum_posts', ['id'=>$postid]);
+
         // Delete attachment todo
         $sql = DB::raw('attachments', '*', ['content_id'=>$postid]);
         if ($sql->rowCount() != 0) {
@@ -167,12 +195,13 @@ class Post
         Redirect::autolink(URLROOT . "/topic?topicid=$topicid", Lang::T("_SUCCESS_DEL_"));
     }
 
+    // Users Posts Default Page
     public function user()
     {
-        // Get Id
+        // Check User Input
         $id = (int) Input::get("id");
 
-        // Run Some Checks
+        // Check User
         if (!isset($id) || !$id) {
             Redirect::autolink(URLROOT, Lang::T("ERROR"));
         }
@@ -180,27 +209,26 @@ class Post
             Redirect::autolink(URLROOT, Lang::T("NO_USER_VIEW"));
         }
 
-        // Count For Pager
+        // Pagination
         $count = DB::column('forum_posts', 'count(*)', ['userid' => $id]);
         list($pager, $limit) = Pagination::pager(20, $count, URLROOT . "/post/user?id=$id&");
-        
-        // Grab All Data
         $row = Forums::getUsersPost($id, $limit);
-        //echo '<pre>'.print_r($row, true).'</pre>';  
 
-        // Check If Data Returned
+        // Check If Data
         if (!$row) {
             Redirect::autolink(URLROOT, "User has not posted in forum");
         }
  
-        // Send Data To View
+        // Init Data To View
         $data = [
             'title' => Lang::T("Search Users Post"),
             'id' => $id,
             'res' => $row,
             'pager' => $pager,
         ];
-        View::render('forum/post/user', $data, 'user');
+
+        // Load View
+        View::render('post/user', $data, 'user');
     }
     
 }

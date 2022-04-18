@@ -1,6 +1,8 @@
 <?php
+
 class Cache
 {
+
     public function __construct()
     {
         $this->cachedir = CACHE;
@@ -18,6 +20,7 @@ class Cache
         }
     }
 
+    // Set Cache
     public function Set($var, $val, $expire = 0)
     {
         if ($expire == 0) {
@@ -36,6 +39,7 @@ class Cache
         }
     }
 
+    // Delete Cache
     public function Delete($var)
     {
         switch ($this->type) {
@@ -48,6 +52,7 @@ class Cache
         }
     }
 
+    // Get Cache
     public function Get($var, $expire = 0)
     {
         if ($expire == 0) {
@@ -66,4 +71,5 @@ class Cache
                 break;
         }
     }
+    
 }

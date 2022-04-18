@@ -1,11 +1,15 @@
 <?php
+
 class Topten
 {
+
     public function __construct()
     {
+        // Verify User/Guest
         Auth::user(0, 2);
     }
 
+    // Top 10 Users Default Page
     public function index()
     {
         $limit = isset($_GET["lim"]) ? (int) $_GET["lim"] : false;
@@ -60,8 +64,10 @@ class Topten
         Style::footer();
     }
 
+    // Top Torrents Default Page
     public function torrents()
     {
+        // Check User Input
         $limit = isset($_GET["lim"]) ? (int) $_GET["lim"] : false;
         $subtype = isset($_GET["subtype"]) ? (int) $_GET["subtype"] : false;
         $pu = Users::get("class") >= 3;
@@ -90,8 +96,10 @@ class Topten
         Style::footer();
     }
 
+    // Top 10 Countries Default Page
     public function countries()
     {
+        // Check User Input
         $limit = isset($_GET["lim"]) ? (int) $_GET["lim"] : false;
         $subtype = isset($_GET["subtype"]) ? (int) $_GET["subtype"] : false;
         $pu = Users::get("class") >= 3;

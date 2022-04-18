@@ -1,12 +1,15 @@
 <?php
+
 class Rss
 {
 
     public function __construct()
     {
+        // Verify User/Guest
         Auth::user(0, 1);
     }
 
+    // RSS Default Page
     public function index()
     {
         $cat = $_GET["cat"];
@@ -72,17 +75,23 @@ class Rss
         echo ("</channel></rss>");
     }
 
+    // RSS Custom Default Page
     public function custom()
     {
+        // Get Cat Data
         $resqn = DB::raw('categories', 'id, name, parent_cat', '', 'ORDER BY parent_cat ASC, sort_index ASC');
+        
+        // Init Data
         $data = [
             'title' => Lang::T("CUSTOM_RSS_XML_FEED"),
             'resqn' => $resqn
         ];
+
+        // Load View
         View::render('rss/custom', $data, 'user');
     }
 
-    
+    // RSS Form Submit
     public function submit()
     {
         if ($_POST) {
@@ -116,4 +125,5 @@ class Rss
             Redirect::autolink(URLROOT, $mss);
         }
     }
+
 }

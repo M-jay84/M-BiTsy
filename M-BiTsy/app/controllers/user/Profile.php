@@ -1,27 +1,35 @@
 <?php
+
 class Profile
 {
+
     public function __construct()
     {
+        // Verify User/Guest
         Auth::user(0, 2);
     }
 
+    // Profile Default Page
     public function index()
     {
+        // Check User Input
         $id = (int) Input::get("id");
 
+        // Check User
         if (!Validate::Id($id)) {
             Redirect::autolink(URLROOT, Lang::T("INVALID_USER_ID"));
         }
-        // can view own but not others
+        
         if (Users::get("view_users") == "no" && Users::get("id") != $id) {
             Redirect::autolink(URLROOT, Lang::T("NO_USER_VIEW"));
         }
 
         $user = DB::raw('users', '*', ['id'=>$id])->fetch();
+
         if (!$user) {
             Redirect::autolink(URLROOT, Lang::T("NO_USER_WITH_ID") . " $id.");
         }
+
         if (($user["enabled"] == "no" || ($user["status"] == "pending")) && Users::get("edit_users") == "no") {
             Redirect::autolink(URLROOT, Lang::T("NO_ACCESS_ACCOUNT_DISABLED"));
         }
@@ -49,8 +57,10 @@ class Profile
 
         $title = sprintf(Lang::T("USER_DETAILS_FOR"), Users::coloredname($id));
 
+        // Get User Data
         $user1 = DB::all('users', '*', ['id'=>$id]);
         
+        // Init Data
         $data = [
             'title' => $title,
             'id' => $id,
@@ -66,19 +76,24 @@ class Profile
             'usersignature' => $usersignature,
             'selectuser' => $user1,
         ];
+
+        // Load View
         View::render('profile/index', $data, 'user');
     }
 
+    // Edit Profile Default Page
     public function edit()
     {
+        // Check User Input
         $id = (int) Input::get("id");
 
+        // Check User
         if (Users::get('class') < _MODERATOR && $id != Users::get('id')) {
             Redirect::autolink(URLROOT, Lang::T("SORRY_NO_RIGHTS_TO_ACCESS"));
         }
 
+        // Get User Data
         $user = DB::raw('users', '*', ['id'=>$id])->fetch();
-        
         $stylesheets = Stylesheets::getStyleDropDown($user['stylesheet']);
         $countries = Countries::pickCountry($user['country']);
         $tz = TimeDate::timeZoneDropDown($user['tzoffset']);
@@ -90,6 +105,7 @@ class Profile
 
         $title = sprintf(Lang::T("USER_DETAILS_FOR"), Users::coloredname($id));
 
+        // Init Data
         $data = [
             'title' => $title,
             'stylesheets' => $stylesheets,
@@ -100,76 +116,94 @@ class Profile
             'id' => $id,
             'selectuser' => $user1,
         ];
+
+        // Load View
         View::render('profile/edit', $data, 'user');
     }
 
+    // Edit Profile Form Submit
     public function submit()
     {
+        // Check User Input
         $id = (int) Input::get("id");
 
+        // Check User
         if (Users::get('class') < _MODERATOR && $id != Users::get('id')) {
             Redirect::autolink(URLROOT, Lang::T("SORRY_NO_RIGHTS_TO_ACCESS"));
         }
 
         if (Input::exist()) {
+            // Init Data
             $data = [
-            'privacy' => $_POST["privacy"],
-            'notifs' => $_POST["pmnotif"] == 'yes' ? "[pm]" : "",
-            'stylesheet' => $_POST["stylesheet"],
-            'client' => $_POST["client"],
-            'age' => $_POST["age"],
-            'gender' => $_POST["gender"],
-            'country' => $_POST["country"],
-            'team' => $_POST["teams"],
-            'avatar' => $_POST["avatar"],
-            'title' => $_POST["title"],
-            'hideshoutbox' => ($_POST["hideshoutbox"] == "yes") ? "yes" : "no",
-            'tzoffset' => (int) $_POST['tzoffset'],
-            'signature' => $_POST["signature"]
+                'privacy' => $_POST["privacy"],
+                'notifs' => $_POST["pmnotif"] == 'yes' ? "[pm]" : "",
+                'stylesheet' => $_POST["stylesheet"],
+                'client' => $_POST["client"],
+                'age' => $_POST["age"],
+                'gender' => $_POST["gender"],
+                'country' => $_POST["country"],
+                'team' => $_POST["teams"],
+                'avatar' => $_POST["avatar"],
+                'title' => $_POST["title"],
+                'hideshoutbox' => ($_POST["hideshoutbox"] == "yes") ? "yes" : "no",
+                'tzoffset' => (int) $_POST['tzoffset'],
+                'signature' => $_POST["signature"]
             ];
             
             if ($_POST['resetpasskey']) {
-                $data = ['passkey' => ''];
+                $data['passkey'] = '';
             }
     
+            // Update
             DB::update("users", $data, ['id'=>$id]);
             Redirect::autolink(URLROOT . "/profile/edit?id=$id", Lang::T("User Edited"));
         }
     }
 
+    // Admin Edit Profile Default Page
     public function admin()
     {
+        // Check User Input
         $id = (int) Input::get("id");
 
+        // Check User
         if (Users::get('class') < _MODERATOR && $id != Users::get('id')) {
             Redirect::autolink(URLROOT . "/profile?id=$id", Lang::T("SORRY_NO_RIGHTS_TO_ACCESS"));
         }
 
+        // Get User Data
         $user1 = DB::raw('users', '*', ['id'=>$id])->fetch();
         
         $title = sprintf(Lang::T("USER_DETAILS_FOR"), Users::coloredname($id));
         $user = DB::all('users', '*', ['id'=>$id]);
 
+        // Init Data
         $data = [
             'id' => $id,
             'title' => $title,
             'selectuser' => $user,
         ];
+
+        // Load View
         View::render('profile/admin', $data, 'user');
     }
 
+    // Admin Edit Profile Form Submit
     public function submited()
     {
+        // Check User Input
         $id = (int) Input::get("id");
-
-        if (Users::get('class') < 5 && $id != Users::get('id')) {
-            Redirect::autolink(URLROOT . "/profile?id=$id", Lang::T("You dont have permission"));
-        }
 
         if (!Validate::Email(Input::get("email"))) {
             Redirect::autolink(URLROOT . "/profile?id=$id", Lang::T("EMAIL_ADDRESS_NOT_VALID"));
         }
 
+        // Check User
+        if (Users::get('class') < 5 && $id != Users::get('id')) {
+            Redirect::autolink(URLROOT . "/profile?id=$id", Lang::T("You dont have permission"));
+        }
+        
+        // Init Data
         $data = [
             'downloaded' => strtobytes(Input::get("downloaded")),
             'uploaded' => strtobytes(Input::get("uploaded")),
@@ -187,6 +221,7 @@ class Profile
             'seedbonus' => Input::get("bonus"),
         ];
         
+        // Change User Class
         if ($data['class'] != 0 && $data['class'] != Users::get('class')) {
             // change user class
             $arr = DB::raw('users', 'class', ['id' => $id])->fetch();
@@ -209,6 +244,7 @@ class Profile
         if (Input::get('resetpasskey') == 'yes') {
             $data = ['passkey' =>''];
         }
+
         // Change Password
         $chgpasswd = Input::get('chgpasswd') == 'yes' ? true : false;
         if ($chgpasswd) {
@@ -220,32 +256,44 @@ class Profile
             }
         }
 
+        // Update
         DB::update("users", $data, ['id'=>$id]);
         Logs::write(Users::get('username') . " has edited user: $id details");
         Redirect::autolink(URLROOT . "/profile?id=$id", Lang::T("User Edited"));
     }
 
+    // Delete Profile Default Page
     public function delete()
     {
+        // Check User Input
         $userid = (int) Input::get("userid");
-        $username = Input::get("username");
         $delreason = Input::get("delreason");
+        $sure = Input::get("sure") ?? 0;
 
+        // Check User
         if (Users::get("delete_users") != "yes") {
             Redirect::autolink(URLROOT . "/profile?id=$userid", Lang::T("TASK_ADMIN"));
         }
+
         if (!Validate::Id($userid)) {
             Redirect::autolink(URLROOT . "/profile?id=$userid", Lang::T("INVALID_USERID"));
         }
+
         if (Users::get("id") == $userid) {
             Redirect::autolink(URLROOT . "/profile?id=$userid", "Staff cannot delete themself. Please PM a admin.");
         }
+
         if (!$delreason) {
             Redirect::autolink(URLROOT . "/profile?id=$userid", Lang::T("MISSING_FORM_DATA"));
         }
 
+        if ($sure == "0") {
+            Redirect::autolink(URLROOT . "/profile/delete", "Sanity check: You are about to delete user. Click <a href='" . URLROOT . "/profile/delete?sure=1'>here</a> if you are sure.");
+        }
+
+        // Delete Profile
         Users::deleteuser($userid);
-        Logs::write(Users::get('username') . " has deleted account: $username");
+        Logs::write(Users::get('username') . " has deleted account: " . Users::coloredname($userid) . "");
         Redirect::autolink(URLROOT . "/profile?id=$userid", Lang::T("USER_DELETE"));
     }
 

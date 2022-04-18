@@ -85,22 +85,25 @@ function get_verbose_backtrace($backtrace = null, $depth = 0)
 
     return join("\n", $output);
 }
+
 // Redirect to error page 
-function to($url)
+function autolink($al_url, $al_msg, $al_time = 3)
 {
-    if (!headers_sent()) {
-        header("Location: " . $url, true, 302);
-        exit();
-    } else {
-        echo '<script type="text/javascript">';            echo 'window.location.href="' . $url . '";';
-        echo '</script>';
-        echo '<noscript>';
-        echo '<meta http-equiv="refresh" content="0; url=' . $url . '" />';
-        echo '</noscript>';
-        exit();
-    }
+Style::error_header("info");
+Style::begin("Info");
+echo "\n<meta http-equiv=\"refresh\" content=\"$al_time; url=$al_url\">\n"; ?>
+<center>
+<b><?php echo $al_msg; ?></b><br>
+<b>Redirecting ...</b>&nbsp;
+<b>[ <a href='<?php echo $al_url; ?>'>link</a> ]</b>&nbsp;
+</center>
+<?php
+Style::end();
+Style::error_footer();
+die();
 }
-// Debug complex Exception Log & Redirect
+
+// Debug Complex Exception Log & Redirect
 function handleUncaughtException($e)
 {
     // Construct the error string
@@ -110,9 +113,10 @@ function handleUncaughtException($e)
     $error .= "\n" . get_verbose_backtrace($e->getTrace());
     // Log details of error in a file
     error_log($error, 3, "../data/logs/exception_log.txt");
-    to(URLROOT . '/exceptions');
+    autolink(URLROOT, Lang::T("OOPS_ERR"));
 }
 
+// Log RunTime Errors
 function runtime_error_handler($errno, $errstr, $errfile, $errline)
 {
     $date = date('d M Y H:i:s');

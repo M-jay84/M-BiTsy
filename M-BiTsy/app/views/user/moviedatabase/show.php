@@ -18,9 +18,9 @@
 <div class="ttform">
 <div class="text-center">
     <a id="searchTVShow"><h3>Search TVShow</h3></a> <?php
-$tvShows = $data['tmdb']->searchMovie($data['name']);
-foreach ($tvShows as $tvShow) {
-    echo $tvShow->getTitle() . ' <a href="'.URLROOT.'/moviedatabase/shows?id=' . $tvShow->getID() . '"><b>Link</b></a><br>';
-} ?>
+    $tvShows = $data['tmdb']->searchTVShow($data['name']);
+    foreach ($tvShows as $tvShow) {
+        echo $tvShow->getName() . ' <a href="'.URLROOT.'/moviedatabase/shows?id=' . $tvShow->getID() . '"><b>Link</b></a><br>';
+    } ?>
 </div>
 </div>

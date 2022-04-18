@@ -3,13 +3,14 @@
 class Parse
 {
 
+    // Get Data From Torrent File
     public function torr($filename = "")
     {
         // First Check File Is Torrent
         $torrent = explode(".", $filename);
         $fileend = strtolower(end($torrent));
         if ($fileend != "torrent") {
-            die('this is not a torrent');
+            Redirect::autolink(URLROOT . '/upload', 'this is not a torrent');
         }
 
         // Set Arrays
@@ -19,7 +20,7 @@ class Parse
         // Read The File
         $parse = file_get_contents("$filename");
         if (!isset($parse)) {
-            die("Error Getting Torrent file");
+            Redirect::autolink(URLROOT . '/upload', "Error Getting Torrent file");
         }
 
         // Decode File Array
@@ -27,18 +28,18 @@ class Parse
 
         // If Array Lets Read It
         if ($array === false) {
-            die("Unable to decode file.");
+            Redirect::autolink(URLROOT . '/upload', "Unable to decode file.");
         }
 
         // Check Info Is There
         if (array_key_exists("info", $array) === false) {
-            die("Error opening torrent.<br>");
+            Redirect::autolink(URLROOT . '/upload', "Error opening torrent.<br>");
         }
 
         // Read info
         $info = $array["info"];
         if (isset($info["file tree"]) && isset($info["files"])) {
-            die('We do not allow hybrid, we except v1 while others catch up but use v2 when possible');
+            Redirect::autolink(URLROOT . '/upload', 'We do not allow hybrid, we except v1 while others catch up but use v2 when possible');
         }
 
         // Get Announce URL
@@ -81,8 +82,8 @@ class Parse
         // V2 Get file list
         if (isset($info["file tree"]) && is_array($info["file tree"])) {
             // For Now Dont Allow V2
-            //unlink("$filename");
-            //die("We Dont Except V2 Torrents Just Yet.");
+            unlink("$filename");
+            Redirect::autolink(URLROOT . '/upload', "Ask Admin To Turn V2 Torrents On.");
 
             $Iterator = new RecursiveIteratorIterator(
                 new RecursiveArrayIterator($info["file tree"]),

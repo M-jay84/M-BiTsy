@@ -11,6 +11,7 @@ class Captcha
         $this->secret = Config::get('CAPTCHA_SECRET');
     }
 
+    // Captcha Response
     public function response($captcha)
     {
         if (Config::get('CAPTCHA_ON')) {
@@ -25,6 +26,7 @@ class Captcha
         }
     }
 
+    // Display Captcha
     public function html()
     {
         if (Config::get('CAPTCHA_ON')) {

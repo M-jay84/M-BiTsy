@@ -1,34 +1,41 @@
 <?php
+
 class Snatch
 {
 
     public function __construct()
     {
+        // Verify User/Guest
         Auth::user(0, 2);
     }
 
+    // Snatched Torrent Default Page
     public function index()
     {
+        // Check User Input
         $tid = (int) $_GET['tid'];
 
         if ($tid > 0) {
             $count_tid = get_row_count('snatched', 'WHERE `tid` = \'' . $tid . '\'');
-        }
-
-        list($pagerbuttons, $limit) = Pagination::pager(25, $count_tid, '/snatch?tid=' . $tid . ' &amp;');
-        $res = Snatched::join($tid, $limit);
-
-        $torrents = DB::column('torrents', 'name', ['id'=>$tid]);
-        $title = "" . Lang::T("REGISTERED_MEMBERS_TO_TORRENT") . " " . htmlspecialchars($torrents) . "";
+        } 
 
         if ($count_tid > 0) {
-
+            // Pagination
+            list($pagerbuttons, $limit) = Pagination::pager(25, $count_tid, '/snatch?tid=' . $tid . ' &amp;');
+            $res = Snatched::join($tid, $limit);
+    
+            $torrents = DB::column('torrents', 'name', ['id'=>$tid]);
+            $title = "" . Lang::T("REGISTERED_MEMBERS_TO_TORRENT") . " " . htmlspecialchars($torrents) . "";
+    
+            // Init Data
             $data = [
                 'title' => $title,
                 'res' => $res,
                 'tid' => $tid,
                 'pagerbuttons' => $pagerbuttons,
             ];
+
+            // Load View
             View::render('snatch/torrent', $data, 'user');
 
         } else {
@@ -36,22 +43,28 @@ class Snatch
         }
     }
 
+    // Snatched User Default Page
     public function user()
     {
+        // Check User Input
         $uid = (int) $_GET['id'];
 
+        // Check User
         if ((Users::get("control_panel") == "no") && Users::get("id") != $uid) {
             Redirect::autolink(URLROOT, Lang::T("NO_PERMISSION"));
         }
 
         $count_uid = get_row_count('snatched', 'WHERE `uid` = \'' . $uid . '\'');
-        list($pagerbuttons, $limit) = Pagination::pager(50, $count_uid, '/snatch?id=' . $uid . ' &amp;');
-        $res = Snatched::join($uid, $limit);
 
         if ($count_uid > 0) {
+            // Pagination
+            list($pagerbuttons, $limit) = Pagination::pager(50, $count_uid, '/snatch?id=' . $uid . ' &amp;');
+            $res = Snatched::join($uid, $limit);
+            
             $users = DB::column('users', 'username', ['id'=>$uid]);
             $title = "" . Lang::T("SNATCHLIST_FOR") . " " . htmlspecialchars($users) . "";
 
+            // Init Data
             $data = [
                 'title' => $title,
                 'res' => $res,
@@ -59,6 +72,8 @@ class Snatch
                 'uid' => $uid,
                 'pagerbuttons' => $pagerbuttons,
             ];
+
+            // Load View
             View::render('snatch/user', $data, 'user');
         } else {
             Redirect::autolink(URLROOT, Lang::T("User Has No Snatched Torrents :)"));
@@ -66,10 +81,13 @@ class Snatch
 
     }
 
+    // Trade Snatched Default Page
     public function trade()
     {
+        // Check User Input
         $uid = (int) Users::get('id');
 
+        // Get Snatched Data
         $res = Snatched::join1($uid);
         
         if ($_POST["requestpoints"]) {
@@ -99,11 +117,14 @@ class Snatch
         }
             
         if ($res->rowCount() > 0) {
+            // Init Data
             $data = [
                 'title' => 'Trade',
                 'res' => $res,
                 'uid' => $uid,
             ];
+            
+            // Load View
             View::render('snatch/trade', $data, 'user');
         } else {
             Redirect::autolink(URLROOT, Lang::T("THERE_ARE_NO_RECORDINGS"));

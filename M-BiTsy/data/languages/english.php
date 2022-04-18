@@ -1197,7 +1197,7 @@ $LANG["OOPS_ERR"] = "Oops somwthing went wrong, Admin have been notified if this
 // REQUEST
 $LANG["REQ_OFF"] = "Request are not available";
 
-$LANG["NO_TEAM"] = "No teams available, to create a group please contact <a href='.URLROOT.'/group/staff>staff</a>";
+$LANG["NO_TEAM"] = "No teams available, to create a group please contact <a href='.URLROOT.'/staff>staff</a>";
 
 $LANG["EMPTY_BODY"] = "Body cannot be empty !";
 $LANG["EMPTY_RECEIVER"] = "Receiver cannot be empty !";

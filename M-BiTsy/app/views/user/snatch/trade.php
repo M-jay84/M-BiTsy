@@ -1,9 +1,6 @@
-<?php
-
-Style::header(Lang::T("YOUR_RECORDINGS_OF_HIT_AND_RUN"));
-Style::begin(Lang::T("YOUR_RECORDINGS_OF_HIT_AND_RUN"));
-echo "<p class='text-center'>To solve this problem you must to keep seeding these torrents for " . Config::get('HNR_SEEDTIME') . " hours or until ratio becomes 1:1<br>
-                  But if you want a fast way, you can trade to delete these recordings With of Upload<p>"; ?>
+<p class='text-center'>
+    To solve this problem you must to keep seeding these torrents for <?php Config::get('HNR_SEEDTIME') ?> hours or until ratio becomes 1:1<br>
+    But if you want a fast way, you can trade to delete these recordings With of Upload<p>
 
 <form method="post" action="<?php echo URLROOT; ?>/snatch/trade">
     <div class='table-responsive'>
@@ -58,6 +55,3 @@ echo "<p class='text-center'>To solve this problem you must to keep seeding thes
         </table>
     </div>
 </form>
-<?php
-Style::end();
-Style::footer();

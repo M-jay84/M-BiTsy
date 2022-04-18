@@ -18,10 +18,10 @@
 
 <div class="ttform">
 <div class="text-center">
-<a id="searchPerson"><h3>Search Person</h3></a> <?php
-$persons = $data['tmdb']->searchPerson($data['name']);
-foreach ($persons as $person) {
-    echo $person->getName() . ' <a href="'.URLROOT.'/moviedatabase/person?id=' . $person->getID() . '"><b>Link</b></a><br>';
-} ?>
+    <a id="searchPerson"><h3>Search Person</h3></a> <?php
+    $persons = $data['tmdb']->searchPerson($data['name']);
+    foreach ($persons as $person) {
+        echo $person->getName() . ' <a href="'.URLROOT.'/moviedatabase/person?id=' . $person->getID() . '"><b>Link</b></a><br>';
+    } ?>
 </div>
 </div>

@@ -1,7 +1,8 @@
 <?php
+
 class TimeDate
 {
-    // Function that calculates the Hours Minutes Seconds of a Timestamp
+    // Function that calculates the Hours Minutes Seconds of a Timestamp 
     public static function mkprettytime($s)
     {
         if ($s < 0) {
@@ -26,19 +27,19 @@ class TimeDate
         return sprintf("%d:%02d", $t["min"], $t["sec"]);
     }
 
-    // Time to Time Conversion Function With Time Zone
+    // Get Time As INT According To TimeZone
     public static function gmtime()
     {
         return self::sql_timestamp_to_unix_timestamp(self::get_date_time());
     }
 
-    // Function That Returns The UNIX Timestamp Of A Date
+    // Convert Timestamp To INT
     public static function sql_timestamp_to_unix_timestamp($s)
     {
         return mktime(substr($s, 11, 2), substr($s, 14, 2), substr($s, 17, 2), substr($s, 5, 2), substr($s, 8, 2), substr($s, 0, 4));
     }
 
-    // Obtaining function Week Day Hour Minute Second According to a Timestamp
+    // Obtain Week Day Hour Minute Second From Int
     public static function get_elapsed_time($ts)
     {
         $mins = floor((self::gmtime() - $ts) / 60);
@@ -64,13 +65,7 @@ class TimeDate
         return "< 1 min";
     }
 
-    // Obtain function Week Day Hour Minute Second According to Time T
-    public static function time_ago($addtime)
-    {
-        $addtime = self::get_elapsed_time(self::sql_timestamp_to_unix_timestamp($addtime));
-        return $addtime;
-    }
-
+    // Get Timestamp - Option Pass Format To Data
     public static function get_date_time($timestamp = 0)
     {
         if ($timestamp) {
@@ -80,7 +75,7 @@ class TimeDate
         }
     }
 
-    // Function which returns a date according to the member's time zone
+    // Get Timestamp From User Time Zone
     public static function utc_to_tz($timestamp = 0)
     {
         global $tzs;
@@ -107,7 +102,7 @@ class TimeDate
         return date("Y-m-d H:i:s", $timestamp);
     }
 
-    // Function That Returns A Timestamp According To The Member's Time Zone
+    // Get Int From User Time Zone
     public static function utc_to_tz_time($timestamp = 0)
     {
         global $tzs;
@@ -134,7 +129,7 @@ class TimeDate
         return $timestamp;
     }
 
-    // Function To Make The Time Interval Between 2 Dates
+    // Get Interval Between 2 Dates As Int
     public static function DateDiff($start, $end)
     {
         if (!is_numeric($start)) {
@@ -146,7 +141,7 @@ class TimeDate
         return ($end - $start);
     }
 
-    /// ELAPSED TIME SINCE TORRENT WAS UPLOADED
+    // Obtain Week Day Hour Minute Second From Timestamp
     public static function get_time_elapsed($datetime, $full = false)
     {
         $now = new DateTime;
@@ -184,7 +179,6 @@ class TimeDate
         $tz = '';
         ksort($tzs);
         reset($tzs);
-        //while (list($key, $val) = thisEach($tzs)) {
         foreach($tzs as $key => $val) {
             if ($tzoffset == $key) {
                 $tz .= "<option value=\"$key\" selected='selected'>$val[0]</option>\n";
@@ -208,5 +202,6 @@ class TimeDate
         }
             
         return date_format($date, 'Y-m-d H:i:s');
+ 
     }
 }

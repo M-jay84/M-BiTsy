@@ -2,6 +2,8 @@
 
 class Lang
 {
+
+    // Translate String To Language
     public static function T($s)
     {
         global $LANG;
@@ -14,6 +16,7 @@ class Lang
         return $s;
     }
 
+    // Translate INT To Language - pureil
     public static function N($s, $num)
     {
         global $LANG;
@@ -26,30 +29,10 @@ class Lang
         return $s;
     }
 
-    public static function langlist()
-    {
-        $ret = array();
-        $stmt = DB::raw('torrentlang', 'id, name, image', '', 'ORDER BY sort_index, id');
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $ret[] = $row;
-        }
-        return $ret;
-    }
-
-    public static function select()
-    {
-        $language = "<select name=\"lang\">\n<option value=\"0\">" . Lang::T("UNKNOWN_NA") . "</option>\n";
-        $langs = self::langlist();
-        foreach ($langs as $row) {
-            $language .= "<option value=\"" . $row["id"] . "\">" . htmlspecialchars($row["name"]) . "</option>\n";
-        }
-        $language .= "</select>\n";
-        return $language;
-    }
-
+    // Add Letter Search
     public static function letters()
     {
-        print("<center><p><br />\n");
+        print("<p class=text-center>");
         // Print Each Letter
         for ($i = 97; $i < 123; ++$i) {
             $l = chr($i);
@@ -60,6 +43,6 @@ class Lang
                 print("<a href=?letter=$l><b>$L</b></a>\n");
             }
         }
-        print("</p><br /></center>\n");
+        print("</p>");
     }
 }

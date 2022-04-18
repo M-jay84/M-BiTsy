@@ -1,4 +1,5 @@
 <?php
+
 class Bans
 {
     public static function whereIn($ids)
@@ -27,6 +28,25 @@ class Bans
             default:
                 Redirect::autolink(URLROOT . '/adminban/ip', Lang::T("THEME_DATEBASE_ERROR"));
         }
+    }
+
+    public static function checkemail($email)
+    {
+        $maildomain = (substr($email, strpos($email, "@") + 1));
+        $a = DB::column('email_bans', 'COUNT(*)', ['mail_domain'=>$email]);
+        if ($a != 0) {
+            $message = sprintf(Lang::T("EMAIL_ADDRESS_BANNED_S"), $email);
+        }
+        $a = DB::run("SELECT count(*) FROM email_bans where mail_domain LIKE '%$maildomain%'")->fetchColumn();
+        if ($a != 0) {
+            $message = sprintf(Lang::T("EMAIL_ADDRESS_BANNED_S"), $email);
+        }
+        // check if email addy is already in use
+        $a = DB::column('users', 'COUNT(*)', ['email'=>$email]);
+        if ($a != 0) {
+            $message = sprintf(Lang::T("EMAIL_ADDRESS_INUSE_S"), $email);
+        }
+        return $message;
     }
 
 }

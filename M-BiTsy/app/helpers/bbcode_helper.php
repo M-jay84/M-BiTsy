@@ -1,13 +1,17 @@
 <?php
+// $form = Form Name
+// $name = Name of Text Area (Textarea)
+// $content = Content Textarea (Only to edit Pages, etc ...)
+
 // Function To Display Input Box With BBCodes And Smilies
 function textbbcode($form, $name, $content = "")
 {
-    // $form = Form Name, $name = Name of Text Area (Textarea), $content = Content Textarea (Only to edit Pages, etc ...)
     // Includen JS Function For BBCode
     require "assets/js/BBTag.js"; ?>
+
     <div class="row justify-content-md-center">
-    <div class="col-12  text-center">
-	<?php
+    <div class="col-12  text-center"> <?php
+
     // bbcode
     print("<i class='fa fa-bold ttbbcode' id='BBCode' name='Bold' height:20px; width:20px;\" onclick=\"bbcomment('[b]', '[/b]')\" title='Bold' /></i>&nbsp;");
     print("<i class='fa fa-italic ttbbcode' id='BBCode' name='Italic' height:20px; width:20px;\" onclick=\"bbcomment('[i]', '[/i]')\" title='Italic' /></i>&nbsp;");
@@ -26,8 +30,10 @@ function textbbcode($form, $name, $content = "")
     print("<i class='fa fa-picture-o ttbbcode' id='BBCode' name='Image' height:20px; width:20px;\" onclick=\"bbcomment('[img]', '[/img]')\" title='Image' /></i>&nbsp;");
     print("<i class='fa fa-video-camera ttbbcode' id='BBCode' name='Video' height:20px; width:20px;\" onclick=\"bbcomment('[video]', '[/video]')\"  title='Video' /></i>&nbsp;");
     print("<i class='fa fa-ban ttbbcode' id='BBCode' name='Hide'   height:20px; width:20px;\" onclick=\"bbcomment('[hide]','[/hide]')\"  title='Hide' /></i>&nbsp;");
+    
     // Smiley
     print("<a data-bs-toggle='collapse' data-bs-target='#collapseExample' aria-expanded='false' aria-controls='collapseExample'><img class='ttpadbottom' src='" . URLROOT . "/assets/images/smilies/grin.png' alt='' /></a>&nbsp;&nbsp;");
+    
     // colour
     print("<select name='color'  onChange='bbcouleur(this.value);' title='Colour'>");
     print("<option value='0' name='color'>Colour</option>");
@@ -68,6 +74,7 @@ function textbbcode($form, $name, $content = "")
     print("<option value='#98CC30' style='BACKGROUND-COLOR:#98CC30'>Dark Lime</option>");
     print("<option value='#40E0D0' style='BACKGROUND-COLOR:#40E0D0'>Turquois</option>");
     print("<option value='#20B4A8' style='BACKGROUND-COLOR:#20B4A8'>Aquarium</option></select>");
+    
     // Style
     print("<select name='font' onChange='bbfont(this.value);' title='Style'>");
     print("<option value='0' name='font'>Style</option><option value='Arial' style='font-family: Arial;'>Arial</option>");
@@ -80,26 +87,27 @@ function textbbcode($form, $name, $content = "")
     print("<option value='Ravie' style='font-family:Ravie;'>Ravie</option><option value='WESTERN' style='font-family:WESTERN;'>Western</option>");
     print("<option value='Amerika' style='font-family:Amerika;'>Amerika</option><option value='Goudy Old Style' style='font-family:Goudy Old Style;'>Goudy</option>");
     print("<option value='Papyrus' style='font-family: Papyrus;'>Papyrus</option><option value='Brush Script MT' style='font-family:Brush Script MT;'>Brush</option></select>");
+    
     // Size
     print("<select name='size' onchange='bbsize(this.value);' title='Size'><option value='0' name='size'>Size &nbsp;&nbsp;</option>");
     print("<option value='1'>1x</option><option value='2'>2x</option><option value='3'>3x</option><option value='4'>4x</option>");
-    print("<option value='5'>5x</option><option value='6'>6x</option><option value='7'>7x</option></select>");
-    ?>
+    print("<option value='5'>5x</option><option value='6'>6x</option><option value='7'>7x</option></select>"); ?>
+
     </div>
     </div>
 
     <div class="container">
     <div class="row justify-content-md-center">
     <div class="collapse" id="collapseExample">
-    <div class="card d-flex justify-content-center shoutsmile">
-        <?php
+    <div class="card d-flex justify-content-center shoutsmile"><?php
+        
+        // Smiliews/emoji
         global $emoji;
-        foreach($emoji as $code => $url) {
-            ?>
+        foreach($emoji as $code => $url) { ?>
             <a title="<?php echo $url; ?>" onclick="SmileIT('<?php echo $code; ?>','<?php echo $form; ?>','<?php echo $name; ?>')"><?php echo $code; ?></a>
             <?php
-        }
-        ?>
+        } ?>
+
     </div>
     </div>
     </div>
@@ -113,8 +121,10 @@ function textbbcode($form, $name, $content = "")
 
 	<div class="row justify-content-md-center">
     <div class="col-10"> <?php
+
         // Refresh And Preview Button
         print("<center><input type='reset' class='btn btn-sm ttbtn' value='Refresh' />&nbsp;<input type='button' class='btn btn-sm ttbtn' value='Preview' onClick='visualisation()' /></center><br>");
+        
         // Creation of the Preview Area
         print("<div id='previsualisation' width='200px' height='200px'></div><br>");
     ?>
@@ -126,10 +136,11 @@ function textbbcode($form, $name, $content = "")
 function shoutbbcode($form, $name, $content = "")
 {
     require "assets/js/BBTag.js"; ?>
+    
     <div class="container">
     <div class="row justify-content-md-center">
-    <div class="col-12 d-flex justify-content-center">
-    <?php
+    <div class="col-12 d-flex justify-content-center"> <?php
+
     // BBcode
     print("<i class='fa fa-bold ttbbcode' id='BBCode' name='Bold' height:20px; width:20px;\" onclick=\"bbcomment('[b]', '[/b]')\" title='Bold' /></i>&nbsp;");
     print("<i class='fa fa-italic ttbbcode' id='BBCode' name='Italic' height:20px; width:20px;\" onclick=\"bbcomment('[i]', '[/i]')\" title='Italic' /></i>&nbsp;");
@@ -146,8 +157,10 @@ function shoutbbcode($form, $name, $content = "")
     print("<i class='fa fa-arrow-right ttbbcode' id='BBCode' name='Align Right'height:20px; width:20px;\"	onclick=\"bbcomment('[align=right]','[/align]')\" title='Align Right' /></i>&nbsp;");
     print("<a href='https://imgur.com/upload' target='_blank' style=\"background: url('" . URLROOT . "/assets/images/bbcodes/imgur.gif');  height:20px; width:20px;\" title='Upload Image' /></a>");
     print("<a href='http://www.youtube.com'	target='_blank'	style=\"background: url('" . URLROOT . "/assets/images/bbcodes/youtube.gif');  height:20px; width:20px;\" title='YouTube' /></a>");
+    
     // Smilies
     print("<a data-bs-toggle='collapse' data-bs-target='#collapseExample' aria-expanded='false' aria-controls='collapseExample'><img class='ttpadbottom' src='" . URLROOT . "/assets/images/smilies/grin.png' alt='' /></a>&nbsp;&nbsp;"); 
+    
     // History & Staff
     $url = $_GET['url'] ?? '';
     if ($url == 'admincp' || $url == 'adminshoutbox') {
@@ -158,6 +171,7 @@ function shoutbbcode($form, $name, $content = "")
     if (Users::get('class') > _UPLOADER) {
         echo "<a href='" . URLROOT . "/adminshoutbox'><small><b>Staff</b></small></a>&nbsp;&nbsp;";
     }
+
     // Choose the colour
     print("<select name='color' style='padding-bottom:3px;' onChange='bbcouleur(this.value);' title='Colour'>");
     print("<option value='0' name='color'>Colour</option>");
@@ -204,15 +218,16 @@ function shoutbbcode($form, $name, $content = "")
     <div class="container">
     <div class="row justify-content-md-center">
     <div class="collapse" id="collapseExample">
-    <div class="text-center shoutsmile">
-        <?php
+    <div class="text-center shoutsmile"> <?php
+
+        // Smiliews/emoji
         global $emoji;
         foreach($emoji as $code => $url) {
             ?>
             <a title="<?php echo $url; ?>" onclick="SmileIT('<?php echo $code; ?>','<?php echo $form; ?>','<?php echo $name; ?>')"><?php echo $code; ?></a>
             <?php
-        }
-        ?>
+        } ?>
+
     </div>
     </div>
     </div>
@@ -225,7 +240,7 @@ function shoutbbcode($form, $name, $content = "")
     <div class="col-md-1">
         <center><input type='submit' name='submit' value='<?php echo Lang::T("SHOUT") ?>' class='btn btn-sm ttbtn' /></center>
     </div>
+
     </div>
-    </div>
-    <?php
+    </div> <?php
 }

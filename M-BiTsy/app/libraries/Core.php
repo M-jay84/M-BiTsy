@@ -1,4 +1,5 @@
 <?php
+
 class Core
 {
     // Set Defaults
@@ -60,4 +61,5 @@ class Core
             return $url;
         }
     }
+    
 }

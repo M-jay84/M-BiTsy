@@ -2,7 +2,7 @@
 
 class Validate
 {
-
+    // Check If Empty
     public static function isEmpty($data)
     {
         if (is_array($data)) {
@@ -14,6 +14,7 @@ class Validate
         }
     }
 
+    // Check Valid Email
     public static function Email($email)
     {
         if (filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
@@ -22,16 +23,19 @@ class Validate
         return true;
     }
 
+    // Check File Name
     public static function Filename($name)
     {
         return preg_match('/^[^\0-\x1f:\\\\\/?*\xff#<>|]+$/si', $name);
     }
 
+    // Check ID 
     public static function Id($id)
     {
         return is_numeric($id) && ($id > 0) && (floor($id) == $id);
     }
 
+    // Check Valid User Name
     public static function username($username) {
 		$allowedchars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-";
 		for ($i = 0; $i < strlen($username); ++$i)
@@ -40,18 +44,16 @@ class Validate
 		return true;
     }
 
+    // Check Valid Number
     public static function Int($id)
     {
         return is_numeric($id) && (floor($id) == $id);
     }
 
+    // Sanitize String
     public static function cleanstr($s)
     {
-        if (function_exists("filter_var")) {
-            return filter_var($s, FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_LOW);
-        } else {
-            return preg_replace('/[\x00-\x1F]/', "", $s);
-        }
+        return filter_var($s, FILTER_FLAG_STRIP_LOW);
     }
 
 }

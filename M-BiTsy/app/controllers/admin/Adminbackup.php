@@ -1,12 +1,15 @@
 <?php
+
 class Adminbackup
 {
 
     public function __construct()
     {
+        // Verify User/Staff
         Auth::user(_ADMINISTRATOR, 2);
     }
 
+    // Backup Default Page
     public function index()
     {
         require APPROOT . '/views/admin/admincp/header.php';
@@ -25,7 +28,7 @@ class Adminbackup
                 }
             }
         }
-        
+
         // SORT THE LIST
         sort($Namebk);
         // OPEN TABLE
@@ -61,20 +64,7 @@ class Adminbackup
         require APPROOT . '/views/admin/admincp/footer.php';
     }
 
-    public function delete()
-    {
-        $filename = $_GET["filename"];
-        $delete_error = true;
-        if (!unlink(BACUP . '/' . $filename)) {
-            $delete_error = false;
-        }
-        if ($delete_error) {
-            Redirect::autolink(URLROOT . '/adminbackup', "Selected Backup Files deleted");
-        } else {
-            Redirect::autolink(URLROOT . '/adminbackup', Lang::T("Error Deleting"));
-        }
-    }
-
+    // Backup Form Submit
     public function submit()
     {
         $DBH = new PDO("mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . "; charset=utf8", DB_USER, DB_PASS);
@@ -83,6 +73,7 @@ class Adminbackup
         $this->backup_tables($DBH, $tables);
     }
 
+    // Backup Tables
     private function backup_tables($DBH, $tables)
     {
         $DBH->setAttribute(PDO::ATTR_ORACLE_NULLS, PDO::NULL_NATURAL);
@@ -210,84 +201,99 @@ class Adminbackup
     }
 
 
+    // Delete Backup Form Submit
+    public function delete()
+    {
+        $filename = $_GET["filename"];
+        $delete_error = true;
+        if (!unlink(BACUP . '/' . $filename)) {
+            $delete_error = false;
+        }
+        if ($delete_error) {
+            Redirect::autolink(URLROOT . '/adminbackup', "Selected Backup Files deleted");
+        } else {
+            Redirect::autolink(URLROOT . '/adminbackup', Lang::T("Error Deleting"));
+        }
+    }
 
     /*
-    public function submit()
+    public function submit1()
     {
 
-  // CREATE THE RANDOM HASH
-  $RandomString=chr(rand(97,122)).chr(rand(97,122)).chr(rand(97,122)).chr(rand(97,122)).chr(rand(97,122)).chr(rand(97,122)).chr(rand(97,122)).chr(rand(97,122)).chr(rand(97,122)).chr(rand(97,122));
-  $md5string = md5($RandomString);
+        // CREATE THE RANDOM HASH
+        $RandomString = chr(rand(97, 122)) . chr(rand(97, 122)) . chr(rand(97, 122)) . chr(rand(97, 122)) . chr(rand(97, 122)) . chr(rand(97, 122)) . chr(rand(97, 122)) . chr(rand(97, 122)) . chr(rand(97, 122)) . chr(rand(97, 122));
+        $md5string = md5($RandomString);
 
-  // COMPOSE THE FILENAME
-  $curdate = str_replace (" ", "_",  TimeDate::utc_to_tz());
-  $filename = BACUP . '/db-backup_'.$curdate.'_'.$md5string.'.sql';
+        // COMPOSE THE FILENAME
+        $curdate = str_replace(" ", "_",  TimeDate::utc_to_tz());
+        $filename = BACUP . '/db-backup_' . $curdate . '_' . $md5string . '.sql';
 
-  // COMPOSE THE HEADER OF THE SQL FILE
-  $return = "//\n";
-  $return .= "//  M-BiTsy\n";
-  $return .= "//  Database BackUp\n";
-  $return .= "//  ".date("y-m-d H:i:s")."\n";
-  $return .= "//\n\n";
+        // COMPOSE THE HEADER OF THE SQL FILE
+        $return = "//\n";
+        $return .= "//  M-BiTsy\n";
+        $return .= "//  Database BackUp\n";
+        $return .= "//  " . date("y-m-d H:i:s") . "\n";
+        $return .= "//\n\n";
 
-  // LIST ALL TABLES ON THE DATABASE
-  $tables = array();
+        // LIST ALL TABLES ON THE DATABASE
+        $tables = array();
 
-  if (empty($tables)) {
-    $result = DB::run('SHOW TABLES');
-  while($row = $result->fetch(PDO::FETCH_NUM))
-  {
-        $tables[] = $row[0];
-        
-  }
+        if (empty($tables)) {
+            $result = DB::run('SHOW TABLES');
+            while ($row = $result->fetch(PDO::FETCH_NUM)) {
+                $tables[] = $row[0];
+            }
         } else {
             $tables = is_array($tables) ? $tables : explode(',', $tables);
         }
 
         //var_dump($tables);die();
 
-  // RETRIEVE THE TABLES
-  foreach($tables as $table)
-  {
-        $result = DB::run('SELECT * FROM '.$table);
-        $num_fields = $result->rowCount();
-        $return.= 'DROP TABLE IF EXISTS '.$table.';';
-        $row2 = DB::run('SHOW CREATE TABLE '.$table)->fetch(PDO::FETCH_ASSOC);
-        $return.= "\n\n".$row2[1].";\n\n";
-        for ($i = 0; $i < $num_fields; $i++)
-        {
-          while($row = $result->fetch(PDO::FETCH_ASSOC))
-          {
-                $return.= 'INSERT INTO '.$table.' VALUES(';
+        // RETRIEVE THE TABLES
+        foreach ($tables as $table) {
+            $result = DB::run('SELECT * FROM ' . $table);
+            $num_fields = $result->rowCount();
+            $return .= 'DROP TABLE IF EXISTS ' . $table . ';';
+            $row2 = DB::run('SHOW CREATE TABLE ' . $table)->fetch(PDO::FETCH_ASSOC);
+            $return .= "\n\n" . $row2[1] . ";\n\n";
+            for ($i = 0; $i < $num_fields; $i++) {
+                while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                    $return .= 'INSERT INTO ' . $table . ' VALUES(';
 
-                for($j=0; $j<$num_fields; $j++)
-                {
-                  $row[$j] = addslashes($row[$j]);
-                  $row[$j] = preg_replace("/\n/","/\\n/",$row[$j]);
-                  if (isset($row[$j])) { $return.= '"'.$row[$j].'"' ; } else { $return.= '""'; }
-                  if ($j<($num_fields-1)) { $return.= ','; }
+                    for ($j = 0; $j < $num_fields; $j++) {
+                        $row[$j] = addslashes($row[$j]);
+                        $row[$j] = preg_replace("/\n/", "/\\n/", $row[$j]);
+                        if (isset($row[$j])) {
+                            $return .= '"' . $row[$j] . '"';
+                        } else {
+                            $return .= '""';
+                        }
+                        if ($j < ($num_fields - 1)) {
+                            $return .= ',';
+                        }
+                    }
+                    $return .= ");\n";
                 }
-                $return.= ");\n";
-          }
+            }
+            $return .= "\n\n\n";
         }
-        $return.="\n\n\n";
-  }
 
-  // OLD FOPEN/FWRITE/FCLOSE METHOD
-  //$handle = fopen($filename,'w+');
-  //fwrite($handle,$return);
-  //fclose($handle);
+        // OLD FOPEN/FWRITE/FCLOSE METHOD
+        //$handle = fopen($filename,'w+');
+        //fwrite($handle,$return);
+        //fclose($handle);
 
-  // NEW METHOD TO STORE THE RESULT ON FILES
-  $create_error = false;
- // if ( file_put_contents($filename, $return) >=  1) { $create_error = false; }
- // if ( file_put_contents($filename.'.gz', gzencode( $return,9)) >= 1 ) { $create_error = false; }
-var_dump($return);die();
-  if ($create_error) {
-    Redirect::autolink(URLROOT."/adminbackup", "Has encountered a error during the backup.<br><br>");
-  } else {
-        Redirect::autolink(URLROOT."/adminbackup", "BackUp Complete.<br><br>");
-  }
+        // NEW METHOD TO STORE THE RESULT ON FILES
+        $create_error = false;
+        // if ( file_put_contents($filename, $return) >=  1) { $create_error = false; }
+        // if ( file_put_contents($filename.'.gz', gzencode( $return,9)) >= 1 ) { $create_error = false; }
+        var_dump($return);
+        die();
+        if ($create_error) {
+            Redirect::autolink(URLROOT . "/adminbackup", "Has encountered a error during the backup.<br><br>");
+        } else {
+            Redirect::autolink(URLROOT . "/adminbackup", "BackUp Complete.<br><br>");
+        }
     }
     */
 }

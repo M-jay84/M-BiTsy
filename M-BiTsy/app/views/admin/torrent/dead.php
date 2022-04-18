@@ -23,17 +23,11 @@ if ($data['count'] > $data['perpage']) {
 <?php }?>
 	</tr></thead>
 <?php
-while ($row = $data['res']->fetch(PDO::FETCH_ASSOC)) {
-    if ($row["username"]) {
-        $owner = "<a href='" . URLROOT . "/profile?id=" . $row["owner"] . "'><b>" . $row["username"] . "</b></a>";
-    } else {
-        $owner = Lang::T("UNKNOWN_USER");
-    }
-    ?>
+while ($row = $data['res']->fetch(PDO::FETCH_ASSOC)) { ?>
     <tbody>
 	<tr>
 		<td class="table_col1"><a href="<?php echo URLROOT; ?>/torrent?id=<?php echo $row["id"]; ?>"><?php echo CutName(htmlspecialchars($row["name"]), 50) ?></a></td>
-		<td class="table_col2"><?php echo $owner; ?></td>
+		<td class="table_col2"><?php echo Users::coloredname($row["username"]); ?></td>
 		<td class="table_col2" align="center"><?php echo mksize($row["size"]); ?></td>
 		<td class="table_col1" align="center"><font color="limegreen"><b><?php echo number_format($row["seeders"]); ?></b></font></td>
 		<td class="table_col2" align="center"><font color="red"><b><?php echo number_format($row["leechers"]); ?></b></font></td>

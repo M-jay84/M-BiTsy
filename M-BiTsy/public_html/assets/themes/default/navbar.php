@@ -14,9 +14,9 @@
         $arr = DB::run("SELECT * FROM messages WHERE receiver=" . Users::get("id") . " and unread='yes' AND location IN ('in','both')")->fetchAll();
         $unreadmail = count($arr);
         if ($unreadmail !== 0) {
-          print("<a class='nav-link' href='" . URLROOT . "/message?type=inbox'><b><font color='#FFFFFF'>$unreadmail</font> " . Lang::N("NEWPM", $unreadmail) . "</b></a>");
+          print("<a class='nav-link' href='" . URLROOT . "/mailbox?type=inbox'><b><font color='#FFFFFF'>$unreadmail</font> " . Lang::N("NEWPM", $unreadmail) . "</b></a>");
         } else {
-          print("<a class='nav-link' href='" . URLROOT . "/message/overview'>" . Lang::T("YOUR_MESSAGES") . "</a>");
+          print("<a class='nav-link' href='" . URLROOT . "/mailbox/overview'>" . Lang::T("YOUR_MESSAGES") . "</a>");
         } ?>
         </li>
         <li class="nav-item dropdown">
@@ -38,7 +38,11 @@
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
             <a class="dropdown-item" href="<?php echo URLROOT ?>/search/browse"><?php echo Lang::T("BROWSE_TORRENTS"); ?></a>
 			      <a class="dropdown-item" href="<?php echo URLROOT ?>/upload"><?php echo Lang::T("UPLOAD_TORRENT"); ?></a>
-			      <a class="dropdown-item" href="<?php echo URLROOT ?>/search"><?php echo Lang::T("SEARCH_TORRENTS"); ?></a> <?php
+			      <a class="dropdown-item" href="<?php echo URLROOT ?>/search"><?php echo Lang::T("SEARCH_TORRENTS"); ?></a>
+            <a class="dropdown-item" href="<?php echo URLROOT ?>/catalog"><?php echo Lang::T("Torrent Catalog"); ?></a> <?php
+            if (_TMDBswitch) { ?>
+                <a class="dropdown-item" href="<?php echo URLROOT ?>/moviedatabase"><?php echo Lang::T("Search TMDB"); ?></a> <?php
+            }
             if (Config::get("REQUESTSON")) { ?>
               <a class="dropdown-item" href="<?php echo URLROOT ?>/request"><?php echo Lang::T("MAKE_REQUEST"); ?></a><?php
             } ?>
@@ -64,7 +68,7 @@
             Contact
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-		        <a class="dropdown-item" href="<?php echo URLROOT ?>/group/staff">Our Staff</a>
+		        <a class="dropdown-item" href="<?php echo URLROOT ?>/staff">Our Staff</a>
 		        <a class="dropdown-item" href="<?php echo URLROOT ?>/contact"><?php echo Lang::T("Contact Staff"); ?></a>
           </div>
         </li> <?php
@@ -86,7 +90,7 @@
         <a href="#"><i class="fa fa-upload tticon"></i></a>&nbsp;<font color='#FFFFFF'><?php echo $useruploaded ?></font>&nbsp;
         <a href="#"><i class="fa fa-cog tticon"></i></a>&nbsp;<font color='#FFFFFF'><?php echo $userratio ?></font>&nbsp;
         <a href="<?php echo URLROOT ?>/bonus"><i class="fa fa fa-smile-o tticon"></i></a>&nbsp;<font color='#FFFFFF'><?php echo Users::get('seedbonus') ?></font>&nbsp;
-        <a href="<?php echo URLROOT ?>/message?type=inbox"><i class="fa fa-envelope tticon"></i></a>&nbsp;<font color='#FFFFFF'><?php echo $unreadmail ?></font>&nbsp; <?php
+        <a href="<?php echo URLROOT ?>/mailbox?type=inbox"><i class="fa fa-envelope tticon"></i></a>&nbsp;<font color='#FFFFFF'><?php echo $unreadmail ?></font>&nbsp; <?php
         if (Users::get("view_torrents") == "yes") {
             $activeseed = get_row_count("peers", "WHERE userid = ".Users::get('id')." AND seeder = 'yes'");
             $activeleech = get_row_count("peers", "WHERE userid = ".Users::get('id')." AND seeder = 'no'");

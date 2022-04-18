@@ -2,7 +2,6 @@
 
 class Movie
 {
-
 	private $_tmdb;
 
 	// 	Construct Class
@@ -62,7 +61,7 @@ class Movie
 	    return substr($nom, 0, -2); 
     }
 	
-	//actors
+	// Actors
     public function actors() {
 	    return $this->_data['credits'];
     }

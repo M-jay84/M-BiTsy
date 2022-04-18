@@ -25,6 +25,7 @@ while ($row = $data['res']->fetch(PDO::FETCH_ASSOC)) {
     
     $comdate = date("d.M.Y<\\b\\r><\\s\\m\\a\\l\\l>H:i</\\s\\m\\a\\l\\l>", TimeDate::utc_to_tz_time($row["date"]));
     $peers = (get_row_count("peers", "WHERE torrent = '$id' AND userid = '$row[id]'")) ? "<font color='#27B500'><b>".Lang::T("YES")."</b></font>" : "<font color='#FF1200'><b>".Lang::T("NO")."</b></font>";
+    // todo move sql
     $res2 =  DB::raw('snatched', 'uload, dload, stime, utime, ltime, hnr', ['tid'=>$id,'uid'=>$row['id']]);
     $row2 = $res2->fetch(PDO::FETCH_ASSOC);
     $tratio = $row2['dload'] > 0 ? number_format($row2['uload'] / $row2['dload'], 1) : "---";

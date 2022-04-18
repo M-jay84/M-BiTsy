@@ -1,21 +1,26 @@
 <?php
+
 class Home
 {
 
     public function __construct()
     {
+        // Verify User/Guest
         Auth::user(0, 1, true);
     }
 
+    // Home Default Page
     public function index()
     {
         Style::header(Lang::T("HOME"));
+        
         // Check
         if (file_exists("check.php") && Users::get("class") == 7) {
             Style::begin("<font class='error'>" . htmlspecialchars('WARNING') . "</font>");
             echo '<div class="alert ttalert">check still exists, please delete or rename the file as it could pose a security risk<br /><br /><a href="check.php">View /check</a> - Use to check your config!<br /></div>';
             Style::end();
         }
+
         // Start Hit And Run Warning
         if (Config::get('HNR_ON')) {
             $count = DB::column('snatched', 'count(hnr)', ['uid'=>Users::get("id"),'hnr'=>'yes']);
@@ -26,11 +31,13 @@ class Home
                 View::render('home/hitnrun', $data);
             }
         }
+
         // Site Notice
         if (Config::get('SITENOTICEON')) {
             $data = [];
             View::render('home/notice', $data);
         }
+
         // Site News
         if (Config::get('NEWSON') && Users::get('view_news') == "yes") {
             $data = [];
@@ -42,11 +49,13 @@ class Home
             $data = [];
             View::render('home/shoutbox', $data);
         }
+
         // Last Forum Post On Index
         if (Config::get('LATESTFORUMPOSTONINDEX')) {
             $data = [];
             View::render('home/lastforumpost', $data);
         }
+
         // Last Forum Post On Index
         if (Config::get('FORUMONINDEX')) {
             $forums_res = Forums::getIndex();
@@ -63,6 +72,7 @@ class Home
                 View::render('home/forum', $data);
             }
         }
+
         // Carousel
         if ($_SESSION['loggedin'] && Users::get("view_torrents") == "yes") {
             $stmt = DB::run("SELECT torrents.id, torrents.category, torrents.vip, torrents.image1, torrents.image2, torrents.tmdb, torrents.leechers, 
@@ -79,6 +89,7 @@ class Home
             ];
             View::render('home/carousel', $data);
         }
+
         // Grid
         if ($_SESSION['loggedin'] && Users::get("view_torrents") == "yes") {
             $stmt = DB::run("SELECT torrents.id, torrents.category, torrents.vip, torrents.image1, torrents.image2, torrents.tmdb, torrents.leechers, 
@@ -95,6 +106,7 @@ class Home
             ];
             View::render('home/grid', $data);
         }
+
         // Latest Torrents
         if (Config::get('MEMBERSONLY') && !$_SESSION['loggedin']) {
             $data = [
@@ -125,17 +137,20 @@ class Home
                 DB::update('users', ['last_browse' =>TimeDate::gmtime()], ['id' => Users::get('id')]);
             }
         }
+
         // Visited Users
         $stmt = DB::run("SELECT id, username, class, donated, warned, avatar FROM users WHERE enabled = 'yes' AND status = 'confirmed' AND privacy !='strong' AND UNIX_TIMESTAMP('".timedate::get_date_time()."') - UNIX_TIMESTAMP(users.last_access) <= 86400");
         $data = [
             'stmt' => $stmt,
         ];
         View::render('home/visitedusers', $data);
+
         // Disclaimer
         if (Config::get('DISCLAIMERON')) {
             $data = [];
             View::render('home/disclaimer', $data);
         }
+
         Style::footer();
     }
 

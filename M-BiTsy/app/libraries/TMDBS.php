@@ -1,5 +1,5 @@
 <?php
-require_once APPROOT . "/libraries/TMDB.php"; // todo edit
+require_once APPROOT . "/libraries/TMDB.php";
 
 class TMDBS
 {

@@ -1,7 +1,4 @@
 <?php
-
-var_dump($_POST);
-
 print("<p class='text-center'>Edit Section or Item</p>");
 while ($arr = $data['res']->fetch(PDO::FETCH_BOTH)) {
     $arr['question'] = stripslashes(htmlspecialchars($arr['question']));
@@ -82,68 +79,3 @@ while ($arr = $data['res']->fetch(PDO::FETCH_BOTH)) {
 
     }
 }
-
-/*
-        <div class='ttform'>
-        <form action="<?php echo URLROOT; ?>/adminfaq/edit?action=editsect" method="post">
-        <input type="hidden" name="id" value="<?php echo $arr['id'] ?>" />
-    
-            <div class="form-group row">
-                <label  class="col-form-label col-3">ID:</label>
-                <div class="col-9">
-                <?php echo $arr['id'] ?>
-                </div>
-            </div><br>  
-        
-            <div class="form-group row">
-                <label for="question" class="col-form-label col-3">Question:</label>
-                <div class="col-9">
-                <input type="text" name="question" value="<?php echo $arr['question'] ?>" />
-                </div>
-            </div><br>
-            
-            <div class="form-group row">
-                <label for="answer" class="col-form-label col-3">Answer:</label>
-                <div class="col-9">
-                <textarea rows='3' cols='35' name="answer"><?php echo $arr['answer'] ?></textarea>
-                </div>
-            </div><br> <?php
-    
-            if ($arr['flag'] == "0") {
-                print("<div class='form-group row'><label for='flag' class='col-form-label col-3'>Status:</label> <div class='col-9'>
-                       <select name=\"flag\" style=\"width: 110px;\"><option value=\"0\" style=\"color: #ff0000;\" selected=\"selected\">Hidden</option><option value=\"1\" style=\"color: #000000;\">Normal</option><option value=\"2\" style=\"color: #0000FF;\">Updated</option><option value=\"3\" style=\"color: #008000;\">New</option></select>
-                       </div></div><br>");
-            } elseif ($arr['flag'] == "2") {
-                print("<div class='form-group row'><label for='flag' class='col-form-label col-3'>Status:</label> <div class='col-9'>
-                <select name=\"flag\" style=\"width: 110px;\"><option value=\"0\" style=\"color: #ff0000;\">Hidden</option><option value=\"1\" style=\"color: #000000;\">Normal</option><option value=\"2\" style=\"color: #0000FF;\" selected=\"selected\">Updated</option><option value=\"3\" style=\"color: #008000;\">New</option></select>
-                </div></div><br>");
-            } elseif ($arr['flag'] == "3") {
-                print("<div class='form-group row'><label for='flag' class='col-form-label col-3'>Status:</label> <div class='col-9'>
-                <select name=\"flag\" style=\"width: 110px;\"><option value=\"0\" style=\"color: #ff0000;\">Hidden</option><option value=\"1\" style=\"color: #000000;\">Normal</option><option value=\"2\" style=\"color: #0000FF;\">Updated</option><option value=\"3\" style=\"color: #008000;\" selected=\"selected\">New</option></select>
-                </div></div><br>");
-            } else {
-                print("<div class='form-group row'><label for='flag' class='col-form-label col-3'>Status:</label> <div class='col-9'>
-                <select name=\"flag\" style=\"width: 110px;\"><option value=\"0\" style=\"color: #ff0000;\">Hidden</option><option value=\"1\" style=\"color: #000000;\" selected=\"selected\">Normal</option><option value=\"2\" style=\"color: #0000FF;\">Updated</option><option value=\"3\" style=\"color: #008000;\">New</option></select>
-                </div></div><br>");
-            } ?>
-        
-            <div class="form-group row">
-                <label for="categ" class="col-form-label col-3">Category:</label>
-                <div class="col-9">
-                <select name="categ"> <?php
-                    while ($arr2 = $data['res2']->fetch(PDO::FETCH_BOTH)) {
-                        $selected = ($arr2['id'] == $arr['categ']) ? " selected=\"selected\"" : "";
-                        print("<option value=\"$arr2[id]\"" . $selected . ">$arr2[question]</option>");
-                    } ?>
-                </select>
-                </div>
-            </div><br> 
-
-            <div class="text-center">
-                <input type="submit" class='btn btn-sm ttbtn' name="edit" value="Edit">
-            </div>
-        
-        </form>
-        </div> <?php
-
-*/

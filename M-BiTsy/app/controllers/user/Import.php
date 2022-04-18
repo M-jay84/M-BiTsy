@@ -5,10 +5,12 @@ class Import
 
     public function __construct()
     {
+        // Verify User/Guest
         Auth::user(_UPLOADER, 2);
     }
 
-    public static function gettorrentfiles()
+    // Get Torrent Files
+    private function gettorrentfiles()
     {
         $files = array();
         $dh = opendir(UPLOADDIR."/import/");
@@ -21,23 +23,28 @@ class Import
         return $files;
     }
 
+    // Import Default Page
     public function index()
     {
         //ini_set("upload_max_filesize",$max_torrent_size);
         $files = self::gettorrentfiles();
         
-        // check access and rights
+        // Check User
         if (Users::get("edit_torrents") != "yes") {
             Redirect::autolink(URLROOT, Lang::T("ACCESS_DENIED"));
         }
 
+        // Init Data
         $data = [
             'title' => Lang::T("UPLOAD"),
             'files' => $files,
         ];
+
+        // Load View
         View::render('import/index', $data, 'user');
     }
 
+    // Import Form Submit
     public function submit()
     {
         $files = self::gettorrentfiles();
@@ -45,10 +52,12 @@ class Import
         $announce_urls = explode(",", strtolower(ANNOUNCELIST));
         set_time_limit(0);
         
-        // check access and cat id
+        // Check User
         if (Users::get("edit_torrents") != "yes") {
             Redirect::autolink(URLROOT, Lang::T("ACCESS_DENIED"));
         }
+
+        // Check Correct Input
         $catid = (int) Input::get("type");
         if (!Validate::Id($catid)) {
             $message = Lang::T("UPLOAD_NO_CAT");

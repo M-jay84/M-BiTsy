@@ -1,16 +1,21 @@
 <?php
+
 class Shoutbox
 {
+    
     public function __construct()
     {
+        // Verify User/Guest
         Auth::user(0, 0);
     }
 
+    // No Default Page
     public function index()
     {
         Redirect::to(URLROOT);
     }
 
+    // Ajax Shoutbox Load
     public function chat()
     {
         $result = DB::raw('shoutbox', '*', ['staff' => 0], ' ORDER BY msgid DESC LIMIT 25');
@@ -56,11 +61,13 @@ class Shoutbox
         <?php
     }
 
+    // Add Shout Submit
     public function add()
     {
         if (Users::get("shoutboxpos") != 'yes' && $_SESSION['loggedin']) {
             //INSERT MESSAGE
             if (!empty(Input::get('message')) && $_SESSION['loggedin'] == true) {
+                // Check User Input
                 $message = Input::get('message');
                 
                 $row = Shoutboxs::checkFlood($message, Users::get('username'));
@@ -74,8 +81,10 @@ class Shoutbox
         Redirect::to(URLROOT);
     }
 
+    // Delete Shout Submit
     public function delete()
     {
+        // Check User Input
         $delete = Input::get('id');
         $sure = Input::get("sure");
 
@@ -98,44 +107,53 @@ class Shoutbox
         Redirect::to(URLROOT);
     }
 
+    // Edit Shout Default Page
     public function edit()
     {
+        // Check User Input
         $user = Input::get('user');
         if (Users::get('class') > _UPLOADER || Users::get('id') == $user) {
+            // Check User Input
             $id = Input::get('id');
             $message = $_POST['message'];
 
+            // Update
             if ($message) {
                 DB::update('shoutbox', ['message'=>$message], ['msgid'=>$id]);
                 Redirect::autolink(URLROOT, Lang::T("Message edited"));
             }
             
+            // Get Shoutbox Data
             $edit = DB::raw('shoutbox', '*', ['msgid'=>$id])->fetch(PDO::FETCH_LAZY);
             
+            // Init Data
             $data = [
                 'title' => 'Edit',
                 'id' => $edit['msgid'],
                 'message' => $edit['message'],
                 'user' => $edit['userid'],
             ];
+
+            // Load View
             View::render('shoutbox/edit', $data, 'user');
         } else {
             Redirect::autolink(URLROOT . '/logout', Lang::T("NO_PERMISSION"));
         }
     }
 
+    // Shoutbox History Default Page
     public function history()
     {
-        if (!$_SESSION['loggedin']) {
-            Redirect::autolink(URLROOT . '/logout', Lang::T("NO_PERMISSION"));
-        }
-        
+        // Get Shoutbox Data
         $result = DB::raw('shoutbox', '*', ['staff' => 0], ' ORDER BY msgid DESC LIMIT 60');
         
+        // Init Data
         $data = [
             'title' => 'History',
             'sql' => $result,
         ];
+
+        // Load View
         View::render('shoutbox/history', $data, 'user');
     }
 

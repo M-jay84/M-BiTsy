@@ -3,14 +3,14 @@ if ($_SESSION['loggedin'] == true) {
     Style::block_begin("Latest Requests");
     $TTCache = new Cache();
     $expires = 600; // Cache time in seconds 10 mins
-    if (($rows = $TTCache->Get("request_block", $expires)) === false) {
+    if (($rows = $TTCache->Get("block/request_block", $expires)) === false) {
         $latestrequestsquery = DB::run("SELECT requests.id, requests.request, categories.name AS cat, categories.id AS catid,
 		categories.parent_cat AS parent_cat FROM requests INNER JOIN categories ON requests.cat = categories.id ORDER BY
 		requests.id DESC LIMIT 5");
         while ($latestrequestsrecord = $latestrequestsquery->fetch(PDO::FETCH_ASSOC)) {
             $latestrequestsrecords[] = $latestrequestsrecord;
         }
-        $TTCache->Set("request_block", $rows, $expires);
+        $TTCache->Set("block/request_block", $rows, $expires);
     }
 
     if (isset($latestrequestsrecords)) {

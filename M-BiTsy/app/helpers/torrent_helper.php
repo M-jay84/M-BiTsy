@@ -391,6 +391,7 @@ function ratingpic($num)
     return "<img src=\"" . URLROOT . "/assets/images/rating/$r.png\" border=\"0\" alt=\"rating: $num/5\" title=\"rating: $num/5\" />";
 }
 
+// Sort Torrent Table By Column
 function sortMod()
 {
     $sort = $_GET['sort'] ?? '';
@@ -434,6 +435,7 @@ function sortMod()
     ];
 }
 
+// Torrent Search
 function search()
 {
     $keyword = $_GET['keyword'] ?? '';
@@ -542,5 +544,38 @@ function search()
         'parent_cat' => $parent_cat,
         'wherecatina' => $wherecatina,
     ];
+    return $array;
+}
+
+// Torrent Search
+function torrentsearch($searchwhat)
+{
+    $search = $_GET['search'] ?? '';
+    $letter = $_GET["letter"] ?? '';
+    $url = "?";
+
+    if ($search != '') {
+        $keys = explode(" ", $search);
+        foreach ($keys as $k) {
+            $ssa[] = " $searchwhat LIKE '%$k%' ";
+        }
+        $query = '(' . implode(' OR ', $ssa) . ')';
+        $url .= "search=" . urlencode($search);
+    } else {
+        if (strlen($letter) > 1) {
+            die;
+        }
+        if ($letter == "" || strpos("abcdefghijklmnopqrstuvwxyz", $letter) === false) {
+            $letter = "t";
+        }
+        $query = "$searchwhat LIKE '$letter%'";
+        $url = "?letter=$letter";
+    }
+
+    $array = [
+        'url' => $url,
+        'query' => $query
+    ];
+
     return $array;
 }

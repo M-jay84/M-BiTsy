@@ -3,6 +3,7 @@
 class Pagination
 {
 
+    // Calculate Page Numbers
     public static function pager($rowsperpage, $countresult, $url)
     {
         // Total Page Number 
@@ -42,13 +43,14 @@ class Pagination
             }
         }
 
-        // Returns Links
+        // Display Buttons
         $pagerbuttons = self::html($page, $pagetotal, $start, $end, $url);
         
         // Return Array
         return array($pagerbuttons, "LIMIT $offset, $limit");
     }
 
+    // Display Buttons
     public static function html($page, $pagetotal, $start, $end, $url)
     {
         if($pagetotal > 1) {

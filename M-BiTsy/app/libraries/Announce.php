@@ -1,6 +1,8 @@
 <?php
+
 class Announce
 {
+    
     // Get Date
     public static function get_date_time($timestamp = 0)
     {
@@ -46,6 +48,48 @@ class Announce
         //Add some other paramters in the dictionary and merge with peer list
         $r = 'd8:intervali' . _INTERVAL . 'e12:min intervali' . _INTERVAL_MIN . 'e8:completei' . $c . 'e10:incompletei' . $i . 'e5:peersl' . $p . 'ee';
         return $r;
+    }
+    
+    // IP Validation Function
+    public static function validIP($ip)
+    {
+        if (strtolower($ip) === "unknown") {
+            return false;
+        }
+        // generate ipv4 network address
+        $ip = ip2long($ip);
+        // if the ip is set and not equivalent to 255.255.255.255
+        if ($ip !== false && $ip !== -1) {
+            // make sure to get unsigned long representation of ip due to discrepancies
+            // between 32 and 64 bit OSes and signed numbers (ints default to signed in PHP)
+            $ip = sprintf("%u", $ip);
+            // do private network range checking
+            if ($ip >= 0 && $ip <= 50331647) {
+                return false;
+            }
+            if ($ip >= 167772160 && $ip <= 184549375) {
+                return false;
+            }
+            if ($ip >= 2130706432 && $ip <= 2147483647) {
+                return false;
+            }
+            if ($ip >= 2851995648 && $ip <= 2852061183) {
+                return false;
+            }
+            if ($ip >= 2886729728 && $ip <= 2887778303) {
+                return false;
+            }
+            if ($ip >= 3221225984 && $ip <= 3221226239) {
+                return false;
+            }
+            if ($ip >= 3232235520 && $ip <= 3232301055) {
+                return false;
+            }
+            if ($ip >= 4294967040) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public static function getIP()
@@ -297,4 +341,5 @@ class Announce
                  WHERE id=?", [self::get_date_time(), $leechers, $seeders, $completed, 'yes', $torrent['id']]);
         }
     }
+
 }

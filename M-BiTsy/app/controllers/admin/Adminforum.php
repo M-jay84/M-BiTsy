@@ -1,112 +1,48 @@
 <?php
+
 class Adminforum
 {
 
     public function __construct()
     {
+        // Verify User/Staff
         Auth::user(_MODERATOR, 2);
     }
 
+    // Forum Default Page
     public function index()
     {
-        $groupsres = DB::run("SELECT group_id, level FROM `groups` ORDER BY group_id ASC");
+        // Get Forum Data
+        $query = DB::raw('forumcats', '*', '', 'ORDER BY sort, name');
+        $forumcat = array();
+        while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+                $forumcat[] = $row;
+        }
 
+        $query = DB::raw('forum_forums', '*', '', 'ORDER BY category, sub, sort');
+
+        $query1 = DB::raw('forum_forums', '*', ['sub'=>0], 'ORDER BY sort, name');
+        $forumforum = array();
+        while ($row = $query1->fetch(PDO::FETCH_ASSOC)) {
+                $forumforum[] = $row;
+        }
+
+        // Init Data
         $data = [
             'title' => Lang::T("FORUM_MANAGEMENT"),
-            'groupsres' => $groupsres,
+            'forumcat' => $forumcat,
+            'forumforum' => $forumforum,
+            'query' => $query,
         ];
-        View::render('forum/index', $data, 'admin');
+
+        // Load View
+        View::render('forum/forum', $data, 'admin');
     }
 
-    public function addcat()
-    {
-        $error_ac = "";
-        $new_forumcat_name = $_POST["new_forumcat_name"];
-        $new_forumcat_sort = $_POST["new_forumcat_sort"];
-
-        if ($new_forumcat_name == "") {
-            $error_ac .= "<li>" . Lang::T("CP_FORUM_CAT_NAME_WAS_EMPTY") . "</li>\n";
-        }
-        if ($new_forumcat_sort == "") {
-            $error_ac .= "<li>" . Lang::T("CP_FORUM_CAT_SORT_WAS_EMPTY") . "</li>\n";
-        }
-
-        if ($error_ac == "") {
-            $res = DB::insert('forumcats', ['name'=>$new_forumcat_name, 'sort'=>intval($new_forumcat_sort)]);
-            if ($res) {
-                Redirect::autolink(URLROOT . "/adminforum", "Thank you, new forum cat added to db ...");
-            } else {
-                Redirect::autolink(URLROOT . "/adminforum", Lang::T("CP_COULD_NOT_SAVE_TO_DB"));
-            }
-        } else {
-            Redirect::autolink(URLROOT . "/adminforum", $error_ac);
-        }
-    }
-
-    public function delcat()
-    {
-        $id = (int) $_GET["id"];
-
-        $v = DB::select('forumcats', '*', ['id'=>$id]);
-        if (!$v) {
-            Redirect::autolink(URLROOT . "/adminforum", Lang::T("FORUM_INVALID_CAT"));
-        }
-
-        $data = [
-            'title' => Lang::T("FORUM_MANAGEMENT"),
-            'id' => $id,
-            'catid' => $v['id'],
-            'name' => $v['name'],
-        ];
-        View::render('forum/deletecat', $data, 'admin');
-    }
-
-    public function deleteforumcat()
-    {
-        DB::delete('forumcats', ['id'=>$_POST['id']]);
-
-        $res = DB::raw('forum_forums', 'id', ['category' => $_POST['id']]);
-        while ($row = $res->fetch(PDO::FETCH_ASSOC)) {
-            $res2 = DB::raw('forum_topics', 'id', ['forumid'=>$row['id']]);
-            while ($arr = $res2->fetch(PDO::FETCH_ASSOC)) {
-                DB::delete('forum_posts', ['topicid'=>$arr['id']]);
-                DB::delete('forum_readposts', ['topicid'=>$arr['id']]);
-            }
-            DB::delete('forum_topics', ['forumid'=>$row['id']]);
-            DB::delete('forum_forums', ['id'=>$row['id']]);
-        }
-        Redirect::autolink(URLROOT . "/adminforum", Lang::T("CP_FORUM_CAT_DELETED"));
-    }
-
-    public function editcat()
-    {
-        $id = (int) $_GET["id"];
-
-        $r = DB::raw('forumcats', '*', ['id'=>$id])->fetch();
-        if (!$r) {
-            Redirect::autolink(URLROOT . "/adminforum", Lang::T("FORUM_INVALID_CAT"));
-        }
-
-        $data = [
-            'title' => Lang::T("FORUM_MANAGEMENT"),
-            'id' => $id,
-            'sort' => $r['sort'],
-            'name' => $r['name'],
-        ];
-        View::render('forum/editcat', $data, 'admin');
-    }
-
-    public function saveeditcat()
-    {
-        $id = (int) $_POST["id"];
-        $changed_sortcat = (int) $_POST["changed_sortcat"];
-
-        DB::update('forumcats', ['sort'=>$changed_sortcat, 'name'=>$_POST["changed_forumcat"]], ['id' => $id]);
-        Redirect::autolink(URLROOT . "/adminforum", "<center><b>" . Lang::T("CP_UPDATE_COMPLETED") . "</b></center>");
-    }
-
+    // Add Forum Submit
     public function addforum()
     {
+        // Check User Input
         $error_ac = "";
         $new_forum_name = $_POST["new_forum_name"];
         $new_desc = $_POST["new_desc"];
@@ -115,9 +51,9 @@ class Adminforum
         $minclassread = (int) $_POST["minclassread"];
         $minclasswrite = (int) $_POST["minclasswrite"];
         $guest_read = $_POST["guest_read"];
-
         $new_forum_forum = (int) $_POST["new_forum_forum"] ?? 0; // sub forum mod
 
+        // Check Correct Input
         if ($new_forum_name == "") {
             $error_ac .= "<li>" . Lang::T("CP_FORUM_NAME_WAS_EMPTY") . "</li>\n";
         }
@@ -130,6 +66,8 @@ class Adminforum
         if ($new_forum_cat == "") {
             $error_ac .= "<li>" . Lang::T("CP_FORUM_CATAGORY_WAS_EMPTY") . "</li>\n";
         }
+
+        // Insert Forum
         if ($error_ac == "") {
             $res = DB::insert('forum_forums', ['name'=>$new_forum_name, 'description'=>$new_desc, 'sort'=>$new_forum_sort, 'category'=>$new_forum_cat, 'minclassread'=> $minclassread, 'minclasswrite'=>$minclasswrite, 'guest_read'=> $guest_read, 'sub'=>$new_forum_forum]);
             if ($res) {
@@ -142,24 +80,31 @@ class Adminforum
         }
     }
 
+    // Delete Forum Default Page
     public function deleteforum()
     {
+        // Check User Input
         $id = (int) $_GET["id"];
 
+        // Get Forum Data
         $v = DB::raw('forum_forums', '*', ['id'=>$id])->fetch();
         if (!$v) {
             Redirect::autolink(URLROOT . "/adminforum", Lang::T("FORUM_INVALID"));
         }
 
+        // Init Data
         $data = [
             'title' => Lang::T("FORUM_MANAGEMENT"),
             'id' => $id,
             'catid' => $v['sort'],
             'name' => $v['name'],
         ];
+
+        // Load View
         View::render('forum/deleteforum', $data, 'admin');
     }
 
+    // Delete Forum Submit
     public function deleteforumok()
     {
         DB::delete('forum_forums', ['id'=>$_POST['id']]);
@@ -169,10 +114,13 @@ class Adminforum
         Redirect::autolink(URLROOT . "/adminforum", Lang::T("CP_FORUM_DELETED"));
     }
 
+    // Edit Forum Default Page
     public function editforum()
     {
+        // Check User Input
         $id = (int) $_GET["id"];
 
+        // Get Forum Data
         $r = DB::raw('forum_forums', '*', ['id'=>$id])->fetch();
         if (!$r) {
             Redirect::autolink(URLROOT . "/adminforum", Lang::T("FORUM_INVALID"));
@@ -180,6 +128,7 @@ class Adminforum
 
         $query = DB::raw('forumcats', '*', '', 'ORDER BY sort, name');
 
+        // Init Data
         $data = [
             'title' => Lang::T("FORUM_MANAGEMENT"),
             'id' => $id,
@@ -190,11 +139,15 @@ class Adminforum
             'guest_read' => $r['guest_read'],
             'query' => $query,
         ];
+
+        // Load View
         View::render('forum/editforum', $data, 'admin');
     }
 
+    // Edit Forum Submit
     public function saveeditforum()
     {
+        // Check User Input
         $id = (int) $_POST["id"];
         $changed_sort = (int) $_POST["changed_sort"];
         $changed_forum = $_POST["changed_forum"];

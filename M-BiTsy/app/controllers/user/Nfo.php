@@ -1,12 +1,15 @@
 <?php
+
 class Nfo
 {
 
     public function __construct()
     {
+        // Verify User/Guest
         Auth::user(0, 2);
     }
 
+    // Validate User
     public function checks($id, $edit = false)
     {
         if (Users::get("view_torrents") == "no") {
@@ -22,15 +25,22 @@ class Nfo
         }
     }
 
+    // NFO Default Page
     public function index()
     {
+        // Check User Input
         $id = (int) Input::get("id");
+
+        // Validate User
         $this->checks($id);
 
+        // Get Torrent
         $res = DB::select('torrents', 'name, nfo', ['id'=>$id]);
         if ($res["nfo"] != "yes") {
             Redirect::autolink(URLROOT."/torrent?id=$id", Lang::T("NO_NFO"));
         }
+
+        // Get NFO
         if ($res["nfo"] == "yes") {
             $shortname = CutName(htmlspecialchars($res["name"]), 40);
             $nfofilelocation = UPLOADDIR."/nfos/$id.nfo";
@@ -39,29 +49,40 @@ class Nfo
         }
 
         if ($nfo) {
-            $nfo = Helper::my_nfo_translate($nfo);
+            $nfo = my_nfo_translate($nfo);
             $title = Lang::T("NFO_FILE_FOR") . ": $shortname";
+
+            // Init Data
             $data = [
                 'id' => $id,
                 'title' => $title,
                 'nfo' => $nfo,
             ];
+
+            // Load View
             View::render('nfo/index', $data, 'user');
+
         } else {
             Redirect::autolink(URLROOT."/torrent?id=$id", Lang::T("NFO Found but error"));
         }
     }
 
+    // NFO Edit Default Page
     public function edit()
     {
+        // Check User Input
         $id = (int) Input::get("id");
-        $this->checks($id, true);
-        
+
+        // Validate User
+        $this->checks($id);
+
+        // Get Torrent
         $res = DB::select('torrents', 'name, nfo', ['id'=>$id]);
         if ($res["nfo"] != "yes") {
             Redirect::autolink(URLROOT."/torrent?id=$id", Lang::T("NO_NFO"));
         }
 
+        // Get NFO
         if ($res["nfo"] == "yes") {
             $shortname = CutName(htmlspecialchars($res["name"]), 40);
             $nfofilelocation = UPLOADDIR."/nfos/$id.nfo";
@@ -70,26 +91,34 @@ class Nfo
         }
 
         if ($nfo) {
-            $nfo = Helper::my_nfo_translate($nfo);
+            $nfo = my_nfo_translate($nfo);
             $title = Lang::T("NFO_FILE_FOR") . ": <a href='" . URLROOT . "/torrent?id=$id'>$shortname</a>";
+            
+            // Init Data
             $data = [
                 'id' => $id,
                 'title' => $title,
                 'nfo' => $nfo,
             ];
+            
+            // Load View
             View::render('nfo/edit', $data, 'user');
         } else {
             Redirect::autolink(URLROOT."/torrent?id=$id", Lang::T("NFO Found but error"));
         }
     }
 
+    // NFO Edit Form Submit
     public function submit()
     {
+        // Check User Input
         $id = (int) Input::get("id");
-        $this->checks($id, true);
 
+        // Validate User
+        $this->checks($id);
+
+        // Check NFO
         $nfo = UPLOADDIR."/nfos/$id.nfo";
-
         if ((!Validate::Id($id)) || (!$contents = file_get_contents($nfo))) {
             Redirect::autolink(URLROOT."/torrent?id=$id", Lang::T("NFO_NOT_FOUND"));
         }
@@ -103,18 +132,23 @@ class Nfo
         }
     }
 
+    // NFO Edit Form Submit
     public function delete()
     {
+        // Check User Input
         $id = (int) Input::get("id");
-        $this->checks($id, true);
+        $reason = htmlspecialchars(Input::get("reason"));
 
+        // Validate User
+        $this->checks($id);
+
+        // Check NFO
         $nfo = UPLOADDIR."/nfos/$id.nfo";
         if ((!Validate::Id($id)) || (!$contents = file_get_contents($nfo))) {
             Redirect::autolink(URLROOT."/torrent?id=$id", Lang::T("NFO_NOT_FOUND"));
         }
 
-        $reason = htmlspecialchars(Input::get("reason"));
-
+        // Delete NFO
         if (get_row_count("torrents", "WHERE `nfo` = 'yes' AND `id` = $id")) {
             unlink($nfo);
             Logs::write("NFO ($id) was deleted by ".Users::get('username')." $reason");

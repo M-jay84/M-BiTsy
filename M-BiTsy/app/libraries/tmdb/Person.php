@@ -29,8 +29,6 @@ class Person
         return $this->_data['job'];
     }
 
-
-
     //  Get the Person's birthday
     public function getBirthday() {
         return $this->_data['birthday'];

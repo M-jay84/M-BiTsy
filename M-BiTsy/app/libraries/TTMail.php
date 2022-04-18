@@ -1,4 +1,5 @@
 <?php
+
 class TTMail
 {
     // Declaration Of Variables Necessary For The Class
@@ -11,7 +12,7 @@ class TTMail
 
     public $smtp_user;
     public $smtp_pass;
-    // Mail Class Constructor Function
+
     public function __construct()
     {
         switch (strtolower(Config::get('mail_type'))) {
@@ -41,7 +42,7 @@ class TTMail
         }
     }
     
-    // Function That Allows Sending Mail
+    // Function That Allows Sending Email
     public function Send($to, $subject, $message, $additional_headers = "", $additional_parameters = "")
     {
         if (preg_match("!^From:(.*)!m", $additional_headers, $matches)) {

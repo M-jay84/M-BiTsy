@@ -26,6 +26,30 @@ class Forums
         return $stmt;
     }
 
+    public static function gettopicpages($topicid, $count = 0)
+    {
+        $count = DB::column('forum_posts', 'COUNT(*)', ['topicid'=>$topicid]);
+        list($pagerbuttons, $limit) = Pagination::pager(15, $count, URLROOT . "/topic?topicid=$topicid&amp;");
+        $query = "SELECT forum_posts.id,
+                        forum_posts.topicid,
+                        forum_posts.userid,
+                        forum_posts.added,
+                        forum_posts.body,
+                        forum_posts.editedby,
+                        forum_posts.editedat,
+                        forum_posts.attachments,
+                        thanks.user,
+                        thanks.thanked,
+                        thanks.type
+                FROM forum_posts
+                LEFT JOIN thanks ON forum_posts.id = thanks.thanked
+                WHERE forum_posts.topicid = $topicid
+                GROUP BY forum_posts.id 
+                ORDER BY forum_posts.id $limit";
+        $res = DB::run($query);
+        return array('res'=>$res,'pagerbuttons'=>$pagerbuttons);
+    }
+
     public static function deltopic($topicid)
     {
         DB::delete('forum_topics', ['id'=>$topicid]);

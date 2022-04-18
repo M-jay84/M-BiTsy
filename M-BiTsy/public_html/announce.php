@@ -1,15 +1,18 @@
 <?php
 // Stop Errors Messing With Output
 error_reporting(0); // E_ALL ^ E_NOTICE
+
 // Set Some Config Settings (external are done with download - not announce)
 define("_MEMBERSONLY", true);
 define("_DEBUG", false);
 define("_INTERVAL", 600);
 define("_INTERVAL_MIN", 300);
+
 // Classes
 require '../app/config/config.php';
 require '../app/libraries/DB.php';
 require '../app/libraries/Announce.php';
+
 // Register custom exception handler (Disable On Live)
 include "../app/helpers/exception_helper.php";
 set_exception_handler("handleUncaughtException");

@@ -1,25 +1,24 @@
 <?php
+
 class Adminsearch
 {
 
     public function __construct()
     {
+        // Verify User/Staff
         Auth::user(_MODERATOR, 2);
     }
 
     public function index()
     {
-        Redirect::to(URLROOT . '/admincp');
-    }
-    
-    public function simplesearch()
-    {
+        // Check User
         if (Users::get('delete_users') == 'no' || Users::get('delete_torrents') == 'no') {
             Redirect::autolink(URLROOT . "/admincp", "You do not have permission to be here.");
         }
+        
         if ($_POST['do'] == "del") {
             if (!@count($_POST["users"])) {
-                Redirect::autolink(URLROOT."/adminsearch/simplesearch", "Nothing Selected.");
+                Redirect::autolink(URLROOT."/adminsearch", "Nothing Selected.");
             }
             $ids = array_map("intval", $_POST["users"]);
             $ids = implode(", ", $ids);
@@ -35,8 +34,10 @@ class Adminsearch
                     Torrents::deletetorrent($row["id"]);
                 }
             }
-            Redirect::autolink(URLROOT . "/adminsearch/simplesearch", "Entries Deleted");
+            Redirect::autolink(URLROOT . "/adminsearch", "Entries Deleted");
         }
+
+        // Search User
         $where = null;
         if (!empty($_GET['search'])) {
             $search = sqlesc('%' . $_GET['search'] . '%');
@@ -44,17 +45,21 @@ class Adminsearch
                  OR ip LIKE " . $search;
         }
 
+        // Pagination
         $count = get_row_count("users", "WHERE enabled = 'yes' AND status = 'confirmed' $where");
         list($pagerbuttons, $limit) = Pagination::pager(25, $count, '/adminsearch/simpleusersearch?;');
         $res = DB::run("SELECT id, username, class, email, ip, added, last_access FROM users WHERE enabled = 'yes' AND status = 'confirmed' $where ORDER BY username DESC $limit");
 
+        // Init Data
         $data = [
             'title' => Lang::T("USERS_SEARCH_SIMPLE"),
             'count' => $count,
             'pagerbuttons' => $pagerbuttons,
             'res' => $res,
         ];
-        View::render('search/simpleusersearch', $data, 'admin');
+
+        // Load View
+        View::render('search/index', $data, 'admin');
     }
 
     public function advancedsearch()
@@ -62,7 +67,7 @@ class Adminsearch
         $do = $_GET['do']; // todo
         if ($do == "warndisable") {
             if (empty($_POST["warndisable"])) {
-                Redirect::autolink(URLROOT."/adminsearch/advancedsearh", "You must select a user to edit.", 1);
+                Redirect::autolink(URLROOT."/adminsearch/advanced", "You must select a user to edit.", 1);
             }
             if (!empty($_POST["warndisable"])) {
                 $enable = $_POST["enable"];
@@ -101,7 +106,7 @@ class Adminsearch
                 }
                 if ($warn != '') {
                     if (empty($_POST["warnpm"])) {
-                        Redirect::autolink(URLROOT."/adminsearch/advancedsearh", "You must type a reason/mod comment.", 1);
+                        Redirect::autolink(URLROOT."/adminsearch/advanced", "You must type a reason/mod comment.", 1);
                     }
 
                     $msg = "You have received a warning, Reason: $warnpm";
@@ -131,7 +136,7 @@ class Adminsearch
         $title = Lang::T("ADVANCED_USER_SEARCH");
         require APPROOT . '/views/admin/admincp/header.php';
         Style::adminnavmenu();
-        require APPROOT . '/views/admin/search/advancedsearch.php';
+        require APPROOT . '/views/admin/search/advanced.php';
         require APPROOT . '/views/admin/admincp/footer.php';
     }
 

@@ -16,20 +16,7 @@
 </footer>
 <!-- Dont Change -->
 <script src="<?php echo URLROOT; ?>/assets/js/jquery-3.3.1.min.js"></script>
-<script src="<?php echo URLROOT; ?>/assets/js/popper.js"></script>
 <script src="<?php echo URLROOT; ?>/assets/js/bootstrap.min.js"></script>
-<script src="<?php echo URLROOT; ?>/assets/js/java_klappe.js"></script>
-<script src="https://www.google.com/recaptcha/api.js" async defer></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js"></script>
-<script>hljs.initHighlightingOnLoad();</script>
-    <script>
-        function updateShouts(){
-            // Assuming we have #shoutbox
-            $('#shoutbox').load('shoutbox/chat');
-        }
-        setInterval( "updateShouts()", 15000 );
-		updateShouts();
-    </script>
-  </body>
+</body>
 </html>
 <?php ob_end_flush();?>

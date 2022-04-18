@@ -28,14 +28,10 @@ if ($data['count'] == 0) {
     </tr></thead>
     <?php
     while ($arr = $data['res']->fetch(PDO::FETCH_LAZY)) {
-        $r2 = DB::raw('users', 'username', ['id'=>$arr['addedby']]);
-        $a2 = $r2->fetch(PDO::FETCH_ASSOC);
-        $r4 = DB::raw('users', 'username,id', ['id'=>$arr['addedby']]);
-        $a4 = $r4->fetch(PDO::FETCH_ASSOC);
         print("<tbody><tr>
         <td>" . TimeDate::utc_to_tz($arr['added']) . "</td>
         <td>$arr[mail_domain]</td>
-        <td><a href='" . URLROOT . "/profile?id=$a4[id]'>".Users::coloredname($a4['id'])."" . "</a></td>
+        <td><a href='" . URLROOT . "/profile?id=$arr[addedby]'>".Users::coloredname($arr['addedby'])."" . "</a></td>
         <td>$arr[comment]</td>
         <td><a href='".URLROOT."/adminban/email?remove=$arr[id]'>Remove</a></td>
         </tr></tbody>");

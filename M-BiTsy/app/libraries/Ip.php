@@ -1,9 +1,11 @@
 <?php
+
 class Ip
 {
     // Check IP for ban and Redirect
     public static function checkipban($ip)
     {
+        $nip = 0;
         $res = DB::raw('bans', '*', '');
         while ($row = $res->fetch(PDO::FETCH_ASSOC)) {
             $banned = false;
@@ -21,6 +23,16 @@ class Ip
                 echo '<html><head><title>Forbidden</title> </head><body> <h1>Forbidden</h1>Unauthorized IP address.<br> </body></html>';
                 die;
             }
+        }
+    }
+
+    // IP Check
+    public static function checkIP()
+    {
+        $ip = Ip::getIP();
+        $ipq = get_row_count("users", "WHERE ip = '$ip'");
+        if ($ipq >= Config::get('ACCOUNTMAX')) {
+            Redirect::autolink(URLROOT . '/login', "This IP is already in use !");
         }
     }
 
@@ -66,6 +78,7 @@ class Ip
         return true;
     }
 
+    // Get Ip
     public static function getIP()
     {
         // Cloudflare
@@ -127,7 +140,7 @@ class Ip
             $ipv6long = $bin . $ipv6long;
             $bits--;
         }
-        // Causes error on xampp
+        // Enable gmp extension
         return gmp_strval(gmp_init($ipv6long, 2), 10);
     }
 
@@ -152,17 +165,13 @@ class Ip
         return inet_ntop(inet_pton(substr($ipv6, 0, -1)));
     }
 
-    /**
-     * Get user agent.
-     */
+    // Get user agent.
     public static function agent()
     {
         return $_SERVER['HTTP_USER_AGENT'];
     }
 
-    /**
-     * Get OperatingSystem name.
-     */
+    // Get OperatingSystem name.
     public static function operatingSystem()
     {
         $UserAgent = self::agent();
@@ -185,9 +194,7 @@ class Ip
         return $PlatForm;
     }
 
-    /**
-     * Get Browser Name.
-     */
+    // Get Browser Name.
     public static function browser()
     {
         $UserAgent = self::agent();
@@ -223,9 +230,7 @@ class Ip
         ];
     }
 
-    /**
-     * Get Os version.
-     */
+    // Get Os version.
     public static function oSVersion()
     {
         $UserAgent = self::agent();
@@ -260,9 +265,7 @@ class Ip
         return $OsVersion;
     }
 
-    /**
-     * Get Browser version.
-     */
+    // Get Browser version.
     public static function browserVersion()
     {
         $UserAgent = self::agent();

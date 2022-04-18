@@ -1,14 +1,18 @@
 <?php
+
 class Adminsnatch
 {
 
     public function __construct()
     {
+        // Verify User/Staff
         Auth::user(_MODERATOR, 2);
     }
 
+    // Hit & Runs Default Page
     public function index()
     {
+        // Delete
         if ($_POST['do'] == 'delete') {
             if (!@count($_POST['ids'])) {
                 Redirect::autolink(URLROOT . "/adminsnatch", "Nothing Selected.");
@@ -20,18 +24,23 @@ class Adminsnatch
         }
 
         if (Config::get('HNR_ON')) {
+
+            // Pagination
             $count = DB::column('snatched', 'count(*)', ['hnr'=>'yes']);
-            $perpage = 50;
-            list($pagerbuttons, $limit) = Pagination::pager($perpage, 30, "Adminsnatch?");
+            list($pagerbuttons, $limit) = Pagination::pager(30, $count, "Adminsnatch?");
             $res = DB::run("SELECT *,s.tid FROM users u left join snatched s on s.uid=u.id  where hnr='yes' ORDER BY s.uid DESC $limit");
 
+            // Init Data
             $data = [
                 'title' => "List of Hit and Run",
                 'count' => $count,
                 'pagerbuttons' => $pagerbuttons,
                 'res' => $res,
             ];
+
+            // Load View
             View::render('snatch/hitnrun', $data, 'admin');
+
         } else {
             Redirect::autolink(URLROOT, "Hit & Run Disabled in Config.php (mod in progress)");
         }

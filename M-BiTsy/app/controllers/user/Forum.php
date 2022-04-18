@@ -1,15 +1,15 @@
 <?php
+
 class Forum
 {
 
     public function __construct()
     {
+        // Verify User/Guest
         Auth::user(0, 1);
     }
 
-    /**
-     * Lets show the validation
-     */
+    // Validate User/Guest
     private function validForumUser()
     {
         if (!Config::get('FORUMS')) {
@@ -23,30 +23,29 @@ class Forum
         }
     }
 
-    /**
-     * View Forum Index.
-     */
+    // Forum Default Page
     public function index()
     {
+        // Validate User/Geust
         $this->validForumUser();
 
-        if ($_GET["do"] == 'catchup') {
+        // Mark All Post Read
+        if (isset($_GET["do"]) == 'catchup') {
             catch_up();
         }
 
-        // Get Data
+        // Get Forum Data
         $forums_res = Forums::getIndex();
         if ($forums_res->rowCount() == 0) {
             Redirect::autolink(URLROOT, Lang::T("FORUM_AVAILABLE"));
         }
-
-        // Get Subs
         $subforums_res = Forums::getsub();
 
-        // topic count and post counts
+        // Count Topis/Posts
         $postcount = number_format(get_row_count("forum_posts"));
         $topiccount = number_format(get_row_count("forum_topics"));
 
+        // Init Data
         $data = [
             'title' => Lang::T("Forums"),
             'mainquery' => $forums_res,
@@ -54,36 +53,42 @@ class Forum
             'postcount' => $postcount,
             'topiccount' => $topiccount,
         ];
+        
+        // Load View
         View::render('forum/index', $data, 'user');
     }
 
-    /**
-     * Search Forum.
-     */
+    // Search Forum Default Page
     public function search()
     {
+        // Validate User/Geust
         $this->validForumUser();
 
+        // Init Data
         $data = [
             'title' => Lang::T("Search Forums"),
         ];
+        
+        // Load View
         View::render('forum/search', $data, 'user');
     }
 
-    /**
-     * Search Results.
-     */
+    // Search Forum Results Page
     public function result()
     {
+        // Validate User/Geust
         $this->validForumUser();
 
+        // Check User Input
         $keywords = Input::get("keywords");
-        $type = $_GET['type'];
+        $type = Input::get("type");;
 
+        // Search Match
         if (!$keywords == '') {
-            $res = Forums::search($keywords, $_GET['type']);
-
+            $res = Forums::search($keywords, $type);
             if ($res['count'] > 0) {
+                
+                // Init Data
                 $data = [
                     'res' => $res['res'],
                     'keywords' => $keywords,
@@ -91,7 +96,10 @@ class Forum
                     'count' => $res['count'],
                     'pagerbuttons' => $res['pager'],
                 ];
+        
+                // Load View
                 View::render('forum/result', $data, 'user');
+
             } else {
                 Redirect::autolink(URLROOT . '/forum/search', Lang::T("NOTHING_FOUND"));
             }
@@ -101,37 +109,38 @@ class Forum
         }
     }
 
-    /**
-     * View Unread Topics.
-     */
+    // View Unread Topics Default Page
     public function viewunread()
     {
+        // Validate User/Geust
         $this->validForumUser();
 
+        // Get Data
         $res = DB::run("SELECT id, forumid, subject, lastpost FROM forum_topics ORDER BY lastpost DESC");
         
-		$data = [
+		// Init Data
+        $data = [
             'res' => $res,
-            'n' => 0,
             'title' => Lang::T("Forums"),
         ];
+
+        // Load View
         View::render('forum/viewunread', $data, 'user');
     }
 
-    /**
-     * View Forum.
-     */
+    // View Forum Default Page
     public function view()
     {
+        // Validate User/Geust
         $this->validForumUser();
 
+        // Check Input
         $forumid = Input::get("forumid");
-
         if (!Validate::Id($forumid)) {
             Redirect::autolink(URLROOT . "/forum", Lang::T("FORUMS_DENIED"));
         }
 
-        // Get forum name 
+        // Get Forum Data
         $arr = DB::select('forum_forums', 'name, minclassread, guest_read', ['id'=>$forumid]);
         $forumname = $arr["name"];
         if (!$forumname || Users::get('class') < $arr["minclassread"] && $arr["guest_read"] == "no") {
@@ -142,14 +151,27 @@ class Forum
         $count = get_row_count("forum_topics", "WHERE forumid=$forumid");
         list($pagerbuttons, $limit) = Pagination::pager(25, $count, URLROOT . "/forum/view&forumid=$forumid&");
         $topicsres = DB::all('forum_topics', '*', ['forumid'=>$forumid], 'ORDER BY sticky, lastpost', "DESC $limit");
-        
+
+        $test = DB::raw('forum_forums', 'sub', ['id'=>$forumid])->fetch(); // sub forum mod
+        $test1 = DB::raw('forum_forums', 'name,id', ['id'=>$test['sub']])->fetch(); // sub forum mod
+        $subforum = $test1['name'] ?? '';
+        $subforumid = $test1['id'] ?? 0;
+        $testz = DB::all('forum_forums', '*', ['sub'=>$forumid]); // sub forum mod
+
+        // Init Data
         $data = [
-            'title' => Lang::T("Forums"),
+            'title' => Lang::T("View Forums"),
             'topicsres' => $topicsres,
             'forumname' => $forumname,
             'forumid' => $forumid,
             'pagerbuttons' => $pagerbuttons,
+
+            'testz' => $testz,
+            'subforum' => $subforum,
+            'subforumid' => $subforumid,
         ];
+
+        // Load View
         View::render('forum/viewforum', $data, 'user');
     }
 

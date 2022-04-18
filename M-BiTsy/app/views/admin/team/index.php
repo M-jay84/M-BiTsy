@@ -56,8 +56,6 @@ while ($row = $data['sql']->fetch(PDO::FETCH_LAZY)) {
     $image = htmlspecialchars($row['image']);
     $owner = (int) $row['owner'];
     $info = format_comment($row['info']);
-    $OWNERNAME2 = DB::raw('users', 'username, class', ['id'=>$owner,])->fetch();
-    $OWNERNAME = $OWNERNAME2['username'];
     ?>
     <tbody><tr>
     <td><b><?php echo $id ?></b> </td> 

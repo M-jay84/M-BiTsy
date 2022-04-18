@@ -1,23 +1,29 @@
 <?php
+
 class Report
 {
 
     public function __construct()
     {
+        // Verify User/Guest
         Auth::user(0, 2);
     }
 
+    // No Default Page
     public function index()
     {
         Redirect::autolink(URLROOT, Lang::T("NO_ID"));
     }
 
+    // Report User Default Page
     public function user()
     {
+        // Check User Input
         $takeuser = (int) Input::get("user");
         $takereason = Input::get("reason");
         $user = (int) Input::get("id");
 
+        // Check User
         if (Users::get("view_users") == "no") {
             Redirect::autolink(URLROOT, Lang::T("NO_USER_VIEW"));
         }
@@ -26,6 +32,7 @@ class Report
             if (empty($takereason)) {
                 Redirect::autolink(URLROOT . "/report/user?user=$user", Lang::T("YOU_MUST_ENTER_A_REASON"));
             }
+            
             $res = DB::raw('reports', 'id', [ 'addedby'=>Users::get('id'),'votedfor'=>$takeuser,'type'=>'user']);
             if ($res->rowCount() == 0) {
                 DB::insert('reports', ['addedby'=>Users::get('id'),'votedfor'=>$takeuser,'votedfor_xtra'=>0,'type'=>'user','reason'=>$takereason]);
@@ -42,23 +49,29 @@ class Report
             }
             $arr = $res->fetch(PDO::FETCH_ASSOC);
             
+            // Init Data
             $data = [
                 'title' => 'Report',
                 'username' => $arr['username'],
                 'user' => $user,
             ];
+
+            // Load View
             View::render('report/user', $data, 'user');
         } else {
             Redirect::autolink(URLROOT . "/profile?id=$user", Lang::T("MISSING_INFO"));
         }
     }
 
+    // Report Torrent Default Page
     public function torrent()
     {
+        // Check User Input
         $taketorrent = (int) Input::get("torrent");
         $takereason = Input::get("reason");
         $torrent = (int) Input::get("torrent");
 
+        // Check User
         if (Users::get("view_torrents") == "no") {
             Redirect::autolink(URLROOT, Lang::T("NO_TORRENT_VIEW"));
         }
@@ -84,23 +97,29 @@ class Report
             }
             $arr = $res->fetch(PDO::FETCH_LAZY);
             
+            // Init Data
             $data = [
                 'title' => 'Report',
                 'name' => $arr['name'],
                 'torrent' => $torrent,
             ];
+
+            // Load View
             View::render('report/torrent', $data, 'user');
         } else {
             Redirect::autolink(URLROOT . "/torrent?id=$torrent", Lang::T("MISSING_INFO"));
         }
     }
 
+    // Report Comment Default Page
     public function comment()
     {
+        // Check User Input
         $takecomment = (int) Input::get("comment");
         $takereason = Input::get("reason");
         $type = Input::get("type");
         
+        // Check Input
         if ($type == "req") {
             $whattype = 'req';
         } else {
@@ -135,20 +154,25 @@ class Report
                 'text' => $arr['text'],
                 'comment' => $takecomment,
             ];
+
+            // Load View
             View::render('report/comment', $data, 'user');
         } else {
             Redirect::autolink(URLROOT, Lang::T("MISSING_INFO"));
         }
     }
 
+    // Report Forum Post Default Page
     public function forum()
     {
+        // Check User Input
         $takeforumid = (int) Input::get("forumid");
         $takeforumpost = (int) Input::get("forumpost");
         $takereason = Input::get("reason");
         $forumid = (int) Input::get("forumid");
         $forumpost = (int) Input::get("forumpost");
 
+        // Check User
         if (Users::get("forumbanned") == "yes" || Users::get("view_forum") == "no") {
             Redirect::autolink(URLROOT, Lang::T("FORUM_BANNED"));
         }
@@ -173,12 +197,15 @@ class Report
             }
             $arr = $res->fetch(PDO::FETCH_LAZY);
             
+            // Init Data
             $data = [
                 'title' => 'Report',
                 'subject' => $arr['subject'],
                 'forumpost' => $forumpost,
                 'forumid' => $forumid,
             ];
+
+            // Load View
             View::render('report/forum', $data, 'user');
         }
 

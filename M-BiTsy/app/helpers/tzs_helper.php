@@ -1,5 +1,5 @@
 <?php
-// Array With Different World Time Zones
+// Time Zones Array
 // Php DateTimeZone (Language Default Used is English !!!)
 $tzs = array();
 $tzs["-720"] = array("(GMT - 12:00 hours) Enitwetok, Kwajalien", "Pacific/Kwajalein");

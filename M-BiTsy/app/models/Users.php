@@ -1,4 +1,5 @@
 <?php
+
 class Users
 {
 
@@ -114,7 +115,8 @@ class Users
         echo $user;
     }
 
-	public static function get($name) {
+	public static function get($name)
+    {
         global $CURRENTUSER;
 		if (isset($CURRENTUSER[$name])) {
             $CURRENTUSER['loggedin'] = true;
@@ -123,4 +125,63 @@ class Users
             return false;
         }
 	}
+
+	// Login If User Allowed
+    public static function login($username, $password)
+    {
+        // Select User
+        $sql = DB::raw('users', 'id, password, secret, status, enabled', ['username' => $username])->fetch();
+        
+        // Run Some Checks
+        if (!$sql || !password_verify($password, $sql['password'])) {
+            Redirect::autolink(URLROOT . "/logout", Lang::T("LOGIN_INCORRECT"));
+        } elseif ($sql['status'] == "pending") {
+            Redirect::autolink(URLROOT . "/logout", Lang::T("ACCOUNT_PENDING"));
+        } elseif ($sql['enabled'] == "no") {
+            Redirect::autolink(URLROOT . "/logout", Lang::T("ACCOUNT_DISABLED"));
+        }
+
+        // Set Cookies
+        Cookie::setAll($sql['id'], $sql['password']);
+        
+        // Update User
+        DB::update('users', ['last_login' => TimeDate::get_date_time()], ['id' => $sql['id']]);
+        
+        // Success Visit Home
+        Redirect::to(URLROOT);
+	}
+
+    
+    public static function search($search, $class, $letter) {
+        $q = $query = null;
+        if ($search) {
+            $query = "username LIKE " . sqlesc("%$search%") . " AND status='confirmed'";
+            if ($search) {
+                $q = "search=" . htmlspecialchars($search);
+            }
+        } elseif ($letter) {
+            if (strlen($letter) > 1) {
+                unset($letter);
+            }
+            if ($letter == "" || strpos("abcdefghijklmnopqrstuvwxyz", $letter) === false) {
+                unset($letter);
+            } else {
+                $query = "username LIKE '$letter%' AND status='confirmed'";
+            }
+            $q = "letter=$letter";
+        }
+        if (!$query) {
+            $query = "status='confirmed'";
+        }
+        if (!$class) {
+            unset($class);
+        } else {
+            $query .= " AND class=$class";
+            $q .= ($q ? "&amp;" : "") . "class=$class";
+        }
+
+        $var = ['query'=>$query, 'q'=>$q];
+
+        return $var;
+    }
 }

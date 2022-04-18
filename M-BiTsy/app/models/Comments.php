@@ -47,7 +47,7 @@ class Comments
         LEFT JOIN torrents t ON c.torrent = t.id 
         LEFT JOIN news n ON c.news = n.id 
         LEFT JOIN users u ON c.user = u.id 
-        ORDER BY c.added DESC $limit")->fetchAll(PDO::FETCH_OBJ);
+        ORDER BY c.added DESC $limit")->fetchAll(PDO::FETCH_ASSOC);
         return $res;
     }
 }

@@ -18,7 +18,7 @@
                  </select><br />";
     print("<br><div>" . Lang::T("CATEGORY") . ": </div><div align='left'>" . $category . "</div>");
 
-    $language = Lang::select();
+    $language = Torrentlang::select();
     print("<br><div>Language: </div><div>" . $language . "</div>");
     
     $anonycheck = '';

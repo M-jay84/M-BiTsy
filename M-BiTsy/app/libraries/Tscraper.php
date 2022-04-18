@@ -3,6 +3,7 @@
 class Tscraper
 {
 
+    // Scrape Torrent
     public static function ScrapeId($id, $annlist, $infohash)
     {
         if (!is_array($annlist)) {
@@ -38,19 +39,22 @@ class Tscraper
         }
     }
 
+    // Scrape Torrent Batch/All todo
     public static function scrapeall()
     {
         // Set A Limit ? how fast is server / how many torrents to limit ?
         //set_time_limit(15);
 
-        // Rescrape torrents every x seconds. (Default: 2 days)
-        $stmt = DB::run("SELECT `id`, `info_hash`, `last_action` 
+        // Rescrape 10 Torrents Every X Days. (Default: 2 days)
+        $stmt = DB::run("SELECT `id`, `info_hash`, `last_action`, `announcelist`
                          FROM `torrents` 
                          WHERE `external` = 'yes' 
-                         AND `last_action` <= DATE_SUB(UTC_TIMESTAMP(), INTERVAL 2 DAY)");
+                         AND `last_action` <= DATE_SUB(UTC_TIMESTAMP(), INTERVAL 2 DAY)
+                         LIMIT 10");
 
         foreach ($stmt as $tor) {
-            //self::ScrapeId($tor['id']);
+            self::ScrapeId($tor['id'], $tor['announcelist'], $tor['info_hash']);
         }
     }
+
 }

@@ -34,16 +34,8 @@ if ($data['res']->rowCount() <= 0): ?>
 endif;
 
 while ($row = $data['res']->fetch(PDO::FETCH_LAZY)):
-    $dealtwith = '<b>No</b>';
-    if ($row["dealtby"] > 0) {
-        $r = DB::raw('users', 'username', ['id'=>$row['dealtby']])->fetch();
-        $dealtwith = 'By <a href="' . URLROOT . '/profile?id=' . $row['dealtby'] . '">' . $r['username'] . '</a>';
-    }
-
+    $dealtwith = $row["dealtby"] > 0 ? Users::coloredname($row['dealtby']) : 'no';
     $r = Reports::getname($row['type'], $row['votedfor']);
-
-    //var_dump($r);
-    //$r = $q->fetch(PDO::FETCH_LAZY);
     if ($row["type"] == "user") {
         $link = "".URLROOT."/profile?id=$row[votedfor]";
     } else if ($row["type"] == "torrent") {

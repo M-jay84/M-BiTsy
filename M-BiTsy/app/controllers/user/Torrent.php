@@ -1,29 +1,45 @@
 <?php
+
 class Torrent
 {
+
     public function __construct()
     {
+        // Verify User/Guest
         Auth::user(0, 1);
     }
 
-    public function index()
+    // Validate User
+    private function validuser()
     {
-        //check permissions
         if (Users::get("view_torrents") != "yes" && Config::get('MEMBERSONLY')) {
             Redirect::autolink(URLROOT, Lang::T("NO_TORRENT_VIEW"));
         }
+    }
 
+    // Torrent Default Page
+    public function index()
+    {
+        // Validate User
+        $this->validuser();
+
+        // Check User Input
         $id = (int) $_GET["id"];
         if (!Validate::Id($id)) {
             Redirect::autolink(URLROOT, Lang::T("THATS_NOT_A_VALID_ID"));
         }
 
-        //GET ALL MYSQL VALUES FOR THIS TORRENT
+        // Get Torrent Data
         $res = DB::run("SELECT torrents.anon, torrents.seeders, torrents.tube, torrents.banned, torrents.leechers, torrents.info_hash, torrents.filename, torrents.nfo, torrents.last_action, torrents.numratings, torrents.name, torrents.tmdb, torrents.tmdb, torrents.owner, torrents.save_as, torrents.descr, torrents.visible, torrents.size, torrents.added, torrents.views, torrents.hits, torrents.times_completed, torrents.id, torrents.type, torrents.external, torrents.image1, torrents.image2, torrents.announce, torrents.numfiles, torrents.freeleech, torrents.vip, IF(torrents.numratings < 2, NULL, ROUND(torrents.ratingsum / torrents.numratings, 1)) AS rating, torrents.numratings, categories.name AS cat_name, torrentlang.name AS lang_name, torrentlang.image AS lang_image, categories.parent_cat as cat_parent, users.username, users.privacy FROM torrents LEFT JOIN categories ON torrents.category = categories.id LEFT JOIN torrentlang ON torrents.torrentlang = torrentlang.id LEFT JOIN users ON torrents.owner = users.id WHERE torrents.id = $id");
         $row = $res->fetch(PDO::FETCH_ASSOC);
+        
+        // Check Torrent
         if (!$row || ($row["banned"] == "yes" && Users::get("edit_torrents") == "no")) {
             Redirect::autolink(URLROOT, Lang::T("TORRENT_NOT_FOUND"));
         }
+
+        $vip = $row["vip"] == "yes" ?? 'no';
+        $freeleech = $row["freeleech"] == 1 ? "<font color=green><b>Yes</b></font>" : "<font color=red><b>No</b></font>";
 
         // TMDB
         if(!empty($row["tmdb"]) && in_array($row["cat_parent"], SerieCats)) {
@@ -40,11 +56,7 @@ class Torrent
             }
         }
 
-        // vip / freeleech
-        $vip = $row["vip"] == "yes" ?? 'no';
-        $freeleech = $row["freeleech"] == 1 ? "<font color=green><b>Yes</b></font>" : "<font color=red><b>No</b></font>";
-
-        //torrent is availiable so do some stuff
+        // Add Hit
         if ($_GET["hit"]) {
             $pvkey_var = "t_".$id;
             $views = $_SESSION[$pvkey_var] == 1 ? $row["views"] + 0 : $row["views"] + 1;
@@ -53,12 +65,14 @@ class Torrent
             Redirect::to(URLROOT . "/torrent?id=$id");
         }
 
+        // Add Bump
         if ($_GET["bump"]) {
             DB::update('torrents', ['added' =>TimeDate::get_date_time()], ['id' => $id]);
             Redirect::autolink(URLROOT . "/torrent?id=$id", Lang::T("Bumped Torrent"));
         }
 
-		$stmt = Tags::getByTorrentId($id);
+		// Get Tag Data
+        $stmt = Tags::getByTorrentId($id);
 		if ($stmt) {
             $tags = '';
             foreach ($stmt as $tag) {
@@ -68,6 +82,7 @@ class Torrent
             $tags = '---';
         }
 
+        // Display Scraper Button
         $ts = TimeDate::modify('date', $row['last_action'], '+2 day');
         if ($ts > TT_DATE) {
             $scraper = "<br>
@@ -98,8 +113,10 @@ class Torrent
             $totalspeed = Lang::T("NO_ACTIVITY");
         }
 
+        // Get Torrent Data
         $torrent1 = Torrents::getAll($id);
 
+        // Init Data
         $data = [
             'title' => Lang::T("DETAILS_FOR_TORRENT") . " \"" . $row["name"] . "\"",
             'row' => $row,
@@ -113,29 +130,34 @@ class Torrent
             'tags' => $tags,
             'scraper' => $scraper,
         ];
+
+        // Load View
         View::render('torrent/read', $data, 'user');
     }
 
+    // Edit Torrent Default Page
     public function edit()
     {
+        // Check User Input
         $id = (int) $_GET["id"];
 
         if (!Validate::Id($id)) {
             Redirect::autolink(URLROOT, Lang::T("INVALID_ID"));
         }
 
+        // Check User
         $row = DB::run("SELECT `owner` FROM `torrents` WHERE id=?", [$id])->fetch();
         if (Users::get("edit_torrents") == "no" && Users::get('id') != $row['owner']) {
             Redirect::autolink(URLROOT . "/torrent?id=$id", Lang::T("NO_TORRENT_EDIT_PERMISSION"));
         }
 
-        //GET DATA FROM DB
+        // Get Torrent Data
         $row = DB::raw('torrents', '*', ['id'=>$id])->fetch();
         if (!$row) {
             Redirect::autolink(URLROOT . "/torrent?id=$id", Lang::T("TORRENT_ID_GONE"));
         }
 
-        //UPDATE CATEGORY DROPDOWN
+        // CATEGORY DROPDOWN
         $catdropdown = "<select name=\"type\">\n";
         $cats = Catagories::genrelist();
         foreach ($cats as $catdropdownubrow) {
@@ -147,9 +169,9 @@ class Torrent
         }
         $catdropdown .= "</select>\n";
 
-        //UPDATE TORRENTLANG DROPDOWN
+        // TORRENTLANG DROPDOWN
         $langdropdown = "<select name=\"language\"><option value='0'>Unknown</option>\n";
-        $lang = Lang::langlist();
+        $lang = Torrentlang::langlist();
         foreach ($lang as $lang) {
             $langdropdown .= "<option value=\"" . $lang["id"] . "\"";
             if ($lang["id"] == $row["torrentlang"]) {
@@ -161,7 +183,8 @@ class Torrent
 
         $shortname = CutName(htmlspecialchars($row["name"]), 40);
 
-		$stmt = Tags::getByTorrentId($id);
+		// Get Tag Data
+        $stmt = Tags::getByTorrentId($id);
 		if ($stmt) {
             $tags = '';
             foreach ($stmt as $tag) {
@@ -171,12 +194,10 @@ class Torrent
             $tags = 'No Tags Added';
         }
 
-        if ($_GET["edited"]) { // todo
-            Redirect::autolink(URLROOT . "/torrent?id=$id", Lang::T("TORRENT_EDITED_OK"));
-        }
-
+        // Get Torrent Data
         $torrent1 = Torrents::getAll($id);
         
+        // Init Data
         $data = [
             'title' => Lang::T("EDIT_TORRENT") . " \"$shortname\"",
             'row' => $row,
@@ -187,32 +208,38 @@ class Torrent
             'tags' => $tags,
             'selecttor' => $torrent1,
         ];
+
+        // Load View
         View::render('torrent/edit', $data, 'user');
     }
 
+    // Edit Torrent Form Submit
     public function submit()
     {
+        // Check User Input
         $id = (int) $_GET["id"];
         if (!Validate::Id($id)) {
             Redirect::autolink(URLROOT, Lang::T("INVALID_ID"));
         }
 
+        // Check User
         $row = DB::raw('torrents', 'owner', ['id'=>$id])->fetch();
         if (Users::get("edit_torrents") == "no" && Users::get('id') != $row['owner']) {
             Redirect::autolink(URLROOT, Lang::T("NO_TORRENT_EDIT_PERMISSION"));
         }
 
-        //GET DATA FROM DB
+        // Get Torrent Data
         $row = DB::raw('torrents', '*', ['id'=>$id])->fetch();
         if (!$row) {
             Redirect::autolink(URLROOT . "/torrent?id=$id", Lang::T("TORRENT_ID_GONE"));
         }
 
         $nfo_dir = UPLOADDIR."/nfos";
+        $updateset = array();
 
-        //DO THE SAVE TO DB HERE
+        // If Input Update
         if (Input::exist()) {
-            $updateset = array();
+            // NFO
             $nfoaction = $_POST['nfoaction'];
             if ($nfoaction == "update") {
                 $nfofile = $_FILES['nfofile'];
@@ -231,22 +258,26 @@ class Torrent
                 unlink(UPLOADDIR."/nfos/$id");
                 $updateset['nfo'] = 'no';
             }
+
             if (!empty($_POST["name"])) {
                 $updateset['name'] = $_POST["name"];
             }
-            // TMDB
-            $updateset['tmdb'] = $_POST["tmdb"];
 
+            $updateset['tmdb'] = $_POST["tmdb"];
             $updateset['descr'] = $_POST["descr"];
             $updateset['category'] = (int) $_POST["type"];
-            if (Users::get("class") >= 5) { // lowest class to make torrent sticky.
-                if ($_POST["sticky"] == "yes") {
-                    $updateset['sticky'] = 'yes';
-                } else {
-                    $updateset['sticky'] = 'no';
-                }
+            $updateset['tube'] = $_POST['tube'] ?? '';
+            $updateset['vip'] = $_POST["vip"] ? "yes" : "no";
+            $updateset['anon'] = $_POST["anon"] ? "yes" : "no";
+
+            if (Users::get("class") >= _MODERATOR) {
+                $updateset['sticky'] = $_POST["sticky"] == 'yes' ? 'yes' : 'no';
             }
-            $updateset['torrentlang'] = (int) $_POST["language"];
+
+            if (Users::get("edit_torrents") == "yes") {
+                $updateset['freeleech'] = $_POST["freeleech"] ? 1 : 0;
+            }
+
             if (Users::get("edit_torrents") == "yes") {
                 if ($_POST["banned"]) {
                     $updateset['banned'] = 'yes';
@@ -256,6 +287,8 @@ class Torrent
                 }
             }
 
+            $updateset['visible'] = $_POST["visible"] ? "yes" : "no";
+            
             $tags = $_POST['tags'];
             if ($tags) {
                 foreach ($tags as $tag) {
@@ -263,19 +296,7 @@ class Torrent
                 }
             }
 
-            $updateset['visible'] = $_POST["visible"] ? "yes" : "no";
-            
-            // youtube
-            $updateset['tube'] = $_POST['tube'] ?? '';
-
-            if (Users::get("edit_torrents") == "yes") {
-                $updateset['freeleech'] = $_POST["freeleech"] ? 1 : 0;
-            }
-
-            $updateset['vip'] = $_POST["vip"] ? "yes" : "no";
-            $updateset['anon'] = $_POST["anon"] ? "yes" : "no";
-
-            //update images
+            // Images
             $img1action = $_POST['img1action'];
             if ($img1action == "update") {
                 $updateset['image1'] = uploadimage(0, $row["image1"], $id);
@@ -283,7 +304,7 @@ class Torrent
 
             if ($img1action == "delete") {
                 if ($row['image1']) {
-                    $del = unlink(UPLOADDIR . "/images/$row[image1]");
+                    unlink(UPLOADDIR . "/images/$row[image1]");
                     $updateset['image1'] = '';
                 }
             }
@@ -295,31 +316,40 @@ class Torrent
 
             if ($img2action == "delete") {
                 if ($row['image2']) {
-                    $del = unlink(UPLOADDIR . "/images/$row[image2]");
+                    unlink(UPLOADDIR . "/images/$row[image2]");
                     $updateset['image2'] = '';
                 }
             }
+
+            // Update
             DB::update("torrents", $updateset, ['id' => $id]);
             Logs::write("Torrent $id (" . htmlspecialchars($_POST["name"]) . ") was edited by ".Users::get('username')."");
             Redirect::to(URLROOT . "/torrent?id=$id");
+
         } else {
             Redirect::autolink(URLROOT . "/torrent?id=$id", 'Error');
         }
     }
 
+    // Delete Torrent Default Page
     public function delete()
     {
+        // Check User Input
         $id = (int) $_GET["id"];
         
+        // Check Corrert Input
         if (!Validate::Id($id)) {
             Redirect::autolink(URLROOT . "/torrent?id=$id", Lang::T("INVALID_ID"));
         }
+
+        // Check User
         $row = DB::raw('torrents', 'owner', ['id'=>$id])->fetch();
         if (Users::get("delete_torrents") == "no" && Users::get('id') != $row['owner']) {
             Redirect::autolink(URLROOT . "/torrent?id=$id", Lang::T("NO_TORRENT_DELETE_PERMISSION"));
         }
         $owner = $row['owner'];
         
+        // Get Torrent Data
         $row = DB::raw('torrents', '*', ['id'=>$id])->fetch();
         if (!$row) {
             Redirect::autolink(URLROOT . "/torrent?id=$id", Lang::T("TORRENT_ID_GONE"));
@@ -328,21 +358,27 @@ class Torrent
         $torrname = $row['name'];
         $shortname = CutName(htmlspecialchars($row["name"]), 45);
         
+        // Init Data
         $data = [
             'title' => Lang::T("DELETE_TORRENT") . " \"$shortname\"",
             'owner' => $owner,
             'id' => $id,
             'name' => $torrname,
         ];
+
+        // Load View
         View::render('torrent/delete', $data, 'user');
     }
 
+    // Delete Torrent Form Submit
     public function deleteok()
     {
+        // Check User Input
         $torrentid = (int) $_GET["id"];
         $delreason = $_POST["delreason"];
         $torrentname = $_POST["torrentname"];
         
+        // Check Corrert Input
         if (Users::get("delete_torrents") == "no") {
             Redirect::autolink(URLROOT . "/torrent?id=$torrentid", Lang::T("NO_TORRENT_DELETE_PERMISSION"));
         }
@@ -353,6 +389,7 @@ class Torrent
             Redirect::autolink(URLROOT . "/torrent/delete?id=$torrentid", Lang::T("MISSING_FORM_DATA"));
         }
 
+        // Delete Torrent
         $owner = DB::raw('torrents', 'name, owner', ['id'=>$torrentid])->fetch();
         Torrents::deletetorrent($torrentid);
         Logs::write(Users::get('username') . " has deleted torrent: ID:$torrentid - " . htmlspecialchars($torrentname) . " - Reason: " . htmlspecialchars($delreason));
@@ -366,26 +403,27 @@ class Torrent
         Redirect::autolink(URLROOT . "/peer/uploaded?id=".Users::get('id')."", htmlspecialchars($torrentname) . " " . Lang::T("HAS_BEEN_DEL_DB"));
     }
 
+    // Torrent Files Default Page
     public function torrentfilelist()
     {
+        // Check User
         $id = (int) $_GET["id"];
 
         if (!Validate::Id($id)) {
             Redirect::autolink(URLROOT, Lang::T("THATS_NOT_A_VALID_ID"));
         }
 
-        //check permissions
-        if (Users::get("view_torrents") == "no") {
-            Redirect::autolink(URLROOT, Lang::T("NO_TORRENT_VIEW"));
-        }
+        // Validate User
+        $this->validuser();
 
-        //GET ALL MYSQL VALUES FOR THIS TORRENT
+        // Get Torrent Data
         $res = DB::run("SELECT torrents.anon, torrents.seeders, torrents.banned, torrents.leechers, torrents.info_hash, torrents.filename, torrents.nfo, torrents.last_action, torrents.numratings, torrents.name, torrents.owner, torrents.save_as, torrents.descr, torrents.visible, torrents.size, torrents.added, torrents.views, torrents.hits, torrents.times_completed, torrents.id, torrents.type, torrents.external, torrents.image1, torrents.image2, torrents.announce, torrents.numfiles, torrents.freeleech, torrents.announcelist, IF(torrents.numratings < 2, NULL, ROUND(torrents.ratingsum / torrents.numratings, 1)) AS rating, torrents.numratings, categories.name AS cat_name, torrentlang.name AS lang_name, torrentlang.image AS lang_image, categories.parent_cat as cat_parent, users.username, users.privacy FROM torrents LEFT JOIN categories ON torrents.category = categories.id LEFT JOIN torrentlang ON torrents.torrentlang = torrentlang.id LEFT JOIN users ON torrents.owner = users.id WHERE torrents.id = $id");
         $row = $res->fetch(PDO::FETCH_ASSOC);
         $fres = DB::raw('files', '*', ['torrent'=>$id], 'ORDER BY `path` ASC');
         
         $shortname = CutName(htmlspecialchars($row["name"]), 45);
 
+        // Init Data
         $data = [
             'title' =>  Lang::T("TORRENT_DETAILS_FOR") . " \"" . $shortname . "\"",
             'row' => $row,
@@ -395,60 +433,36 @@ class Torrent
             'size' => $row["size"],
             'fres' => $fres,
         ];
+
+        // Load View
         View::render('torrent/filelist', $data, 'user');
     }
 
+    // Torrent Files Default Page
     public function torrenttrackerlist()
     {
+        // Check User
         $id = (int) $_GET["id"];
 
         if (!Validate::Id($id)) {
             Redirect::autolink(URLROOT . "/torrent?id=$id", Lang::T("THATS_NOT_A_VALID_ID"));
         }
 
-        if (Users::get("view_torrents") == "no") {
-            Redirect::autolink(URLROOT, Lang::T("NO_TORRENT_VIEW"));
-        }
+        // Validate User
+        $this->validuser();
 
-        //GET ALL MYSQL VALUES FOR THIS TORRENT
+        // Get Torrent Data
         $res = DB::run("SELECT torrents.anon, torrents.seeders, torrents.banned, torrents.leechers, torrents.info_hash, torrents.filename, torrents.nfo, torrents.last_action, torrents.numratings, torrents.name, torrents.owner, torrents.save_as, torrents.descr, torrents.visible, torrents.size, torrents.added, torrents.views, torrents.hits, torrents.times_completed, torrents.id, torrents.type, torrents.external, torrents.image1, torrents.image2, torrents.announce, torrents.numfiles, torrents.freeleech, torrents.announcelist, IF(torrents.numratings < 2, NULL, ROUND(torrents.ratingsum / torrents.numratings, 1)) AS rating, torrents.numratings, categories.name AS cat_name, torrentlang.name AS lang_name, torrentlang.image AS lang_image, categories.parent_cat as cat_parent, users.username, users.privacy FROM torrents LEFT JOIN categories ON torrents.category = categories.id LEFT JOIN torrentlang ON torrents.torrentlang = torrentlang.id LEFT JOIN users ON torrents.owner = users.id WHERE torrents.id = $id");
         
+        // Init Data
         $data = [
             'title' => Lang::T("Tracker List"),
             'id' => $id,
             'res' => $res,
         ];
+
+        // Load View
         View::render('torrent/trackerlist', $data, 'user');
-    }
-
-    public function reseed()
-    {
-        if (Users::get("view_torrents") == "no") {
-            Redirect::autolink(URLROOT, Lang::T("NO_TORRENT_VIEW"));
-        }
-
-        $id = (int) $_GET["id"];
-
-        if (isset($_COOKIE["reseed$id"])) {
-            Redirect::autolink(URLROOT, Lang::T("RESEED_ALREADY_ASK"));
-        }
-
-        $row = DB::select('torrents', 'owner,banned,external', ['id'=>$id]);
-        if (!$row || $row["banned"] == "yes" || $row["external"] == "yes") {
-            Redirect::autolink(URLROOT, Lang::T("TORRENT_NOT_FOUND"));
-        }
-
-        $res2 = DB::run("SELECT users.id FROM completed LEFT JOIN users ON completed.userid = users.id WHERE users.enabled = 'yes' AND users.status = 'confirmed' AND completed.torrentid = $id");
-        $message = sprintf(Lang::T('RESEED_MESSAGE'), Users::get('username'), URLROOT, $id);
-        while ($row2 = $res2->fetch(PDO::FETCH_ASSOC)) {
-            DB::insert('messages', [ 'subject'=>Lang::T("RESEED_MES_SUBJECT"),'sender'=>Users::get('id'),'receiver'=>$row2['id'],'added'=>TimeDate::get_date_time(), 'msg'=>$message]);
-        }
-        if ($row["owner"] && $row["owner"] != Users::get("id")) {
-            DB::insert('messages', [ 'subject'=>'Torrent Reseed Request','sender'=>Users::get('id'),'receiver'=>$row['owner'],'added'=>TimeDate::get_date_time(), 'msg'=>$message]);
-        }
-        
-        setcookie("reseed$id", $id, time() + 86400, '/');
-        Redirect::autolink(URLROOT, Lang::T("RESEED_SENT"));
     }
 
 }

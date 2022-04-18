@@ -1,10 +1,12 @@
 <?php
+
 class Style
 {
 
+    // Default Header
     public static function header($title = "")
     {
-        if (!$_SESSION['loggedin'] == true) {
+        if (!isset($_SESSION['loggedin'])) {
             Guests::guestadd();
         }
         if ($title == "") {
@@ -15,11 +17,13 @@ class Style
         require_once "assets/themes/" . (Users::get('stylesheet') ?: Config::get('DEFAULTTHEME')) . "/header.php";
     }
     
+    // Default Footer
     public static function footer()
     {
         require_once "assets/themes/" . (Users::get('stylesheet') ?: Config::get('DEFAULTTHEME')) . "/footer.php";
     }
     
+    // Default Block Header
     public static function begin($caption = "-")
     {
         $blockId = 'f-' . sha1($caption);
@@ -33,6 +37,7 @@ class Style
         <?php
     }
     
+    // Default Block Footer
     public static function end()
     {
         ?>
@@ -43,6 +48,7 @@ class Style
     }
 
 
+    // Default Admin Header
     public static function adminheader($title = "")
     {
         if ($title == "") {
@@ -53,11 +59,13 @@ class Style
         require_once APPROOT . "/views/admin/admincp/header.php";
     }
     
+    // Default Admin Footer
     public static function adminfooter()
     {
         require_once APPROOT . "/views/admin/admincp/footer.php";
     }
 
+    // Default Admin Home
     public static function adminnavmenu()
     {
         //Get Last Cleanup
@@ -88,6 +96,7 @@ class Style
         echo '</div></div><br>';
     }
 
+    // Default Sidebar Block Header
     public static function block_begin($caption = "-")
     {
         $blockId = 'b-' . sha1($caption); ?>
@@ -99,6 +108,7 @@ class Style
             <div class="card-body block-body slidingDiv<?php echo $blockId; ?>"> <?php
     }
 
+    // Default Sidebar Block Footer
     public static function block_end()
     {
             ?>
@@ -107,6 +117,7 @@ class Style
         <div class="block-footer"></div> <?php
     }
 
+    // Default Error Header
     public static function error_header($title = "")
     {
         if ($title == "") {
@@ -117,6 +128,7 @@ class Style
         require_once APPROOT . "/views/user/error/error_header.php";
     }
     
+    // Default Error Footer
     public static function error_footer()
     {
         require_once APPROOT . "/views/user/error/error_footer.php";

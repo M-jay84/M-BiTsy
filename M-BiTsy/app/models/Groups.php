@@ -52,36 +52,4 @@ class Groups
         return $ret;
     }
 
-    public static function search($search, $class, $letter) {
-        $q = $query = null;
-        if ($search) {
-            $query = "username LIKE " . sqlesc("%$search%") . " AND status='confirmed'";
-            if ($search) {
-                $q = "search=" . htmlspecialchars($search);
-            }
-        } elseif ($letter) {
-            if (strlen($letter) > 1) {
-                unset($letter);
-            }
-            if ($letter == "" || strpos("abcdefghijklmnopqrstuvwxyz", $letter) === false) {
-                unset($letter);
-            } else {
-                $query = "username LIKE '$letter%' AND status='confirmed'";
-            }
-            $q = "letter=$letter";
-        }
-        if (!$query) {
-            $query = "status='confirmed'";
-        }
-        if (!$class) {
-            unset($class);
-        } else {
-            $query .= " AND class=$class";
-            $q .= ($q ? "&amp;" : "") . "class=$class";
-        }
-
-        $var = ['query'=>$query, 'q'=>$q];
-
-        return $var;
-    }
 }

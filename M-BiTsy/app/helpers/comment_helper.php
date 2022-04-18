@@ -1,4 +1,7 @@
 <?php
+// $res = comment query
+// $type = type of comment
+
 // Function For Comment Table
 function commenttable($res, $type = null)
 {

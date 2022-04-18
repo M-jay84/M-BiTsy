@@ -97,7 +97,7 @@ $stmt = Tags::getAll(); ?>
     </div>
 </div><br> <?php
 
-$language = Lang::select(); ?>
+$language = Torrentlang::select(); ?>
 <div class="mb-6 row">
     <label for="type" class="col-sm-2"><?php echo Lang::T("LANGUAGE") ?></label>
     <div class="col-sm-6">
