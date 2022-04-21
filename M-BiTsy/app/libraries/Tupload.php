@@ -28,7 +28,7 @@ class Tupload
 
     public function getName()
     {
-        return mb_ereg_replace('[\\\\/:*?"<>|]', null, trim($this->name));
+        return mb_ereg_replace('[\\\\/:*?"<>|]', "", trim($this->name));
     }
 
     public function getSize()
