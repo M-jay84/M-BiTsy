@@ -18,6 +18,8 @@ $GLOBALS['tstart'] = array_sum(explode(" ", microtime()));
     <!-- TT Custom CSS, any edits must go here-->
     <link href="<?php echo URLROOT; ?>/assets/themes/<?php echo (Users::get('stylesheet') ?: Config::get('DEFAULTTHEME')) ?>/customstyle.css" rel="stylesheet">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/monokai-sublime.min.css">
+    <!-- ajax shoutbox -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   </head>
 <body>
 

@@ -78,7 +78,6 @@ class Shoutbox
         } else {
             Redirect::autolink(URLROOT, Lang::T("Shoutbox Banned"));
         }
-        Redirect::to(URLROOT);
     }
 
     // Delete Shout Submit

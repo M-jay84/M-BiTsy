@@ -1,9 +1,9 @@
 <p id="shoutboxstaff"></p>
-<form name='shoutboxform' action='<?php echo URLROOT ?>/adminshoutbox/add' method='post'>
+<form id='contactForm1' name='contactForm1' action='<?php echo URLROOT ?>/adminshoutbox/add' method='post'>
 <div class="row">
     <div class="col-md-12">
     <?php
-    echo shoutbbcode("shoutboxform", "message");
+    echo shoutbbcode("contactForm1", "message");
     ?>
     </div>
 </div>

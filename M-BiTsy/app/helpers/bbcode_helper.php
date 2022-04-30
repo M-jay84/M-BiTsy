@@ -235,7 +235,7 @@ function shoutbbcode($form, $name, $content = "")
 
 
     <div class="col-md-11">
-        <input  class="form-control shoutbox_msgbox" type='text' size='100%' name="<?php echo $name; ?>"><?php echo $content; ?>
+        <input id="message" class="form-control shoutbox_msgbox" type='text' size='100%' name="<?php echo $name; ?>"><?php echo $content; ?>
     </div>
     <div class="col-md-1">
         <center><input type='submit' name='submit' value='<?php echo Lang::T("SHOUT") ?>' class='btn btn-sm ttbtn' /></center>

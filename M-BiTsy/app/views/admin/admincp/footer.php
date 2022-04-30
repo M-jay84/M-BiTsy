@@ -29,6 +29,33 @@ if (Config::get('RIGHTNAV')) {?>
 <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js"></script>
 <script>hljs.initHighlightingOnLoad();</script>
+<!-- ajax shoutbox -->
+<script type="text/javascript">
+    var frm = $('#contactForm1');
+
+    frm.submit(function (e) {
+
+        e.preventDefault();
+
+        $.ajax({
+            type: frm.attr('method'),
+            url: frm.attr('action'),
+            data: frm.serialize(),
+            success: function (data) {
+                console.log('Submission was successful.');
+                console.log(data);
+            },
+            complete: function(){
+              $("#message").focus().val('');
+              $('#shoutbox').load('<?php echo URLROOT; ?>/adminshoutbox/loadchat');
+            },
+            error: function (data) {
+                console.log('An error occurred.');
+                console.log(data);
+            },
+        });
+    });
+</script>
 <script>
         function updatestaffShouts(){
             // Assuming we have #shoutbox
