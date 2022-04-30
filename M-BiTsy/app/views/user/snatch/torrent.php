@@ -23,7 +23,7 @@ while ($row = $data['res']->fetch(PDO::FETCH_LAZY)):
     if ($row[12] != "yes") {$seed = "<font color=#FF1200><b>" . Lang::T("NO") . "</b></font>";} else { $seed = "<font color=#27B500><b>" . Lang::T("YES") . "</b></font>";}
     ?>
 	<tr>
-	<td><a href="<?php echo URLROOT ?>/profile?id=<?php echo $row[0]; ?>"><?php echo "<b>" . $row[1] . "</b>"; ?></a></td>
+	<td><a href="<?php echo URLROOT ?>/profile?id=<?php echo $row[0]; ?>"><?php echo "<b>" . Users::coloredname($row[0]) . "</b>"; ?></a></td>
 	<td><font color="#27B500"><?php echo mksize($row[5]); ?></font></td>
 	<td><font color="#FF1200"><?php echo mksize($row[6]); ?></font></td>
 	<td><?php echo get_ratio_color($userratio); ?></td>

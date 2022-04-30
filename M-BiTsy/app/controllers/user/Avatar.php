@@ -43,7 +43,7 @@ class Avatar
             'id' => $id,
         ];
 
-        // Load Data
+        // Load View
         View::render('avatar/index', $data, 'user');
     }
 

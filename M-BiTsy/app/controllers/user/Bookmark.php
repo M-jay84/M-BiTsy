@@ -29,7 +29,7 @@ class Bookmark
                 'res' => $query,
             ];
 
-            // Load Data
+            // Load View
             View::render('bookmark/index', $data, 'user');
         }
 

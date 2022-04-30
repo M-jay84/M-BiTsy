@@ -76,7 +76,7 @@ class Moviedatabase
             'tmdb' => $tmdb,
         ];
 
-        // Load Data
+        // Load View
         View::render('moviedatabase/persondetails', $data, 'user');
     }
 
@@ -96,7 +96,7 @@ class Moviedatabase
             'tmdb' => $tmdb,
         ];
 
-        // Load Data
+        // Load View
         View::render('moviedatabase/showdetails', $data, 'user');
     }
 
@@ -116,7 +116,7 @@ class Moviedatabase
             'tmdb' => $tmdb,
         ];
 
-        // Load Data
+        // Load View
         View::render('moviedatabase/moviedetails', $data, 'user');
     }
 }

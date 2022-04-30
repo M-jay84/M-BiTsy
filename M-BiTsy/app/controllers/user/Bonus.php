@@ -22,7 +22,7 @@ class Bonus
             'autoclean_interval' => floor(Config::get('ADDBONUS') / 60)
         ];
 
-        // Load Data
+        // Load View
         View::render('bonus/index', $data, 'user');
     }
 

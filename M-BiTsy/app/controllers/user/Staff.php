@@ -50,7 +50,7 @@ class Staff
             'table' => $table,
         ];
 
-        // Load Data
+        // Load View
         View::render('staff/index', $data, 'user');
     }
 

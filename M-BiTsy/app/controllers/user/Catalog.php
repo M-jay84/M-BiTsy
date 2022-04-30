@@ -33,7 +33,7 @@ class Catalog
             'pagerbuttons' => $pagerbuttons,
         ];
 
-        // Load Data
+        // Load View
         View::render('catalog/index', $data, 'user');
         
     }

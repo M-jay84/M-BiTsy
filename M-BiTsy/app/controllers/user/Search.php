@@ -234,7 +234,7 @@ class Search
             'stmt' => $stmt,
         ];
 
-        // Load Data
+        // Load View
         View::render('search/tag', $data, 'user');
     }
 

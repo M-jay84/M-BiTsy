@@ -25,7 +25,7 @@ class Mailbox
             'template' => $arr['template'],
         ];
 
-        // Load Data
+        // Load View
         View::render('mailbox/overview', $data, 'user');
     }
 
@@ -86,7 +86,7 @@ class Mailbox
             'mainsql' => $res,
         ];
 
-        // Load Data
+        // Load View
         View::render('mailbox/index', $data, 'user');
     }
 

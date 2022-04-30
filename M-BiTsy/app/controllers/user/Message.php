@@ -48,7 +48,7 @@ class Message
             'msg' => $arr['msg'],
         ];
 
-        // Load Data
+        // Load View
         View::render('message/index', $data, 'user');
     }
 
@@ -81,7 +81,7 @@ class Message
             'id' => $id
         ];
 
-        // Load Data
+        // Load View
         View::render('message/create', $data, 'user');
     }
 
@@ -143,7 +143,7 @@ class Message
             'id' => $row['id'],
         ];
 
-        // Load Data
+        // Load View
         View::render('message/reply', $data, 'user');
     }
 
@@ -181,7 +181,7 @@ class Message
             'id' => $row['id'],
         ];
 
-        // Load Data
+        // Load View
         View::render('message/update', $data, 'user');
     }
 

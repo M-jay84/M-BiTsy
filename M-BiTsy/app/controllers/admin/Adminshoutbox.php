@@ -89,7 +89,6 @@ class Adminshoutbox
                 }
             }
         }
-        Redirect::to(URLROOT . '/adminshoutbox');
     }
 
     // Clear Shoutbox Default Page

@@ -26,7 +26,7 @@ class Changepass
             'id' => $id,
         ];
 
-        // Load Data
+        // Load View
         View::render('changepass/index', $data, 'user');
     }
 

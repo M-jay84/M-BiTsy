@@ -59,7 +59,7 @@ class Confirmemail
             'id' => $id,
         ];
 
-        // Load Data
+        // Load View
         View::render('confirmemail/index', $data, 'user');
     }
 
