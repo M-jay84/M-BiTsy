@@ -9,7 +9,7 @@ $GLOBALS['tstart'] = array_sum(explode(" ", microtime()));
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="author" content="M-jay" />
     <meta name="generator" content="M-BiTsy <?php echo VERSION; ?>" />
-    <meta name="description" content="M-BiTsy is a feature packed and highly customisable PHP/PDO/MVC Based BitTorrent tracker. Featuring intergrated forums, and plenty of administration options. Please visit www.torrenttrader.uk for the support forums. " />
+    <meta name="description" content="M-BiTsy is a feature packed and highly customisable PHP/PDO/MVC Based BitTorrent tracker. Featuring intergrated forums, and plenty of administration options. Please visit www.M-BiTsy.uk for the support forums. " />
     <meta name="keywords" content="https://github.com/M-jay84/M-BiTsy" />
     <title><?php echo $title; ?></title>
     <!-- Bootstrap & core CSS -->
@@ -17,15 +17,12 @@ $GLOBALS['tstart'] = array_sum(explode(" ", microtime()));
     <link href="<?php echo URLROOT; ?>/assets/font-awesome/css/font-awesome.css" rel="stylesheet">
     <!-- TT Custom CSS, any edits must go here-->
     <link href="<?php echo URLROOT; ?>/assets/themes/<?php echo (Users::get('stylesheet') ?: Config::get('DEFAULTTHEME')) ?>/customstyle.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/monokai-sublime.min.css">
   </head>
-<body>
-  
-<div class="container-fluid" style="padding-top: 10px;">
+<body class='d-flex flex-column min-vh-100'>
 
-<div class="col-sm-12">
-  <?php require "assets/themes/" . (Users::get('stylesheet') ?: Config::get('DEFAULTTHEME')) . "/navbar.php"; ?>
-</div>
+<?php require "assets/themes/". (Users::get('stylesheet') ?: Config::get('DEFAULTTHEME')) ."/navbar.php"; ?>
 
-<table class="table">
-<tr>
-<th style="width: 70%">
+<div class="container-fluid">
+<div class="row page">
+<div class="col">

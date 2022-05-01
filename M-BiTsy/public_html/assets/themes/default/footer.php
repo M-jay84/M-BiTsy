@@ -57,7 +57,7 @@ if (Config::get('RIGHTNAV')) {?>
             },
             complete: function(){
               $("#message").focus().val('');
-              $('#shoutbox').load('shoutbox/chat');
+              $('#shoutbox').load('<?php echo URLROOT; ?>/shoutbox/chat');
             },
             error: function (data) {
                 console.log('An error occurred.');
@@ -68,7 +68,7 @@ if (Config::get('RIGHTNAV')) {?>
     <script>
         function updateShouts(){
             // Assuming we have #shoutbox
-            $('#shoutbox').load('shoutbox/chat');
+            $('#shoutbox').load('<?php echo URLROOT; ?>/shoutbox/chat');
         }
         setInterval( "updateShouts()", 15000 );
 		updateShouts();

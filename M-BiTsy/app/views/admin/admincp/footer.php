@@ -10,9 +10,9 @@ if (Config::get('RIGHTNAV')) {?>
 
 </div>
 </div>
-<footer>
+<footer class="mt-auto">
 <hr />
-  <ul class="list-unstyled text-center">
+<ul class="list-unstyled text-center card">
     <li><?php printf(Lang::T("POWERED_BY_TT"), VERSION);?></li>
     <li><?php $totaltime = array_sum(explode(" ", microtime())) - $GLOBALS['tstart'];?></li>
     <li><?php printf(Lang::T("PAGE_GENERATED_IN"), $totaltime);?></li>
@@ -43,7 +43,6 @@ if (Config::get('RIGHTNAV')) {?>
             data: frm.serialize(),
             success: function (data) {
                 console.log('Submission was successful.');
-                console.log(data);
             },
             complete: function(){
               $("#message").focus().val('');
@@ -51,7 +50,6 @@ if (Config::get('RIGHTNAV')) {?>
             },
             error: function (data) {
                 console.log('An error occurred.');
-                console.log(data);
             },
         });
     });
