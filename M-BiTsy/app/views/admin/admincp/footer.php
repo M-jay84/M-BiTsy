@@ -46,7 +46,7 @@ if (Config::get('RIGHTNAV')) {?>
             },
             complete: function(){
               $("#message").focus().val('');
-              $('#shoutbox').load('<?php echo URLROOT; ?>/adminshoutbox/loadchat');
+              $('#shoutboxstaff').load('<?php echo URLROOT; ?>/adminshoutbox/loadchat');
             },
             error: function (data) {
                 console.log('An error occurred.');
