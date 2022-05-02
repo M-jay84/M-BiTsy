@@ -16,7 +16,7 @@ if (Config::get('RIGHTNAV')) {?>
 </div>
 </div>
 <!-- Footer -->
-<footer>
+<footer class="mt-auto">
 <hr />
   <ul class="list-unstyled text-center">
     <li><?php printf(Lang::T("POWERED_BY_TT"), VERSION);?></li>
