@@ -71,9 +71,10 @@ class Signup
 
             // Check User Invite
             if (strlen($data['secret']) == 20 || !is_numeric($invite)) {
-                $invite_row = DB::select('users', 'id', ['id'=>$invite, 'secret'=>$data['secret']]);
+                $invite_row1 = DB::select('users', 'id', ['id'=>$invite, 'secret'=>$data['secret']]);
+                $invite_row = (int) $invite_row1['id'] ?? 0;
             }
-
+            
             // Check User Input
             $message = $this->validSign($passagain, $data, $invite_row);
             
@@ -113,10 +114,13 @@ class Signup
             if ($message == "") {
                 // Invited User
                 if ($invite_row) {
-                    DB::update('users', ['username'=>$data['username'], 'password'=>$data['password'], 'secret'=>$data['secret'], 'status'=>'confirmed', 'added'=>TimeDate::get_date_time()], ['id'=>$invite_row['id']]);
+                    DB::run("UPDATE users SET username=?, password=?, class=?, secret=?, status=?, added=? WHERE id=?",
+                                                  [$data['username'], $data['password'], 1, $data['secret'], 'confirmed', TimeDate::get_date_time(), $invite_row]);
+                    //var_dump($test); die();
+                    //DB::update('users', ['username'=>$data['username'], 'password'=>$data['password'], 'class'=>1, 'secret'=>$data['secret'], 'status'=>'confirmed', 'added'=>TimeDate::get_date_time()], ['id'=>1]);
                     // Welcome PM
                     if (Config::get('WELCOMEPM_ON')) {
-                        Messages::insert(['sender'=>0, 'receiver'=>$invite_row['id'], 'added'=>TimeDate::get_date_time(), 'subject'=>'Welcome', 'msg'=>Config::get('WELCOMEPM_MSG'), 'unread'=>'yes', 'location'=>'in']);
+                        Messages::insert(['sender'=>0, 'receiver'=>$invite_row, 'added'=>TimeDate::get_date_time(), 'subject'=>'Welcome', 'msg'=>Config::get('WELCOMEPM_MSG'), 'unread'=>'yes', 'location'=>'in']);
                     }
                     // Post Shout
                     DB::insert('shoutbox', ['userid'=>0, 'date'=>TimeDate::get_date_time(), 'user'=>'System', 'message'=>"New User: " . $data['username'] . " has joined."]);
@@ -206,7 +210,7 @@ class Signup
         } elseif (!Validate::username($data['username'])) {
             $message = "Invalid username.";
 
-        } elseif (!$data['invite_row'] && !Validate::Email($data['email'])) {
+        } elseif ($data['invite_row'] = false && !Validate::Email($data['email'])) {
             $message = "That doesn't look like a valid email address.";
         }
         
