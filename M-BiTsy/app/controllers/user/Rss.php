@@ -6,20 +6,27 @@ class Rss
     public function __construct()
     {
         // Verify User/Guest
-        Auth::user(0, 1);
+        Auth::user(0, 0);
     }
 
     // RSS Default Page
     public function index()
     {
-        $cat = $_GET["cat"];
-        $dllink = (int) $_GET["dllink"];
-        $passkey = $_GET["passkey"];
+        // Check User Input
+        $passkey = $_GET["passkey"] ?? Users::get('passkey');
         $incldead = $_GET["incldead"];
+        $cat = $_GET["cat"];
+        $user = $_GET["user"];
 
+        // Check User
         if (!get_row_count("users", "WHERE passkey=" . sqlesc($passkey))) {
             $passkey = "";
         }
+        if ($passkey == "" && Config::get('MEMBERSONLY')) {
+            Redirect::autolink(URLROOT, Lang::T("NO_PERMISSION"));
+        }
+
+        // Sort Input
         $where = "";
         $wherea = array();
         if (!$incldead) {
@@ -29,13 +36,27 @@ class Rss
             $cats = implode(", ", array_unique(array_map("intval", explode(",", (string) $cat))));
             $wherea[] = "category in ($cats)";
         }
-        if (Validate::Id($_GET["user"])) {
-            $wherea[] = "owner=$_GET[user]";
+        if (Validate::Id($user)) {
+            $wherea[] = "owner=$user";
         }
         if ($wherea) {
             $where = "WHERE " . implode(" AND ", $wherea);
         }
         $limit = "LIMIT 50";
+
+        // Get Data
+        $res = DB::run("SELECT torrents.id,
+                               torrents.name,
+                               torrents.size,
+                               torrents.category,
+                               torrents.added, torrents.leechers,
+                               torrents.seeders, categories.parent_cat as cat_parent,
+                               categories.name AS cat_name 
+                        FROM torrents 
+                        LEFT JOIN categories ON category = categories.id 
+                        $where 
+                        ORDER BY added 
+                        DESC $limit")->fetchAll();
 
         // start the RSS feed output
         header( "Content-type: text/xml; charset=".CHARSET."");
@@ -47,29 +68,15 @@ class Rss
         <description>" . htmlspecialchars(Config::get('SITENAME')) . " RSS</description>
         <language>en-us</language>";
 
-
-        $res = DB::run("SELECT torrents.id, torrents.name, torrents.size, torrents.category, torrents.added, torrents.leechers, torrents.seeders, categories.parent_cat as cat_parent, categories.name AS cat_name FROM torrents LEFT JOIN categories ON category = categories.id $where ORDER BY added DESC $limit");
-        while ($row = $res->fetch(PDO::FETCH_LAZY)) {
-            list($id, $name, $size, $category, $added, $leechers, $seeders, $catname) = $row;
-            $guid = URLROOT . "/torrent?id=$id&amp;hit=1";
-            if ($dllink) {
-                if ($passkey) {
-                    $link = "".URLROOT."/download?id=$id&amp;passkey=$passkey";
-                    $link = "".URLROOT."/download?id=$id&amp;passkey=$passkey";
-                } else {
-                    $link = "".URLROOT."/download?id=$id";
-                }
-            } else {
-                $link = URLROOT . "/torrent?id=$id&amp;hit=1";
-            }
-            $pubdate = date("r", TimeDate::sql_timestamp_to_unix_timestamp($added));
+        foreach ($res as $row) {
+            $pubdate = date("r", TimeDate::sql_timestamp_to_unix_timestamp($row['added']));
             echo "<item>
-                  <title>" . htmlspecialchars($name) . "</title>
-                  <guid>" . $link . "</guid>
-                  <link>" . $link . "</link>
+                  <title>" . htmlspecialchars($row['name']) . "</title>
+                  <guid>" . URLROOT . "/torrent?id=$row[id]&amp;hit=1</guid>
+                  <link>" . URLROOT . "/download?id=$row[id]&amp;passkey=$passkey</link>
                   <pubDate>" . $pubdate . "</pubDate>
                   <category> " . $row["cat_parent"] . ": " . $row["cat_name"] . "</category>
-                  <description>Size: " . mksize($size) . " Seeders: " . $seeders . " Leechers: " . $leechers . "</description>
+                  <description>Size: " . mksize($row['size']) . " Seeders: " . $row['seeders'] . " Leechers: " . $row['leechers'] . "</description>
                   </item>";
         }
         echo ("</channel></rss>");
@@ -78,13 +85,18 @@ class Rss
     // RSS Custom Default Page
     public function custom()
     {
+        // Check User
+        if (Users::get("view_torrents") != "yes" && Config::get('MEMBERSONLY')) {
+            Redirect::autolink(URLROOT, Lang::T("NO_TORRENT_VIEW"));
+        }
+
         // Get Cat Data
-        $resqn = DB::raw('categories', 'id, name, parent_cat', '', 'ORDER BY parent_cat ASC, sort_index ASC');
+        $stmt = DB::raw('categories', 'id, name, parent_cat', '', 'ORDER BY parent_cat ASC, sort_index ASC');
         
         // Init Data
         $data = [
             'title' => Lang::T("CUSTOM_RSS_XML_FEED"),
-            'resqn' => $resqn
+            'stmt' => $stmt
         ];
 
         // Load View
@@ -94,7 +106,13 @@ class Rss
     // RSS Form Submit
     public function submit()
     {
-        if ($_POST) {
+        // Check User
+        if (Users::get("view_torrents") != "yes" && Config::get('MEMBERSONLY')) {
+            Redirect::autolink(URLROOT, Lang::T("NO_TORRENT_VIEW"));
+        }
+
+        if (Input::exist()) {
+            // Sort Data
             $params = array();
             if ($cats = $_POST["cats"]) {
                 $catlist = array();
@@ -110,19 +128,22 @@ class Rss
             if ($_POST["incldead"]) {
                 $params[] = "incldead=1";
             }
-            if ($_POST["dllink"]) {
-                $params[] = "dllink=1";
-            }
-            if (!$_POST["cookies"] && $_SESSION['loggedin'] == true) {
+            if ($_SESSION["loggedin"]) {
                 $params[] = "passkey=".Users::get('passkey')."";
+            }
+            if (Validate::Id($_POST['user'])) {
+                $params[] = "user=$_POST[user]";
             }
             if ($params) {
                 $param = "?" . implode("&amp;", $params);
             } else {
                 $param = "";
             }
-            $mss = "Your RSS link is: <a href=\"".URLROOT."/rss$param\">".URLROOT."/rss$param</a><br/><br/>";
-            Redirect::autolink(URLROOT, $mss);
+            
+            Redirect::autolink(URLROOT, "Your RSS link is: <a href='".URLROOT."/rss$param'>".URLROOT."/rss$param</a>");
+
+        } else {
+            Redirect::autolink(URLROOT, 'error with custom input');
         }
     }
 

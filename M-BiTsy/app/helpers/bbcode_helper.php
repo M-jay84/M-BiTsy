@@ -155,7 +155,7 @@ function shoutbbcode($form, $name, $content = "")
     print("<i class='fa fa-arrow-left ttbbcode' id='BBCode' name='Align Leftt' height:20px; width:20px;\" onclick=\"bbcomment('[align=left]','[/align]')\" title='Align Left' /></i>&nbsp;");
     print("<i class='fa fa-align-center ttbbcode' id='BBCode' name='Align Center' height:20px; width:20px;\" onclick=\"bbcomment('[align=center]','[/align]')\" title='Align Center' /></i>&nbsp;");
     print("<i class='fa fa-arrow-right ttbbcode' id='BBCode' name='Align Right'height:20px; width:20px;\"	onclick=\"bbcomment('[align=right]','[/align]')\" title='Align Right' /></i>&nbsp;");
-    print("<a href='https://imgur.com/upload' target='_blank' style=\"background: url('" . URLROOT . "/assets/images/bbcodes/imgur.gif');  height:20px; width:20px;\" title='Upload Image' /></a>");
+    print("<a href='https://imgur.com/upload' target='_blank' style=\"background: url('" . URLROOT . "/assets/images/bbcodes/imgur.gif');  height:20px; width:20px;\" title='Upload Image' /></a>&nbsp;");
     print("<a href='http://www.youtube.com'	target='_blank'	style=\"background: url('" . URLROOT . "/assets/images/bbcodes/youtube.gif');  height:20px; width:20px;\" title='YouTube' /></a>");
     
     // Smilies

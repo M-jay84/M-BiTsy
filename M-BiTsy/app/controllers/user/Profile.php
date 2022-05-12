@@ -151,7 +151,9 @@ class Profile
             ];
             
             if ($_POST['resetpasskey']) {
-                $data['passkey'] = '';
+                $rand = array_sum(explode(" ", microtime()));
+                $passkey = md5(Users::get('username') . $rand . Users::get('secret') . ($rand * mt_rand()));
+                $data['passkey'] = $passkey;
             }
     
             // Update
@@ -242,7 +244,9 @@ class Profile
         
         // Reset Passkey Check
         if (Input::get('resetpasskey') == 'yes') {
-            $data = ['passkey' =>''];
+            $rand = array_sum(explode(" ", microtime()));
+            $passkey = md5(Users::get('username') . $rand . Users::get('secret') . ($rand * mt_rand()));
+            $data = ['passkey' => $passkey];
         }
 
         // Change Password

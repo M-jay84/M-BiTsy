@@ -47,6 +47,11 @@ class Auth
             if ($row) {
                 $where = Users::where($_SERVER['REQUEST_URI'], $row["id"], 0);
                 DB::update('users', ['last_access' =>TimeDate::get_date_time(), 'ip' =>Ip::getIP(),'page' =>$where], ['id' => $row["id"]]);
+                // todo moved to signup
+                $rand = array_sum(explode(" ", microtime()));
+                $passkey = md5($row['username'] . $rand . $row['secret'] . ($rand * mt_rand()));
+                DB::run("UPDATE users SET passkey=? WHERE passkey=? AND id=?", [$passkey, '', $row["id"]]);
+
                 $GLOBALS['CURRENTUSER'] = $row;
                 //$_SESSION = $row;
                 $_SESSION["loggedin"] = true;

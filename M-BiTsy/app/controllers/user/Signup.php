@@ -102,7 +102,12 @@ class Signup
                 $data['secret'] = Security::mksecret();
                 
                 // Hash Password
-                $data['password'] = password_hash($data['password'], PASSWORD_BCRYPT); // hash the password
+                $data['password'] = password_hash($data['password'], PASSWORD_BCRYPT);
+                
+                // Make Passkey
+                $rand = array_sum(explode(" ", microtime()));
+                $passkey = md5($data['username'] . $rand . $data['secret'] . ($rand * mt_rand()));
+                $data['passkey'] = $passkey;
             }
 
             // Check Message Error
@@ -114,8 +119,8 @@ class Signup
             if ($message == "") {
                 // Invited User
                 if ($invite_row) {
-                    DB::run("UPDATE users SET username=?, password=?, class=?, secret=?, status=?, added=? WHERE id=?",
-                                                  [$data['username'], $data['password'], 1, $data['secret'], 'confirmed', TimeDate::get_date_time(), $invite_row]);
+                    DB::run("UPDATE users SET username=?, password=?, class=?, secret=?, status=?, added=?, passkey=? WHERE id=?",
+                                                  [$data['username'], $data['password'], 1, $data['secret'], 'confirmed', TimeDate::get_date_time(), $data['passkey'], $invite_row]);
                     //var_dump($test); die();
                     //DB::update('users', ['username'=>$data['username'], 'password'=>$data['password'], 'class'=>1, 'secret'=>$data['secret'], 'status'=>'confirmed', 'added'=>TimeDate::get_date_time()], ['id'=>1]);
                     // Welcome PM
