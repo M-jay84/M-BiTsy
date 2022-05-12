@@ -18,7 +18,7 @@ if (Config::get('RIGHTNAV')) {?>
 <!-- Footer -->
 <footer class="mt-auto">
 <hr />
-  <ul class="list-unstyled text-center">
+  <ul class="list-unstyled text-center card">
     <li><?php printf(Lang::T("POWERED_BY_TT"), VERSION);?></li>
     <li><?php $totaltime = array_sum(explode(" ", microtime())) - $GLOBALS['tstart'];?></li>
     <li><?php printf(Lang::T("PAGE_GENERATED_IN"), $totaltime);?></li>
@@ -70,7 +70,7 @@ if (Config::get('RIGHTNAV')) {?>
             // Assuming we have #shoutbox
             $('#shoutbox').load('<?php echo URLROOT; ?>/shoutbox/chat');
         }
-        setInterval( "updateShouts()", 15000 );
+        setInterval( "updateShouts()", 300000 );
 		updateShouts();
     </script>
 <script>

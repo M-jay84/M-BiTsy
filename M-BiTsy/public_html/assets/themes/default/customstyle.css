@@ -1,73 +1,113 @@
-html, body {
-	height: 100%;
-    font-size: 1.0 rem;   /* this option adjusts the general font size */
-    background: #ffffffcc !important;
-	color: rgb(5, 33, 59);
-	line-height: 1.4;
+/* Page Body Style */
+html,
+body {
+    /* Fix Body Scroll Content */
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    background-image: url("godzilla.webp");
+    height: 100%;
+
+    /* Center and scale the image nicely */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    color: #fff;
 }
 
-/* centering with form */
-.ttform {
-	margin: 0 auto;
-	padding: 10px 20px;
-    background-color: #abc2df;
-    color: #072F5F;
-    border-radius: 2.3rem!important;
+/* Navbar Style */
+.navbar {
+    background-color: #000 !important;
+    opacity: 1.0;
+    background-repeat: repeat-x;
+    border-bottom: 2px solid #FFD400;
 }
 
-@media only screen and (min-width: 1300px) {
-	.ttform {
-		width: 50% !important;
-	}
+.navbar-nav .nav-link {
+    color: #fff;
 }
 
-@media only screen and (max-width: 1300px) {
-	.ttform {
-		max-width: 95% !important;
-	}
+.nav-link:hover {
+    color: #FF9900 !IMPORTANT;
 }
 
+/* Add Padding to Top Of Body */
 .page {
-    padding-top: 10px;
+    padding-top: 20px;
 }
 
+/* Show Sidebars */
 .ttsidebar {
     -ms-flex: 0 0 210px;
     flex: 0 0 210px;
 }
 
 @media only screen and (max-width: 1300px) {
-	.ttsidebar {
-		display: none !important;
-	}
-}
-
-@media only screen and (max-width: 1967px) {
-	.ttmobile {
-		max-width: 600px !important;
-	}
+    .ttsidebar {
+        display: none !important;
+    }
 }
 
 /* Define the spacing between center contents and side bars */
-.col{
-    padding-right: 5px;
-    padding-left: 5px;
+.col {
+    padding-right: 10px;
+    padding-left: 10px;
 }
 
-.navbar {
-    background-image: -webkit-linear-gradient(top, #072F5F, #3895D3);
-    background-image: linear-gradient(to bottom, #072F5F, #3895D3);
+/* Center Content With */
+.ttform {
+    margin: 0 auto;
+    padding: 10px 20px;
+    border-radius: 2.3rem !important;
+}
+
+@media only screen and (min-width: 1300px) {
+    .ttform {
+        width: 50% !important;
+    }
+}
+
+@media only screen and (max-width: 1300px) {
+    .ttform {
+        max-width: 95% !important;
+    }
+}
+
+/* Div With Border */
+.ttborder {
+    border: 2px solid #FFD400 !important;
+    background: transparent;
+    padding-bottom: 2px;
+    color: #fff;
+    background-color: #000 !important;
+    opacity: 0.8;
+}
+
+/* Mix Colours Round */
+.ttblend {
+    border: 1px solid #FFD400 !important;
     background-repeat: repeat-x;
 }
 
-.card {
-	background-color: transparent; /* Needed to make the padding-bottom work */
-	border: 0px; /* Needed to make the padding-bottom work */
+/* Fix Color */
+.browsebg {
+    background: #000 !important;
 }
 
-.frame-header {
+/* Card Style */
+.card {
+    background-color: #000 !important;
+    opacity: .9;
+    border: 5px solid #FFD400;
+    border-image-slice: 1;
+    border-width: 2px;
     color: #fff;
-    background-color: #3895D3 !important;
+    border-radius: 0.5rem;
+}
+
+/* Frame Style */
+.frame-header {
+    color: #FFD400;
     background-repeat: repeat-x;
     border-bottom: 0px;
     padding-top: 0;
@@ -75,16 +115,12 @@ html, body {
 }
 
 .frame-body {
-    border: 10px solid;
-    border-image-slice: 1;
-    border-width: 2px;
-    background-color: #c0d9e0 !important;
-    border-image-source: linear-gradient(to bottom, #3895D3, #8cc6ec) !important;
+    color: #fff;
 }
 
+/* Block Style */
 .block-header {
-    color: #fff;
-    background-color: #3895D3 !important;
+    color: #FFD400;
     background-repeat: repeat-x;
     border-bottom: 0px;
     padding-top: 0;
@@ -92,173 +128,197 @@ html, body {
 }
 
 .block-body {
-	padding: 0.05rem;
-    border: 10px solid;
-    border-image-slice: 1;
-    border-width: 2px;
-    background-color: #c0d9e0 !important;
-    border-image-source: linear-gradient(to bottom, #3895D3, #8cc6ec) !important;
+    color: #fff;
+    padding: 0.07rem;
 }
 
+.block-footer {
+    height: 20px !important;
+}
+
+/* Icon Style */
 .tticon {
-	color: #fff !important;
+    color: #fff !important;
     padding: .075rem .25rem;
 }
 
 .tticon-red {
-	color: #ff0000 !important;
+    color: #FF9900 !important;
     padding: .075rem .25rem;
 }
 
+/* Button Style */
 .ttbtn {
-	color: #fff !IMPORTANT;
-	background-image: -webkit-linear-gradient(top, #072F5F, #3895D3) !IMPORTANT;
-	background-image: linear-gradient(to bottom, #072F5F, #3895D3) !IMPORTANT;
+    color: #fff !IMPORTANT;
     padding: .075rem .25rem;
+    border: 1px solid #FFD400 !important;
 }
 
 .ttbtnactive {
-	color: #ff9933 !IMPORTANT;
-	background-image: -webkit-linear-gradient(top, #3895D3, #072F5F) !IMPORTANT;
-	background-image: linear-gradient(to bottom, #3895D3, #072F5F) !IMPORTANT;
+    color: #fff !important;
+    border: 1px solid #FFD400 !important;
     padding: .075rem .25rem;
 }
 
 .ttbtn:hover {
-	color: #ff9933 !IMPORTANT;
+    color: #FF9900 !important;
+    border: 1px solid #FFD400 !important;
 }
 
-.ttborder {
-	border: 2px solid #3895D3 !important;
-    background: linear-gradient(90deg, rgb(198 228 236) 0%, #a7cdf5 100%) !important;
-    padding-bottom: 2px;
+.ttbbcode {
+    color: #FF9900 !important;
+    border: 1px solid #FFD400 !important;
+    height: 20px;
+    padding: 4px;
 }
 
-.ttblend {
-	color: #fff;
-    background-image: -webkit-linear-gradient(top, #3895D3, #072F5F) !IMPORTANT;
-    background-image: linear-gradient(to bottom, #3895D3, #072F5F) !IMPORTANT;
-	background-repeat: repeat-x;
-}
-  
-.ttalert {
-    background: linear-gradient(90deg, rgb(198 228 236) 0%, #a7cdf5 100%) !important;
-	background-repeat: repeat-x;
-}
-
-  #country-list{list-style:none;width:190px;}
-  #country-list li{padding: 10px; background: #f0f0f0; border-bottom: #bbb9b9 1px solid;}
-  #country-list li:hover{background:#ece3d2;cursor: pointer;}
-  #search-box{padding: 10px;border: #a8d4b1 1px solid;border-radius:4px;}
+/* Search User To PM */
+#country-list{list-style:none;width:190px;}
+#country-list li{padding: 10px; color: #fff; background: #000; border-bottom: #bbb9b9 1px solid;}
+#country-list li:hover{background:#242424; color: #ff9900;cursor: pointer;}
+#search-box{padding: 10px;border: #FFD400 1px solid;border-radius:4px;}
 
 /* Styles ShoutBox */
 .shoutbox_contain {
-	border: 0;
-	height: 250px;
-	width: 100%;
-	overflow: auto;
+    border: 0;
+    height: 250px;
+    width: 100%;
+    overflow: auto;
 }
 
 .shoutbox_msgbox {
-	width: 100%;
-	font-size: 16px;
-	background-color: #FFF;
-	border: 1px solid #777;
+    width: 100%;
+    font-size: 16px;
+    background-color: transparent;
+    border: 1px solid #FFD400;
 }
 
 .shouttable {
     padding: .05rem .05rem !important;
 }
 
-/* -- Bootstrap Table --*/
-.table thead th {
-    color: #fff;
-    background-color: #072F5F;
-    background-image: -webkit-linear-gradient(top, #072F5F, #3895D3);
-    background-image: linear-gradient(to bottom, #072F5F, #3895D3);
-    background-repeat: repeat-x;
-	height: 25px !important;
-    padding: .15rem;
-}
-
-.table {
-    color: rgb(5, 42, 97);
-}
-
-.a {
-    color: rgb(5, 33, 59);
-}
-
-.navbar-nav .nav-link {
-    color: #fff;
-}
-
-.list-group-item {
-    color: rgb(5, 33, 59);
-    background-color: #c0d9e0 !important;
-    border-image-source: rgb(5, 33, 59) !important;
-}
-
-.ttbbcode {
-	color: #fff !IMPORTANT;
-	background-image: -webkit-linear-gradient(top, #3895D3, #072F5F) !IMPORTANT;
-	background-image: linear-gradient(to bottom, #3895D3, #072F5F) !IMPORTANT;
-    height: 20px;
-    padding: 4px;
-}
-
 .shoutsmile {
     flex-direction: row !important;
 }
 
+/* Table Style*/
+.table thead th {
+    color: #FFD400;
+    background-color: transparent;
+    border: 1px solid #FFD400;
+    height: 25px !important;
+    padding: .15rem;
+}
+
+.table {
+    color: #fff;
+}
+
 .table-striped>tbody>tr:nth-of-type(odd) {
-    color: #000102 !important;
+    color: #fff !important;
 }
 
 tr:nth-child(odd) {
-    background: #a7cdf5 !important;
+    background: transparent !important;
 }
 
 tr:nth-child(even) {
-    background: #beddfd !important;
+    background-color: #121212 !important;
+    opacity: 0.9;
 }
 
-.browsebg {
-    background: #c0d9e0 !important;
+/* Link Style*/
+.a {
+    color: #ff9900 !important;
 }
 
-.form-control {	
-    color: rgb(5, 33, 59);
-    border: 1px solid #1F8AC0 !important;	
+/* List Style*/
+.list-group-item {
+    color: #fff;
+    background-color: transparent !important;
 }
 
-button, input, optgroup, select, textarea {	
-    color: rgb(5, 33, 59);	
+/* Form Style*/
+.form-control,
+.form-control:focus {
+    color: #fff;
+    background-color: #121212 !important;
+    opacity: 0.9;
+    border: 1px solid #FFD400 !important;
+    box-shadow: none;
 }
 
-.dropdown-item {	
-    color: rgb(5, 33, 59);	
-    background-color: #c0d9e0 !important;	
+button,
+input,
+optgroup,
+select,
+textarea {
+    color: #fff;
+    background-color: #121212 !important;
+    opacity: 0.9;
+    border: 1px solid #FFD400 !important;
 }
 
-.dropdown-menu {	
-    color: rgb(5, 33, 59);	
-    background-color: #c0d9e0 !important;	
+/* Dropdown Style */
+.dropdown-item {
+    color: #FFF;
+    background-color: #000 !important;
 }
 
-.progress-bar {	
-    color: #a7cdf5;	
+.dropdown-item:hover {
+    color: #ff9900 !IMPORTANT;
 }
 
-.block-footer {
-    height: 10px !important;
+.dropdown-menu {
+    color: #fff;
+    background-color: #000 !important;
 }
 
+/* Ballon Style */
+.progress-bar {
+    color: #fff;
+}
+
+/* Ballon Style */
+.ballooncolor {
+    color: #fff;
+    background-color: #151217;
+}
+
+.balloonheadercolor {
+    background-repeat: repeat-x;
+    color: #fff;
+}
+
+/* Pagination Style */
+.pagination-sm .page-link {
+    color: #FFD400;
+    background: transparent;
+}
+
+.page-item.disabled .page-link {
+    color: #FFD400;
+    background: transparent;
+}
+
+.page-item.active .page-link {
+    color: #ff9900;
+    background: transparent;
+}
+
+/* Auto Fit Div/Image */
+.scaleA {
+    width: 100%;
+    max-width: max-content;
+}
+
+/* Carousel Style */
 @media (max-width: 767px) {
-    .carousel-inner .carousel-item > div {
+    .carousel-inner .carousel-item>div {
         display: none;
     }
-    .carousel-inner .carousel-item > div:first-child {
+
+    .carousel-inner .carousel-item>div:first-child {
         display: block;
     }
 }
@@ -271,63 +331,27 @@ button, input, optgroup, select, textarea {
 
 /* medium and up screens */
 @media (min-width: 768px) {
-    
+
     .carousel-inner .carousel-item-end.active,
     .carousel-inner .carousel-item-next {
-      transform: translateX(25%);
+        transform: translateX(25%);
     }
-    
-    .carousel-inner .carousel-item-start.active, 
+
+    .carousel-inner .carousel-item-start.active,
     .carousel-inner .carousel-item-prev {
-      transform: translateX(-25%);
+        transform: translateX(-25%);
     }
 }
 
 .carousel-inner .carousel-item-end,
-.carousel-inner .carousel-item-start { 
-  transform: translateX(0);
+.carousel-inner .carousel-item-start {
+    transform: translateX(0);
 }
 
 .carousel-control-prev-icon {
-    background-color: rgb(255, 0, 0);
+    background-color: #FFD400;
 }
+
 .carousel-control-next-icon {
-    background-color: rgb(255, 0, 0);
-}
-
-.ballooncolor {
-    color: rgb(5, 33, 59);	
-    background-color: #a7cdf5;	
-}
-
-.balloonheadercolor {
-    background-image: -webkit-linear-gradient(top, #072F5F, #3895D3);
-    background-image: linear-gradient(to bottom, #072F5F, #3895D3);
-    background-repeat: repeat-x;
-    color: #fff;
-}
-
-.pagination-sm .page-link {
-    color: #fff;
-    background-image: -webkit-linear-gradient(top, #072F5F, #3895D3);
-    background-image: linear-gradient(to bottom, #072F5F, #3895D3);
-}
-
-.page-item.disabled .page-link {
-    color: #fff;
-    background-image: -webkit-linear-gradient(top, #072F5F, #3895D3);
-    background-image: linear-gradient(to bottom, #072F5F, #3895D3);
-}
-
-.page-item.active .page-link {
-    color: #ff9900;
-}
-
-.ttpadbottom {
-    margin-bottom: 15px !important;
-}
-
-.scaleA {
-    width: 100%;
-    max-width: max-content;
+    background-color: #FFD400;
 }

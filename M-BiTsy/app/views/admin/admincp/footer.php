@@ -59,7 +59,7 @@ if (Config::get('RIGHTNAV')) {?>
             // Assuming we have #shoutbox
             $('#shoutboxstaff').load('<?php echo URLROOT; ?>/adminshoutbox/loadchat');
         }
-        setInterval( "updatestaffShouts()", 15000 );
+        setInterval( "updatestaffShouts()", 300000 );
 		updatestaffShouts();
     </script>
    
