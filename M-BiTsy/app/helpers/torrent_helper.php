@@ -34,15 +34,15 @@ function health($leechers, $seeders)
 // Create Table Of Peers
 function peerstable($res)
 {
-    $ret = "<table align='center' cellpadding=\"3\" cellspacing=\"0\" class=\"table_table\" width=\"100%\" border=\"1\"><tr><th class='table_head'>" . Lang::T("NAME") . "</th><th class='table_head'>" . Lang::T("SIZE") . "</th><th class='table_head'>" . Lang::T("UPLOADED") . "</th>\n<th class='table_head'>" . Lang::T("DOWNLOADED") . "</th><th class='table_head'>" . Lang::T("RATIO") . "</th></tr>\n";
+    $ret = "<div class='table-responsive'><table class='table table-striped'><thead><tr><th>" . Lang::T("NAME") . "</th><th>" . Lang::T("SIZE") . "</th><th>" . Lang::T("UPLOADED") . "</th>\n<th>" . Lang::T("DOWNLOADED") . "</th><th>" . Lang::T("RATIO") . "</th></tr></thead>\n";
 
     while ($arr = $res->fetch(PDO::FETCH_LAZY)) {
         $res2 = DB::run("SELECT name,size FROM torrents WHERE id=? ORDER BY name", [$arr['torrent']]);
         $arr2 = $res2->fetch(PDO::FETCH_LAZY);
         $userratio = $arr2["downloaded"] > 0 ? number_format($arr2["uploaded"] / $arr2["downloaded"], 1) : "---";
-        $ret .= "<tr><td class='table_col1'><a href=" . URLROOT . "torrent?id=$arr[torrent]&amp;hit=1'><b>" . htmlspecialchars($arr2["name"]) . "</b></a></td><td align='center' class='table_col2'>" . mksize($arr2["size"]) . "</td><td align='center' class='table_col1'>" . mksize($arr["uploaded"]) . "</td><td align='center' class='table_col2'>" . mksize($arr["downloaded"]) . "</td><td align='center' class='table_col1'>".get_ratio_color($userratio)."</td></tr>\n";
+        $ret .= "<tbody><tr><td><a href=" . URLROOT . "torrent?id=$arr[torrent]&amp;hit=1'><b>" . htmlspecialchars($arr2["name"]) . "</b></a></td><td>" . mksize($arr2["size"]) . "</td><td>" . mksize($arr["uploaded"]) . "</td><td>" . mksize($arr["downloaded"]) . "</td><td>".get_ratio_color($userratio)."</td></tr></tbody>\n";
     }
-    $ret .= "</table>\n";
+    $ret .= "</table></div>\n";
     return $ret;
 }
 

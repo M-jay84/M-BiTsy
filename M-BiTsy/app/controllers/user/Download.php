@@ -14,7 +14,7 @@ class Download
     {
         // Check User Input
         $id = (int) Input::get("id");
-        $passkey = Input::get("passkey") ?? Users::get('passkey');
+        $passkey = Input::get("passkey") == "" ?  Users::get('passkey') : Input::get("passkey");
         
         // Get Data
         $torrent = DB::select('torrents', 'filename, banned, external, announce, owner, vip', ['id'=>$id]);

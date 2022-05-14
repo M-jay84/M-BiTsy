@@ -11,7 +11,7 @@ while ($forums_arr = $data['mainquery']->fetch(PDO::FETCH_ASSOC)) {
     if (Users::get('class') < $forums_arr["minclassread"] && $forums_arr["guest_read"] == "no") {
         continue;
     }
-    if ($forums_arr['fcid'] != $fcid) { ?>
+    if ($forums_arr['fcid'] != $fcid) { ?><br>
         <div class="row frame-header">
             <div class="col-md-8">
                 <?php echo htmlspecialchars($forums_arr['fcname']); ?>
