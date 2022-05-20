@@ -225,6 +225,7 @@ tr:nth-child(odd) {
 tr:nth-child(even) {
     background-color: #121212 !important;
     opacity: 0.9;
+    color: #fff !important;
 }
 
 /* Link Style*/

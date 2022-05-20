@@ -40,7 +40,7 @@ function peerstable($res)
         $res2 = DB::run("SELECT name,size FROM torrents WHERE id=? ORDER BY name", [$arr['torrent']]);
         $arr2 = $res2->fetch(PDO::FETCH_LAZY);
         $userratio = $arr2["downloaded"] > 0 ? number_format($arr2["uploaded"] / $arr2["downloaded"], 1) : "---";
-        $ret .= "<tbody><tr><td><a href=" . URLROOT . "torrent?id=$arr[torrent]&amp;hit=1'><b>" . htmlspecialchars($arr2["name"]) . "</b></a></td><td>" . mksize($arr2["size"]) . "</td><td>" . mksize($arr["uploaded"]) . "</td><td>" . mksize($arr["downloaded"]) . "</td><td>".get_ratio_color($userratio)."</td></tr></tbody>\n";
+        $ret .= "<tbody><tr><td><a href=" . URLROOT . "/torrent?id=$arr[torrent]&hit=1'><b>" . htmlspecialchars($arr2["name"]) . "</b></a></td><td>" . mksize($arr2["size"]) . "</td><td>" . mksize($arr["uploaded"]) . "</td><td>" . mksize($arr["downloaded"]) . "</td><td>".get_ratio_color($userratio)."</td></tr></tbody>\n";
     }
     $ret .= "</table></div>\n";
     return $ret;

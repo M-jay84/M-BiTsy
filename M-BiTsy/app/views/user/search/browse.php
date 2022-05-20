@@ -1,16 +1,15 @@
 <form method="get" action="<?php echo URLROOT; ?>/search/browse">
-<table align="center">
-<tr align='right'>
+<p class="text-center">
 <?php
 $i = 0;
 while ($cat = $data['cats']->fetch(PDO::FETCH_ASSOC)) {
     $catsperrow = 5;
-    print(($i && $i % $catsperrow == 0) ? "</tr><tr align='right'>" : "");
-    print("<td class='browsebg' style=\"padding-bottom: 2px;padding-left: 2px\"><a href=" . URLROOT . "/search/browse?cat=$cat[id]>".htmlspecialchars($cat["parent_cat"])." - " . htmlspecialchars($cat["name"]) . "</a> <input name='c{$cat["id"]}' type=\"checkbox\" " . (in_array($cat["id"], $data['wherecatina']) || $_GET["cat"] == $cat["id"] ? "checked='checked' " : "") . "value='1' /></td>\n");
+    print(($i && $i % $catsperrow == 0) ? "<br><br>" : "");
+    print("<a href=" . URLROOT . "/search/browse?cat=$cat[id]>".htmlspecialchars($cat["parent_cat"])." - " . htmlspecialchars($cat["name"]) . "</a> <input name='c{$cat["id"]}' type=\"checkbox\" " . (in_array($cat["id"], $data['wherecatina']) || $_GET["cat"] == $cat["id"] ? "checked='checked' " : "") . "value='1' />&nbsp;\n");
     $i++;
 }
-echo "</tr><tr align='center'><td class='browsebg' colspan='$catsperrow' align='center'><input type='submit' value='".Lang::T("GO")."' /></td></tr>";
-echo "</table></form>";
+echo "<br><br><input type='submit' value='".Lang::T("GO")."' />";
+echo "</p></form>";
 //if we are browsing, display all subcats that are in same cat
 if ($data['parent_cat']) {
     $data['url'] .= "parent_cat=" . urlencode($data['parent_cat']) . "&amp;";

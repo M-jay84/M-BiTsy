@@ -59,7 +59,7 @@ foreach ($data['selecttor'] as $torr) :
         <?php echo Lang::T("HITS"); ?>:&nbsp;<?php echo number_format($torr["hits"]); ?>&nbsp; 
         <?php echo Lang::T("COMPLETED"); ?>: <?php echo number_format($torr["times_completed"]); ?>&nbsp; <?php
         if ($torr["external"] != "yes" && $torr["times_completed"] > 0) { ?>
-            <a href='<?php echo URLROOT; ?>/complete?id=<?php echo $data['id']; ?>'><?php echo Lang::T("WHOS_COMPLETED"); ?></a>]<br><?php  
+            <a href='<?php echo URLROOT; ?>/complete?id=<?php echo $torr['id']; ?>'><?php echo Lang::T("WHOS_COMPLETED"); ?></a>]<br><?php  
         } ?><br><br>
         <b><?php echo Lang::T("DATE_ADDED"); ?>:</b>&nbsp;<?php echo date("d-m-Y H:i:s", TimeDate::utc_to_tz_time($torr["added"])); ?><br><?php
         if ($torr["anon"] == "yes" && !$torr['owned']) { ?>

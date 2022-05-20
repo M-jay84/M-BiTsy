@@ -38,14 +38,6 @@ if (_MEMBERSONLY){
 // 6) Check Torrent
 $torrent = Announce::TorrentCheck($client['info_hash']);
 
-// 7) Completed So Lets Record    
-if ($client['event'] == "completed") {
-    if ( _MEMBERSONLY ) {
-        Announce::Completed($user['id'], $torrent['id']);
-        $torrent['times_completed'] = $torrent['times_completed'] + 1;
-    }
-}
-
 // 8) Check If Peer Already In Database
 $peer = Announce::CheckIfPeer($torrent['id'], $client['peer_id'], $passkey);
 
@@ -74,16 +66,27 @@ if (!$peer) {
 			Announce::UpdateUser($user['id'], $upthis, false);
 		}else{
             Announce::UpdateUser($user['id'], $upthis, $downthis);
-            Announce::UpdateSnatched($userid, $torrentid, $elapsed, $downthis, $upthis);
+            Announce::UpdateSnatched($user['id'], $torrent['id'], $elapsed, $downthis, $upthis);
         }
     }
-    // If Peer stopped Delete & Return Empty Response
-    if ($client['event'] == "stopped") {
-        Announce::DeletePeer($torrent['id'], $client['peer_id']);
-        //die(Announce::response(array(), 0, 0));
-    }
+
     // Now Update Peer
     Announce::UpdatePeer($passkey, $agent, $seeder, $torrent['id'], $client);
+
+}
+
+// 7) Completed So Lets Record
+if ($client['event'] == "completed") {
+	if ( _MEMBERSONLY ) {
+		Announce::Completed($user['id'], $torrent['id']);
+		$torrent['times_completed'] = $torrent['times_completed'] + 1;
+	}
+}
+
+// If Peer stopped Delete & Return Empty Response
+if ($client['event'] == "stopped") {
+    Announce::DeletePeer($torrent['id'], $client['peer_id']);
+    //die(Announce::response(array(), 0, 0));
 }
 
 // 10) Now Lets Get Details For Response

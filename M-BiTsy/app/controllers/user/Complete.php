@@ -1,6 +1,6 @@
 <?php
 
-class Completed
+class Complete
 {
 
     public function __construct()

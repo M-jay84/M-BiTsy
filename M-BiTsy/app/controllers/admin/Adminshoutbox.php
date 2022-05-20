@@ -64,7 +64,11 @@ class Adminshoutbox
             <small class="pull-left time d-none d-sm-block" style="width:99px;font-size:11px"><i class="fa fa-clock-o"></i>&nbsp;<?php echo date('jS M,  g:ia', TimeDate::utc_to_tz_time($row['date'])); ?></small>
             <a class="pull-left d-none d-sm-block"><?php echo $av ?></a>&nbsp;
             <a class="pull-left"><b><?php echo Users::coloredname($row["userid"]) ?>:</b></a>&nbsp;
-            <?php echo nl2br(format_comment($row['message'])); ?>
+            <?php
+            echo nl2br(format_comment($row['message']));
+            echo "&nbsp<a href='" . URLROOT . "/shoutbox/delete?id=" . $row['msgid'] . "&sure=1'><i class='fa fa-remove' ></i></a>&nbsp";
+            echo "&nbsp<a href='" . URLROOT . "/shoutbox/edit?id=" . $row['msgid'] . "''><i class='fa fa-pencil' ></i></a>&nbsp"
+            ?>
             </td>
             </tr>
             

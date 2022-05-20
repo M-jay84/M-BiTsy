@@ -26,7 +26,7 @@ while ($row = $data['res']->fetch(PDO::FETCH_ASSOC)) {
     $comdate = date("d.M.Y<\\b\\r><\\s\\m\\a\\l\\l>H:i</\\s\\m\\a\\l\\l>", TimeDate::utc_to_tz_time($row["date"]));
     $peers = (get_row_count("peers", "WHERE torrent = '$id' AND userid = '$row[id]'")) ? "<font color='#27B500'><b>".Lang::T("YES")."</b></font>" : "<font color='#FF1200'><b>".Lang::T("NO")."</b></font>";
     // todo move sql
-    $res2 =  DB::raw('snatched', 'uload, dload, stime, utime, ltime, hnr', ['tid'=>$id,'uid'=>$row['id']]);
+    $res2 =  DB::raw('snatched', 'uload, dload, stime, utime, ltime, hnr', ['tid'=>$data['id'],'uid'=>$row['id']]);
     $row2 = $res2->fetch(PDO::FETCH_ASSOC);
     $tratio = $row2['dload'] > 0 ? number_format($row2['uload'] / $row2['dload'], 1) : "---";
 
@@ -42,7 +42,7 @@ while ($row = $data['res']->fetch(PDO::FETCH_ASSOC)) {
     } ?>
 
     <tr>
-    <td><a href="<?php URLROOT ?>/profile?id=<?php echo $row["id"]; ?>"><b><?php echo $row["username"]; ?></b></a> | <b><?php echo get_ratio_color($userratio); ?></b></td>
+    <td><a href="<?php URLROOT ?>/profile?id=<?php echo $row["id"]; ?>"><b><?php echo Users::coloredname($row["id"]); ?></b></a> | <b><?php echo get_ratio_color($userratio); ?></b></td>
     <td><?php echo date('d.M.Y<\\b\\r>H:i', TimeDate::sql_timestamp_to_unix_timestamp($startdate));?></td>
     <td><?php echo $comdate; ?></td>
     <td><?php echo date('d.M.Y<\\b\\r>H:i', TimeDate::sql_timestamp_to_unix_timestamp($lastaction));?></td>

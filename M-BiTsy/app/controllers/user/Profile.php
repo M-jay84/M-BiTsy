@@ -238,7 +238,7 @@ class Profile
                 // Notify user
                 $prodemoted = ($data['class'] > $uc ? "promoted" : "demoted");
                 $msg = "You have been $prodemoted to " . Groups::get_user_class_name($data['class']) . " by " . Users::get("username") . "";
-                DB::insert('messages', ['sender'=>0, 'receiver'=>$id, 'added'=>TimeDate::get_date_time(), 'msg'=>$msg]);
+                DB::insert('messages', ['sender'=>0, 'receiver'=>$id, 'added'=>TimeDate::get_date_time(), 'subject'=>'Group Change', 'msg'=>$msg]);
             }
         }
         
