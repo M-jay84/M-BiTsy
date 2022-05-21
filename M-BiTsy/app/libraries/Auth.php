@@ -55,6 +55,7 @@ class Auth
                 $GLOBALS['CURRENTUSER'] = $row;
                 //$_SESSION = $row;
                 $_SESSION["loggedin"] = true;
+                $_SESSION["language"] = $row['language'];
                 unset($row);
             }
 

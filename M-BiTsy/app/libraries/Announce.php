@@ -273,8 +273,9 @@ class Announce
     public static function Completed($userid, $torrentid)
     {
         DB::run("INSERT INTO completed (userid, torrentid, date) VALUES (?,?,?) ON DUPLICATE KEY UPDATE date = ?", [$userid, $torrentid, self::get_date_time(), self::get_date_time()]);
-        DB::run("UPDATE LOW_PRIORITY `snatched` SET `completed` = ? WHERE `tid` = ? AND `uid` = ? AND `utime` = ?", [1, $torrentid, $userid, self::get_date_time()]);
-        $completed = 1;
+        //DB::run("UPDATE LOW_PRIORITY `snatched` SET `completed` = ? WHERE `tid` = ? AND `uid` = ? AND `utime` = ?", [1, $torrentid, $userid, self::get_date_time()]);
+        DB::run("UPDATE `snatched` SET `completed` = ? WHERE `tid` = ? AND `uid` = ?", [1, $torrentid, $userid]);
+		$completed = 1;
         return $completed;
     }
 
@@ -305,9 +306,9 @@ class Announce
     }
 
     // Current Peer So Update User
-    public static function UpdateUser($userid, $upthis, $downthis = false)
+    public static function UpdateUser($userid, $upthis, $downthis = 0)
     {
-        if (!$downthis) {
+        if ($downthis == 0) {
             DB::run("UPDATE users SET uploaded = uploaded + ? WHERE id=?", [$upthis, $userid]);
         } else {
             DB::run("UPDATE users SET uploaded = uploaded + ?, downloaded = downloaded + ? WHERE id=?", [$upthis, $downthis, $userid]);

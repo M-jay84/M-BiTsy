@@ -934,8 +934,6 @@ CREATE TABLE IF NOT EXISTS `snatched` (
   `completed` enum('0','1') NOT NULL DEFAULT '0',
   `hnr` enum('no','yes') NOT NULL DEFAULT 'no',
   `done` enum('yes','no') NOT NULL DEFAULT 'no',
-  `hitrun` datetime DEFAULT NULL,
-  `hitrunwarn` enum('yes','pending','no') NOT NULL DEFAULT 'no',
   PRIMARY KEY (`sid`),
   UNIQUE KEY `tid_uid` (`tid`,`uid`),
   KEY `completed` (`completed`),

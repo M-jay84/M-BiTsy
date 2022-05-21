@@ -41,8 +41,8 @@ class Bonuses
                 break;
             case 'VIP':
                 $days = $row['value'];
-                $vipuntil = (Users::get("vipuntil") > "0000-00-00 00:00:00") ? $vipuntil = TimeDate::get_date_time(strtotime(Users::get("vipuntil")) + (60 * 86400)) : $vipuntil = TimeDate::get_date_time(TimeDate::gmtime() + (60 * 86400));
-                $oldclass = (Users::get("vipuntil") > "0000-00-00 00:00:00") ? $oldclass = Users::get("oldclass") : $oldclass = Users::get("class");
+                $vipuntil = (Users::get("vipuntil") != null) ? $vipuntil = TimeDate::get_date_time(strtotime(Users::get("vipuntil")) + (30 * 86400)) : $vipuntil = TimeDate::get_date_time(TimeDate::gmtime() + (30 * 86400));
+                $oldclass = (Users::get("vipuntil") != null) ? $oldclass = Users::get("oldclass") : $oldclass = Users::get("class");
                 DB::update('users', ['class' =>3, 'oldclass' =>$oldclass,'vipuntil' =>$vipuntil], ['id' => Users::get('id')]);
                 break;
         }

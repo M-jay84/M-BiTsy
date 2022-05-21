@@ -59,7 +59,7 @@ class Snatch
         if ($count_uid > 0) {
             // Pagination
             list($pagerbuttons, $limit) = Pagination::pager(50, $count_uid, '/snatch?id=' . $uid . ' &amp;');
-            $res = Snatched::join($uid, $limit);
+            $res = Snatched::join2($uid, $limit);
             
             $users = DB::column('users', 'username', ['id'=>$uid]);
             $title = "" . Lang::T("SNATCHLIST_FOR") . " " . htmlspecialchars($users) . "";

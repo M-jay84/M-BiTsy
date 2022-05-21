@@ -32,7 +32,8 @@ class Snatched
 
         return $res;
     }
-
+	
+	
     public static function join1($uid)
     {
         $res = DB::run("SELECT 
@@ -57,4 +58,34 @@ class Snatched
 
         return $res;
     }
+	
+	public static function join2($uid, $LIMIT = 25)
+    {
+        $res = DB::run("SELECT
+				snatched.tid as tid,
+				torrents.name,                                      
+				snatched.uload,
+				snatched.dload,
+				snatched.stime,
+				snatched.utime,
+				snatched.ltime,
+				snatched.completed,
+				snatched.hnr,
+				(
+					SELECT seeder
+					FROM peers
+					WHERE torrent = tid AND userid = $uid LIMIT 1
+				) AS seeding
+				FROM
+				snatched
+				INNER JOIN users ON snatched.uid = users.id
+				INNER JOIN torrents ON snatched.tid = torrents.id
+				WHERE
+				users.status = 'confirmed' AND
+				torrents.banned = 'no' AND snatched.uid = '$uid'
+				ORDER BY stime DESC $limit");
+
+        return $res;
+    }
+	
 }

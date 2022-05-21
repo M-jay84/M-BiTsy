@@ -38,15 +38,11 @@ if (_MEMBERSONLY){
 // 6) Check Torrent
 $torrent = Announce::TorrentCheck($client['info_hash']);
 
-// 8) Check If Peer Already In Database
+// 7) Check If Peer Already In Database
 $peer = Announce::CheckIfPeer($torrent['id'], $client['peer_id'], $passkey);
 
-// 9) Is It New Or Exsisting Peer
+// 8) Is It New Or Exsisting Peer
 if (!$peer) {
-    // If New Peer stopped Return Empty Response
-    if ($client['event'] == "stopped") {
-        die(Announce::response(array(), 0, 0));
-    }
     // Check Max Download Slots
     Announce::MaxSlots($user);
     // Use Client To Insert New Peer - wait times / fsock / max connections would go before here
@@ -59,8 +55,8 @@ if (!$peer) {
 	// Use Client To Update User/Snatched Details
 	$elapsed = ($peer['seeder'] == 'yes') ? _INTERVAL - floor(($peer['ez'] - time()) / 60) : 0;
     $upthis = max(0, $client['uploaded'] - $peer["uploaded"]);
-    // $downthis = max(0, $client['downloaded'] - $peer["downloaded"]); 
-	$downthis = $user['class'] == _VIP ? 0 : max(0, $client['downloaded'] - $peer["downloaded"]);
+    $downthis = max(0, $client['downloaded'] - $peer["downloaded"]); 
+	// $downthis = $user['class'] == _VIP ? 0 : max(0, $client['downloaded'] - $peer["downloaded"]);
     if ($upthis > 0 || $downthis > 0 || $elapsed > 0){
 		if ($torrent["freeleech"] == 1){
 			Announce::UpdateUser($user['id'], $upthis, false);
@@ -75,7 +71,7 @@ if (!$peer) {
 
 }
 
-// 7) Completed So Lets Record
+// 9) Event Completed So Lets Record
 if ($client['event'] == "completed") {
 	if ( _MEMBERSONLY ) {
 		Announce::Completed($user['id'], $torrent['id']);
@@ -83,18 +79,13 @@ if ($client['event'] == "completed") {
 	}
 }
 
-// If Peer stopped Delete & Return Empty Response
+// Event stopped Delete & Return Empty Response
 if ($client['event'] == "stopped") {
     Announce::DeletePeer($torrent['id'], $client['peer_id']);
     //die(Announce::response(array(), 0, 0));
 }
 
-// 10) Now Lets Get Details For Response
-$response = DB::run("SELECT peer_id, ip, port FROM peers WHERE torrent = ?", [$torrent['id']])->fetchAll();
-$reply = array(); // To be encoded and sent to the client
-foreach($response as $resp) { // Runs for every client with the same torrentid/infohash
-	$reply[] = array($resp['ip'], $resp['port'], $resp['peer_id']); //ip, port, peerid
-}
+// 10) Count Peers
 $seeders = DB::run("SELECT COUNT(*) FROM peers WHERE seeder=? AND torrent = ?", ['yes', $torrent['id']])->fetchColumn();
 $leechers = DB::run("SELECT COUNT(*) FROM peers WHERE seeder=? AND torrent = ?", ['no', $torrent['id']])->fetchColumn();
 
@@ -104,4 +95,9 @@ if ($seeder == "yes") {
 }
 
 // 12) Send Response Back
+$response = DB::run("SELECT peer_id, ip, port FROM peers WHERE torrent = ?", [$torrent['id']])->fetchAll();
+$reply = array(); // To be encoded and sent to the client
+foreach($response as $resp) { // Runs for every client with the same torrentid/infohash
+	$reply[] = array($resp['ip'], $resp['port'], $resp['peer_id']); //ip, port, peerid
+}
 die(Announce::response($reply, $seeders, $leechers));

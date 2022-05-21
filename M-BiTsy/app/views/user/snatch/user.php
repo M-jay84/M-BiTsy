@@ -13,9 +13,9 @@ if (Config::get('ALLOWEXTERNAL')) { ?>
 <th><?php echo Lang::T("RATIO"); ?></th>
 <th><?php echo Lang::T("ADDED"); ?></th>
 <th><?php echo Lang::T("LAST_ACTION"); ?></th>
-<th><img src="assets/images/seedtime.png" border="0" title="<?php echo Lang::T("SEED_TIME"); ?>"></th>
-<th><i class='fa fa-check tticon' title='<?php echo Lang::T("COMPLETED"); ?>'></i></th>
-<th><i class='fa fa-upload tticon' title='<?php echo Lang::T("SEEDING"); ?>'></i></th>
+<th><?php echo Lang::T("SEED_TIME"); ?></th>
+<th><?php echo Lang::T("COMPLETED"); ?></th>
+<th><?php echo Lang::T("SEEDING"); ?></th>
 <th><?php echo Lang::T("HNR"); ?></th>
 </tr></thead><tbody>
 <?php

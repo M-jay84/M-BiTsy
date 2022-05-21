@@ -28,7 +28,7 @@ class Cleanup
         self::deletepeers();
         self::makeinvisible();
         self::bonus();
-        //self::vipuntil(); error reset class to 0
+        self::vipuntil();
         self::pendinguser();
         self::deletelogs();
         self::freeleech();
@@ -84,10 +84,10 @@ class Cleanup
     // Reset VIP Until
     public static function vipuntil()
     {
-        $rowv = DB::run("SELECT id, oldclass FROM users WHERE vipuntil < ? AND oldclass != ?", [TimeDate::get_date_time(), 0])->fetchAll();
-        if ($rowv) {
-            DB::run("UPDATE users SET class =?, oldclass=?, vipuntil =? WHERE vipuntil < ?", [$rowv['oldclass'], 0, null, TimeDate::get_date_time()]);
+        $rowv1 = DB::run("SELECT id, oldclass FROM users WHERE vipuntil < ? AND oldclass != ?", [TimeDate::get_date_time(), 0])->fetchAll();
+        foreach ($rowv1 as $rowv) {
             DB::insert('messages', ['sender'=>0, 'receiver'=>$rowv['id'], 'added'=>TimeDate::get_date_time(), 'subject'=> 'Your VIP class stay has just expired', 'msg'=>'Your VIP class stay has just expired']);
+            DB::run("UPDATE users SET class =?, oldclass=?, vipuntil =? WHERE vipuntil < ?", [$rowv['oldclass'], 0, null, TimeDate::get_date_time()]);
         }
     }
 
