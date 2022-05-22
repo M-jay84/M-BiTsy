@@ -28,12 +28,12 @@ if ($data['res']->rowCount() != 0) {
         while ($row2 = $result2->fetch(PDO::FETCH_ASSOC)) {
             $smallname = substr(htmlspecialchars($row2["name"]), 0, 35);
             if ($smallname != htmlspecialchars($row2["name"])) {$smallname .= '...';}
-            $stime = TimeDate::mkprettytime($row['ltime']);
-            $startdate = TimeDate::utc_to_tz(TimeDate::get_date_time($row['stime']));
-            $lastaction = TimeDate::utc_to_tz(TimeDate::get_date_time($row['utime']));
+            $stime = TimeDate::mkprettytime($row['last_time']);
+            $startdate = TimeDate::utc_to_tz(TimeDate::get_date_time($row['start_time']));
+            $lastaction = TimeDate::utc_to_tz(TimeDate::get_date_time($row['upload_time']));
             print '<td><a href="' . $config['SITEURL'] . '/torrent?id=' . $row['tid'] . '">' . $smallname . '</td>';
-            print '<td><font color=limegreen>' . mksize($row['uload']) . '</font></td>';
-            print '<td><font color=red>' . mksize($row['dload']) . '</font></td>';
+            print '<td><font color=limegreen>' . mksize($row['upload']) . '</font></td>';
+            print '<td><font color=red>' . mksize($row['download']) . '</font></td>';
             print '<td>' . (is_null($stime) ? '0' : $stime) . '</td>';
             print '<td>' . date('d.M.Y H:i', TimeDate::sql_timestamp_to_unix_timestamp($startdate)) . '</td>';
             print '<td>' . date('d.M.Y H:i', TimeDate::sql_timestamp_to_unix_timestamp($lastaction)) . '</td>';

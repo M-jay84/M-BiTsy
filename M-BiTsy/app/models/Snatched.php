@@ -9,11 +9,11 @@ class Snatched
         users.class,
         snatched.uid as uid,
         snatched.tid as tid,
-        snatched.uload,
-        snatched.dload,
-        snatched.stime,
-        snatched.utime,
-        snatched.ltime,
+        snatched.upload,
+        snatched.download,
+        snatched.start_time,
+        snatched.upload_time,
+        snatched.last_time,
         snatched.completed,
         snatched.hnr,
         (
@@ -28,7 +28,7 @@ class Snatched
         WHERE
         users.status = 'confirmed' AND
         torrents.banned = 'no' AND snatched.tid = '$tid'
-        ORDER BY stime DESC $limit");
+        ORDER BY start_time DESC $limit");
 
         return $res;
     }
@@ -40,9 +40,9 @@ class Snatched
                     snatched.tid as tid, 
                     torrents.name, 
                     torrents.size, 
-	                snatched.uload, 
-                    snatched.dload, 
-		            snatched.ltime, 
+	                snatched.upload, 
+                    snatched.download, 
+		            snatched.last_time, 
 		            snatched.hnr, 
 		            users.uploaded, 
 		            users.seedbonus, 
@@ -54,7 +54,7 @@ class Snatched
 		            AND snatched.uid = '$uid'
 		            AND snatched.hnr = 'yes'
 		            AND snatched.done = 'no'
-		            ORDER BY stime DESC");
+		            ORDER BY start_time DESC");
 
         return $res;
     }
@@ -64,11 +64,11 @@ class Snatched
         $res = DB::run("SELECT
 				snatched.tid as tid,
 				torrents.name,                                      
-				snatched.uload,
-				snatched.dload,
-				snatched.stime,
-				snatched.utime,
-				snatched.ltime,
+				snatched.upload,
+				snatched.download,
+				snatched.start_time,
+				snatched.upload_time,
+				snatched.last_time,
 				snatched.completed,
 				snatched.hnr,
 				(
@@ -83,7 +83,7 @@ class Snatched
 				WHERE
 				users.status = 'confirmed' AND
 				torrents.banned = 'no' AND snatched.uid = '$uid'
-				ORDER BY stime DESC $limit");
+				ORDER BY start_time DESC $limit");
 
         return $res;
     }

@@ -19,7 +19,7 @@ class Adminsnatch
             }
             $ids = array_map('intval', $_POST['ids']);
             $ids = implode(',', $ids);
-            DB::run("UPDATE snatched SET ltime = '86400', hnr = 'no', done = 'yes' WHERE `sid` IN ($ids)");
+            DB::run("UPDATE snatched SET last_time = '86400', hnr = 'no', done = 'yes' WHERE `sid` IN ($ids)");
             Redirect::autolink(URLROOT . "/Adminsnatch", "Entries deleted.");
         }
 

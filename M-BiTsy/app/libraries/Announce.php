@@ -273,8 +273,8 @@ class Announce
     public static function Completed($userid, $torrentid)
     {
         DB::run("INSERT INTO completed (userid, torrentid, date) VALUES (?,?,?) ON DUPLICATE KEY UPDATE date = ?", [$userid, $torrentid, self::get_date_time(), self::get_date_time()]);
-        //DB::run("UPDATE LOW_PRIORITY `snatched` SET `completed` = ? WHERE `tid` = ? AND `uid` = ? AND `utime` = ?", [1, $torrentid, $userid, self::get_date_time()]);
-        DB::run("UPDATE `snatched` SET `completed` = ? WHERE `tid` = ? AND `uid` = ?", [1, $torrentid, $userid]);
+        //DB::run("UPDATE LOW_PRIORITY `snatched` SET `completed` = ? WHERE `tid` = ? AND `uid` = ? AND `upload_time` = ?", [1, $torrentid, $userid, self::get_date_time()]);
+        //DB::run("UPDATE `snatched` SET `completed` = ? WHERE `tid` = ? AND `uid` = ?", [1, $torrentid, $userid]);
 		$completed = 1;
         return $completed;
     }
@@ -300,9 +300,9 @@ class Announce
     }
 
     // New Peer So Add Snatched
-    public static function InsertSnatched($userid, $torrentid)
+    public static function InsertSnatched($userid, $torrentid, $seeder)
     {
-        DB::run("INSERT INTO `snatched` (`uid`, `tid`, `stime`, `utime`) VALUES (?,?,?,?) ON DUPLICATE KEY UPDATE `utime` = ?", [$userid, $torrentid, self::gmtime(), self::gmtime(), self::gmtime()]);
+        DB::run("INSERT INTO `snatched` (`uid`, `tid`, `start_time`, `upload_time`, `completed`) VALUES (?,?,?,?,?) ON DUPLICATE KEY UPDATE `upload_time` = ?", [$userid, $torrentid, self::gmtime(), self::gmtime(), $seeder, self::gmtime()]);
     }
 
     // Current Peer So Update User
@@ -316,9 +316,13 @@ class Announce
     }
 
     // Current Peer So Update Snatched
-    public static function UpdateSnatched($userid, $torrentid, $elapsed, $downthis, $upthis)
+    public static function UpdateSnatched($userid, $torrentid, $elapsed, $upthis, $seeder, $downthis = 0)
     {
-        DB::run("UPDATE LOW_PRIORITY `snatched` SET `uload` = `uload` + '$upthis', `dload` = `dload` + '$downthis', `utime` = '" . self::gmtime() . "', `ltime` = `ltime` + '$elapsed' WHERE `tid` = ? AND `uid` = ?", [$torrentid, $userid]);
+        if ($downthis == 0) {
+            DB::run("UPDATE LOW_PRIORITY `snatched` SET `upload` = `upload` + '$upthis', `upload_time` = '" . self::gmtime() . "', `last_time` = `last_time` + '$elapsed', completed = $seeder WHERE `tid` = ? AND `uid` = ?", [$torrentid, $userid]);
+        } else {
+            DB::run("UPDATE LOW_PRIORITY `snatched` SET `upload` = `upload` + '$upthis', `download` = `download` + '$downthis', `upload_time` = '" . self::gmtime() . "', `last_time` = `last_time` + '$elapsed', completed = $seeder WHERE `tid` = ? AND `uid` = ?", [$torrentid, $userid]);
+        }
     }
 
     // Current Peer So Update User

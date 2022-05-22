@@ -26,12 +26,12 @@
                     <tr>
                         <td align='left' class='table_col1'><a href=<?php echo URLROOT ?>/torrent?id=<?php $row['tid'] ?>&hit=1><?php echo $dispname ?></a></td>
                         <td class="table_col2">
-                            <font color="#27B500"><?php echo mksize($row['uload']); ?></font>
+                            <font color="#27B500"><?php echo mksize($row['upload']); ?></font>
                         </td>
                         <td class="table_col1">
-                            <font color="#FF2200"><?php echo mksize($row['dload']); ?></font>
+                            <font color="#FF2200"><?php echo mksize($row['download']); ?></font>
                         </td>
-                        <td class="table_col2"><?php echo ($row['uploaded']) ? TimeDate::mkprettytime($row['ltime']) : '---'; ?></td>
+                        <td class="table_col2"><?php echo ($row['uploaded']) ? TimeDate::mkprettytime($row['last_time']) : '---'; ?></td>
                         <td class="table_col1" align="left">
                             <?php
                             if ($points >= 100) { ?>

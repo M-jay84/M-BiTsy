@@ -34,7 +34,7 @@ class Bonuses
                     $new_modcomment .= "" . Users::coloredname(Users::get('id')) . " has cleared H&R for " . $row['cost'] . " points \n";
                     $modcom = $new_modcomment;
                     DB::run("UPDATE `users` SET `modcomment` = CONCAT($modcom,modcomment) WHERE id = ?", [$uid]);
-                    DB::update('snatched', ['ltime' =>129600, 'hnr' =>'no'], ['uid' => $uid]);
+                    DB::update('snatched', ['last_time' =>129600, 'hnr' =>'no'], ['uid' => $uid]);
                 }
                 break;
             case 'other':

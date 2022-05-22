@@ -103,7 +103,7 @@ class Torrents
      torrentlang.name AS lang_name, 
      torrentlang.image AS lang_image, 
      categories.parent_cat as cat_parent, 
-     users.username, users.donated, users.warned, users.privacy, snatched.tid, snatched.uid, snatched.uload, snatched.dload, snatched.stime, snatched.utime, snatched.ltime
+     users.username, users.donated, users.warned, users.privacy, snatched.tid, snatched.uid, snatched.upload, snatched.download, snatched.start_time, snatched.upload_time, snatched.last_time
      FROM torrents 
      LEFT JOIN categories ON torrents.category = categories.id 
      LEFT JOIN torrentlang ON torrents.torrentlang = torrentlang.id 

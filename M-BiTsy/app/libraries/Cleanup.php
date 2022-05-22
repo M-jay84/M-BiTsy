@@ -218,9 +218,9 @@ class Cleanup
         $length = Config::get('HNR_DEADLINE') * 86400; // 7 days
         $seedtime = Config::get('HNR_SEEDTIME') * 3600; // 48 hours
         // Update Snatched
-        DB::run("UPDATE snatched SET hnr = ? WHERE completed = ? AND hnr = ? AND uload < dload AND $timenow - $length > stime AND $seedtime > ltime AND done=?", ['yes', 1, 'no', 'no']);
-        DB::run("UPDATE `snatched` SET `hnr` = ? WHERE `hnr` = ? AND uload >= dload", ['no', 'yes']);
-        DB::run("UPDATE `snatched` SET `hnr` = ? WHERE `hnr` = ? AND ltime >= ?", ['no', 'yes', $seedtime]);
+        DB::run("UPDATE snatched SET hnr = ? WHERE completed = ? AND hnr = ? AND upload < download AND $timenow - $length > start_time AND $seedtime > last_time AND done=?", ['yes', 'yes', 'no', 'no']);
+        DB::run("UPDATE `snatched` SET `hnr` = ? WHERE `hnr` = ? AND upload >= download", ['no', 'yes']);
+        DB::run("UPDATE `snatched` SET `hnr` = ? WHERE `hnr` = ? AND last_time >= ?", ['no', 'yes', $seedtime]);
         // Do We Have Snatched
         $a = DB::run("SELECT DISTINCT uid FROM snatched WHERE hnr = ? AND done= ?", ['yes', 'no']);
         if ($a->rowCount() > 0):

@@ -35,11 +35,11 @@ class Complete
         users.class,
         snatched.uid as uid,
         snatched.tid as tid,
-        snatched.uload,
-        snatched.dload,
-        snatched.stime,
-        snatched.utime,
-        snatched.ltime,
+        snatched.upload,
+        snatched.download,
+        snatched.start_time,
+        snatched.upload_time,
+        snatched.last_time,
         snatched.completed,
         snatched.hnr,
         (
@@ -54,7 +54,7 @@ class Complete
         WHERE
         users.status = 'confirmed' AND
         torrents.banned = 'no' AND snatched.tid = '$id' AND snatched.completed != 0
-        ORDER BY stime DESC");
+        ORDER BY start_time DESC");
         
         if ($res->rowCount() == 0) {
             Redirect::autolink(URLROOT, Lang::T("NO_DOWNLOADS_YET"));

@@ -43,29 +43,31 @@ $peer = Announce::CheckIfPeer($torrent['id'], $client['peer_id'], $passkey);
 
 // 8) Is It New Or Exsisting Peer
 if (!$peer) {
+	
     // Check Max Download Slots
     Announce::MaxSlots($user);
     // Use Client To Insert New Peer - wait times / fsock / max connections would go before here
 	Announce::InsertPeer($passkey, $seeder, $user['id'], $agent, $torrent, $client);
-	// Not Seeder So Insert Snatch
-	if ( (_MEMBERSONLY) && (($seeder == 'no' && $torrent['freeleech'] == 0)) ) {
-        Announce::InsertSnatched($user['id'], $torrent['id']);
+	// Insert Snatch
+	if (_MEMBERSONLY) {
+        Announce::InsertSnatched($user['id'], $torrent['id'], $seeder);
     }
+	
 } else {
+	
 	// Use Client To Update User/Snatched Details
 	$elapsed = ($peer['seeder'] == 'yes') ? _INTERVAL - floor(($peer['ez'] - time()) / 60) : 0;
     $upthis = max(0, $client['uploaded'] - $peer["uploaded"]);
-    $downthis = max(0, $client['downloaded'] - $peer["downloaded"]); 
-	// $downthis = $user['class'] == _VIP ? 0 : max(0, $client['downloaded'] - $peer["downloaded"]);
+    $downthis = max(0, $client['downloaded'] - $peer["downloaded"]); // $downthis = $user['class'] == _VIP ? 0 : max(0, $client['downloaded'] - $peer["downloaded"]);
     if ($upthis > 0 || $downthis > 0 || $elapsed > 0){
 		if ($torrent["freeleech"] == 1){
-			Announce::UpdateUser($user['id'], $upthis, false);
+			Announce::UpdateUser($user['id'], $upthis, 0);
+			Announce::UpdateSnatched($user['id'], $torrent['id'], $elapsed, $upthis, $seeder, 0);
 		}else{
             Announce::UpdateUser($user['id'], $upthis, $downthis);
-            Announce::UpdateSnatched($user['id'], $torrent['id'], $elapsed, $downthis, $upthis);
+            Announce::UpdateSnatched($user['id'], $torrent['id'], $elapsed, $downthis, $upthis, $seeder);
         }
     }
-
     // Now Update Peer
     Announce::UpdatePeer($passkey, $agent, $seeder, $torrent['id'], $client);
 

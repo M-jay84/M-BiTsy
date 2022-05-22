@@ -97,7 +97,7 @@ class Snatch
                 }
                 $modcomment = gmdate("d-M-Y") . " - " . Lang::T("DELETED_RECORDING") . ": " . $torid . " " . Lang::T("POINTS_OF_SEED_BONUS") . "\n" . $modcom;
                 DB::run("UPDATE users SET seedbonus = seedbonus - '100', modcomment = ? WHERE id = ?", [$modcomment, $uid]);
-                DB::update('snatched', ['ltime' =>86400, 'hnr' =>'no','done' =>'yes'], ['tid' => $torid, 'uid' => $uid]);
+                DB::update('snatched', ['last_time' =>86400, 'hnr' =>'no','done' =>'yes'], ['tid' => $torid, 'uid' => $uid]);
                 Logs::write("<a href=" . URLROOT . "/profile?id=".Users::get('id')."><b>".Users::get('username')."</b></a> " . Lang::T("DELETED_RECORDING") . ": <a href=" . URLROOT . "/torrent?id=$torid><b>$torid</b></a> " . Lang::T("POINTS_OF_SEED_BONUS") . "");
                 Redirect::autolink(URLROOT . "/snatch/trade", Lang::T("ONE_RECORDING_HIT_AND_RUN_DELETED"));
         }
@@ -111,7 +111,7 @@ class Snatch
                 }
                 $modcomment = gmdate("d-M-Y") . " - " . Lang::T("DELETED_RECORDING") . ": " . $torid . " with " . $viewsize . " " . Lang::T("OF_UPLOAD") . "\n" . $modcom;
                 DB::run("UPDATE users SET uploaded = uploaded - '$torsize', modcomment = ? WHERE id = ?", [$modcomment, $uid]);
-                DB::update('snatched', ['ltime' =>86400, 'hnr' =>'no','done' =>'yes'], ['tid' => $torid, 'uid' => $uid]);
+                DB::update('snatched', ['last_time' =>86400, 'hnr' =>'no','done' =>'yes'], ['tid' => $torid, 'uid' => $uid]);
                 Logs::write("<a href=" . URLROOT . "/profile?id=Users::get(id]><b>".Users::get('username')."</b></a> " . Lang::T("DELETED_RECORDING") . ": <a href=" . URLROOT . "/torrent?id=$torid><b>$torid</b></a> " . Lang::T("HIT_AND_RUN_WITH") . " <b>$viewsize</b> " . Lang::T("OF_UPLOAD") . "");
                 Redirect::autolink(URLROOT . "/snatch/trade", Lang::T("ONE_RECORDING_HIT_AND_RUN_DELETED"));
         }
