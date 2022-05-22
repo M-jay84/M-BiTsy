@@ -29,8 +29,33 @@ class Complete
             Redirect::autolink(URLROOT, Lang::T("THIS_TORRENT_IS_EXTERNALLY_TRACKED"));
         }
 
-        // Get Users
-        $res = Completed::completedUser($id);
+        $res = DB::run("SELECT
+        users.id,
+        users.username,
+        users.class,
+        snatched.uid as uid,
+        snatched.tid as tid,
+        snatched.uload,
+        snatched.dload,
+        snatched.stime,
+        snatched.utime,
+        snatched.ltime,
+        snatched.completed,
+        snatched.hnr,
+        (
+            SELECT seeder
+            FROM peers
+            WHERE torrent = tid AND userid = uid LIMIT 1
+        ) AS seeding
+        FROM
+        snatched
+        INNER JOIN users ON snatched.uid = users.id
+        INNER JOIN torrents ON snatched.tid = torrents.id
+        WHERE
+        users.status = 'confirmed' AND
+        torrents.banned = 'no' AND snatched.tid = '$id' AND snatched.completed != 0
+        ORDER BY stime DESC");
+        
         if ($res->rowCount() == 0) {
             Redirect::autolink(URLROOT, Lang::T("NO_DOWNLOADS_YET"));
         }
