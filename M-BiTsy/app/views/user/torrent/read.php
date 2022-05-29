@@ -239,7 +239,7 @@ if ($torr["nfo"] == "yes") {
 endforeach;
 
 // Similar Torrents mod
-$query = "SELECT torrents.id, torrents.anon, torrents.descr, torrents.announce, torrents.category, torrents.sticky,  torrents.vip,  torrents.tube,  torrents.tmdb, torrents.leechers, torrents.nfo, torrents.seeders, torrents.name, torrents.times_completed, torrents.size, torrents.added, torrents.comments, torrents.numfiles, torrents.filename, torrents.owner, torrents.external, torrents.freeleech, torrents.image1, torrents.image2,
+$query = "SELECT torrents.id, torrents.anon, torrents.descr, torrents.announce, torrents.category, torrents.sticky,  torrents.vip,  torrents.tube,  torrents.tmdb, torrents.imdb, torrents.leechers, torrents.nfo, torrents.seeders, torrents.name, torrents.times_completed, torrents.size, torrents.added, torrents.comments, torrents.numfiles, torrents.filename, torrents.owner, torrents.external, torrents.freeleech, torrents.image1, torrents.image2,
 categories.name AS cat_name, categories.image AS cat_pic, categories.parent_cat AS cat_parent,
 users.username, users.privacy,
 IF(torrents.numratings < 1, NULL, ROUND(torrents.ratingsum / torrents.numratings, 1)) AS rating

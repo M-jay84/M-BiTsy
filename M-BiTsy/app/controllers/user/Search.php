@@ -150,7 +150,7 @@ class Search
             list($pagerbuttons, $limit) = Pagination::pager(25, $count, URLROOT . "/search/browse" . $search['url'] . $search['pagerlink']);
             $res = DB::run("SELECT torrents.id, torrents.anon, torrents.announce, torrents.category, torrents.sticky, 
                                     torrents.leechers, torrents.nfo, torrents.seeders, torrents.name, torrents.times_completed, 
-                                    torrents.tube, torrents.tmdb, torrents.size, torrents.added, torrents.comments, torrents.numfiles, 
+                                    torrents.tube, torrents.tmdb, torrents.imdb, torrents.size, torrents.added, torrents.comments, torrents.numfiles, 
                                     torrents.filename, torrents.owner, torrents.external, torrents.freeleech, 
                                     categories.name AS cat_name, categories.parent_cat AS cat_parent, 
                                     categories.image AS cat_pic, users.username, users.privacy, 

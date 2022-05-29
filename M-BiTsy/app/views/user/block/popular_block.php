@@ -2,7 +2,7 @@
 if ($_SESSION['loggedin'] == true) {
 $tcat = implode(',', PopularCats);
 $i = 0;
-$q = "SELECT torrents.id, torrents.name, torrents.image1, torrents.image2, torrents.tmdb, categories.name as cat_name, categories.parent_cat as cat_parent FROM torrents LEFT JOIN categories ON torrents.category=categories.id WHERE banned = 'no' AND visible = 'yes' AND category IN ($tcat) ORDER BY torrents.seeders + torrents.leechers DESC LIMIT 10"; 
+$q = "SELECT torrents.id, torrents.name, torrents.image1, torrents.image2, torrents.tmdb, torrents.imdb, categories.name as cat_name, categories.parent_cat as cat_parent FROM torrents LEFT JOIN categories ON torrents.category=categories.id WHERE banned = 'no' AND visible = 'yes' AND category IN ($tcat) ORDER BY torrents.seeders + torrents.leechers DESC LIMIT 10"; 
 $q = DB::run($q);
 
 Style::block_begin('Popular Movies');
