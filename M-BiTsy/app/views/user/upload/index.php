@@ -34,22 +34,25 @@ if (Config::get('ALLOWEXTERNAL')) { ?>
     <div class="col-sm-6">
 	<input class="form-control" type='text' name='name'><?php echo Lang::T("THIS_WILL_BE_TAKEN_TORRENT"); ?>
     </div>
-</div><br>
+</div><br> <?php
 
+if (_OMDBswitch) { ?>
 <div class="mb-6 row">
     <label for="tmdb" class="col-sm-2 col-form-label"><a href="https://www.themoviedb.org/" target='_blank'><img border='0' src='assets/images/misc/tmdb.png' width='30' height='30' title='Click here to go to TMDB'></a></label>
     <div class="col-sm-8">
 	<input class="form-control" type='text' name='tmdb'>Example https://www.themoviedb.org/movie/399566-godzilla-vs-kong
     </div>
-</div><br>
+</div><br> <?php
+}
 
+if (_TMDBswitch) { ?>
 <div class="mb-6 row">
-    <label for="imdb" class="col-sm-2 col-form-label"><a href="https://www.imdb.com/?ref_=nv_home" target='_blank'><i class="fa fa-imdb" width='30' height='30' aria-hidden="true"></i></a></label>
+    <label for="imdb" class="col-sm-2 col-form-label"><a href="https://www.imdb.com/?ref_=nv_home" target='_blank'><i class="fa fa-imdb fa-2x" title='Click here to go to TMDB'></i></a></label>
     <div class="col-sm-8">
 	<input class="form-control" type='text' name='imdb'>Example https://www.imdb.com/title/tt5034838/
     </div>
-</div><br><?php ?>
-
+</div><br> <?php
+} ?>
  
 <?php
 if (Config::get('YOU_TUBE')) { ?>

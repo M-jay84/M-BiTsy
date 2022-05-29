@@ -75,6 +75,7 @@ define('_TMDBLANG', 'en'); // TMDB Language
 define('_TMDBDEBUG', false); // TMDB Debug
 define('_TMDBswitch', false); // TMDB On - Off
 define('_OMDBAPIKEY', 'Place_Api_Key_Here'); // Place Key Here ////////
+define('_OMDBswitch', true); // TMDB On - Off
 
 // Debug
 define('DEBUG_VIEW_DATA', false);
