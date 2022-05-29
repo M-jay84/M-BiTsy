@@ -163,7 +163,7 @@ class MDBS
                 "INSERT INTO tmdb 
                  (id_tmdb, title, duration, producer, genre, plot, actor, trailer, date, image, url, type, torrentid)
                  VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",
-                [$id_tmdb, $title, $duration, 'not working', $genre, $plot, $bdd, $trailer, $date, $image, $url, $imdb_id, $id]
+                [$id_tmdb, $title, $duration, 'not working', $genre, $plot, $bdd, $trailer, NULL, $image, $url, $imdb_id, $id]
             );
 
 
@@ -200,7 +200,14 @@ class MDBS
     // Get Image Or Poster
     public static function getimage($row)
     {
-        if ($row["tmdb"] != '') {
+        if ($row["imdb"] != '') {
+            
+            $id_tmdb = MDBS::getId($row["imdb"]);
+            $_data = MDBS::getImdb($id_tmdb, $row['id']);
+            $img =  $_data["poster"];
+            
+        } elseif ($row["tmdb"] != '') {
+            
             $id_tmdb = MDBS::getId($row["tmdb"]);
             if (in_array($row["cat_parent"], SerieCats)) {
                 $_data = MDBS::getSerie($id_tmdb);
@@ -209,13 +216,21 @@ class MDBS
             }
             $url = UPLOADDIR . '/tmdb/' . $_data["type"] . '/' . $_data["poster"];
             $img = data_uri($url, $_data["poster"]);
+            
         } elseif ($row["image1"] != '') {
+            
             $img = data_uri(UPLOADDIR . "/images/" . $row["image1"], $row['image1']);
+            
         } elseif ($row["image2"] != '') {
+            
             $img = data_uri(UPLOADDIR . "/images/" . $row["image2"], $row['image2']);
+            
         } else {
+            
             $img = "" . URLROOT . "/assets/images/misc/default_avatar.png";
+            
         }
         return $img;
     }
+    
 }
