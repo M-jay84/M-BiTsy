@@ -44,7 +44,9 @@ torrentmenu($data['id'], $torr['external']); ?>
 
 <div class="col">
     <b><?php echo Lang::T("TMDB") ?></b><br>
-    <input class="form-control" type="text" name="tmdb" value="<?php echo htmlspecialchars($torr["tmdb"])  ?>" size="60"><br><br><?php
+    <input class="form-control" type="text" name="tmdb" value="<?php echo htmlspecialchars($torr["tmdb"])  ?>" size="60"><br><br>
+    <b><?php echo Lang::T("IMDB") ?></b><br>
+    <input class="form-control" type="text" name="imdb" value="<?php echo htmlspecialchars($torr["imdb"])  ?>" size="60"><br><br><?php
 if (Config::get('YOU_TUBE')) { ?>
     <b><?php echo Lang::T("VIDEOTUBE") ?>: </b><br>
     <input class="form-control" type='text' name='tube' value='<?php echo htmlspecialchars($torr["tube"]) ?>' size='60' /><br>&nbsp;<i><?php echo Lang::T("FORMAT") ?>: </i> <span style='color:#FF0000'><b>https://www.youtube.com/watch?v=aYzVrjB-CWs</b></span><br><br><?php

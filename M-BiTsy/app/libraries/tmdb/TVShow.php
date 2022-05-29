@@ -111,8 +111,9 @@ class TVShow
             $role .= $actor['cast'][$i]['character'].' * ';
             $nom .= $actor['cast'][$i]['name'].' + ';
             $img .= 'http://image.tmdb.org/t/p/w92'.$actor['cast'][$i]['profile_path'].' & ';
+		    $id .= $actor['cast'][$i]['id'].' & ';
         }
-        return array(substr($role, 0, -2),substr($nom, 0, -2),substr($img, 0, -2)); 
+        return array(substr($role, 0, -2),substr($nom, 0, -2),substr($img, 0, -2), $id); 
     }
         
     // Date Created
@@ -132,7 +133,7 @@ class TVShow
         }
         return substr($nom, 0, -2); 
     }
-    
+
     //  Get Generic.<br>
     public function get($item = ''){
         return (empty($item)) ? $this->_data : $this->_data[$item];

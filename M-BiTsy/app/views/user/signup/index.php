@@ -35,7 +35,7 @@ if ($data['invite'] == 0) { ?>
     <div class="form-group row">
         <label for="email" class="col-form-label col-4"><?php echo Lang::T("EMAIL"); ?>:</label>
         <div class="col-8">
-            <input id="email" type="email" class="form-control" name="email" minlength="3" maxlength="25" required autofocus>
+            <input id="email" type="email" class="form-control" name="email" minlength="3" maxlength="100" required autofocus>
         </div>
     </div><br> <?php
 } ?>

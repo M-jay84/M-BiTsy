@@ -225,6 +225,7 @@ class Cleanup
         $a = DB::run("SELECT DISTINCT uid FROM snatched WHERE hnr = ? AND done= ?", ['yes', 'no']);
         if ($a->rowCount() > 0):
             while ($b = $a->fetch(PDO::FETCH_ASSOC)):
+                
                 // Check User
                 $user = $b['uid'];
                 $count = DB::run("SELECT COUNT( hnr ) FROM snatched WHERE uid = ? AND hnr = ?", [$user, 'yes'])->fetchColumn();
@@ -242,7 +243,7 @@ class Cleanup
                     if ($rov["enabled"] == "yes"):
                         DB::update(' users', ['warned' => 'yes'], ['id' => $user]);
                         DB::insert('warnings', ['userid'=>$user, 'reason'=>$reason, 'added'=>TimeDate::get_date_time(),'expiry'=>$expiretime,'warnedby'=>0,'type'=>'HnR']);
-                        DB::insert('messages', ['sender'=>0, 'receiver'=>$user, 'added'=>TimeDate::get_date_time(),'msg'=>$msg,'subject'=>$subject,'poster'=>1]);
+                        DB::insert('messages', ['sender'=>0, 'receiver'=>$user, 'added'=>TimeDate::get_date_time(),'msg'=>$msg,'subject'=>$subject]);
                     endif;
                 endif;
                 // Unwarn
@@ -251,7 +252,7 @@ class Cleanup
                     $msg = "" . Lang::T("CLEANUP_YOU_NOW_HAVE_LESS_THAN") . " " . Config::get('HNR_WARN') . " H&R.\n" . Lang::T("CLEANUP_YOUR_WARNING_FOR_H&R_HAS_REMOVED") . "";
                     DB::update(' users', ['warned' => 'no'], ['id' => $user]);
                     DB::delete('warnings', ['userid' =>$user, 'type' => 'HnR']);
-                    DB::insert('messages', ['sender'=>0, 'receiver'=>$user, 'added'=>TimeDate::get_date_time(),'msg'=>$msg,'subject'=>$subject,'poster'=>1]);
+                    DB::insert('messages', ['sender'=>0, 'receiver'=>$user, 'added'=>TimeDate::get_date_time(),'msg'=>$msg,'subject'=>$subject]);
                 endif;
                 // Ban
                 if ($count >= Config::get('HNR_BAN')):
@@ -271,6 +272,7 @@ class Cleanup
                 // Download Ban
                 if ($count >= Config::get('HNR_STOP_DL')){
                     DB::update(' users', ['downloadbanned' => 'yes'], ['id' => $user]);
+                    DB::insert('messages', ['sender'=>0, 'receiver'=>$user, 'added'=>TimeDate::get_date_time(),'msg'=>'Too many Hit & Runs. You are Download Banned','subject'=>'Download Banned']);
                 }
             endwhile;
         endif;

@@ -13,7 +13,7 @@ Style::begin(Lang::T("Carousel"));  ?>
             <div class='carousel-item <?php echo $set_; ?>'>
                 <div class="col-md-1">
                     <div class='scaleA'>
-                        <a href='<?php echo URLROOT; ?>/torrent?id=<?php echo $row["id"] ?>'><img src="<?php echo getimage($row); ?>" width="100" height="250" title="<?php echo CutName($row['name'], 40); ?>"></a>
+                        <a href='<?php echo URLROOT; ?>/torrent?id=<?php echo $row["id"] ?>'><img src="<?php echo MDBS::getimage($row); ?>" width="100" height="250" title="<?php echo CutName($row['name'], 40); ?>"></a>
                         <div class='text-center'>
                             <font color="#00cc00"><b>S</b></font> <?php echo $row['seeders']; ?><font color="#FF0000"><b> L </b></font><?php echo $row['leechers']; ?>
                         </div>

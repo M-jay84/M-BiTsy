@@ -12,10 +12,10 @@ while ( $r = $q->fetch(PDO::FETCH_ASSOC) )
 {
 	print (($i && $i % 2) ? '
 	<td><a href="'.URLROOT.'/torrent?id='.$r['id'].'">
-	<img src="' . getimage($r) . '" height="100" width="100" border="0" /></a></td>
+	<img src="' . MDBS::getimage($r) . '" height="100" width="100" border="0" /></a></td>
 	</tr>' : '
 	<tr><td><a href="'.URLROOT.'/torrent?id='.$r['id'].'">
-	<img src="' . getimage($r) . '" height="100" width="80" border="0" /></a></td>');
+	<img src="' . MDBS::getimage($r) . '" height="100" width="80" border="0" /></a></td>');
 	$i++;
 } 
 print '</tr>';

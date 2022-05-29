@@ -8,7 +8,7 @@ if (!Config::get('MEMBERSONLY') || $_SESSION['loggedin'] == true) {
             $cat = htmlspecialchars("$row[cat_parent] - $row[cat_name]");
             $name = htmlspecialchars($row["name"]);
             if ($row["image1"]) { ?>
-				<div class="col-lg-6"><a href="<?php echo URLROOT; ?>/torrent?id=<?php echo $row["id"]; ?>" title="<?php echo $name . " / " . $cat; ?>"><img src="<?php echo getimage($row); ?>" alt="<?php echo $name . " / " . $cat; ?>" class="img-thumbnail" /></a></div> <?php
+				<div class="col-lg-6"><a href="<?php echo URLROOT; ?>/torrent?id=<?php echo $row["id"]; ?>" title="<?php echo $name . " / " . $cat; ?>"><img src="<?php echo MDBS::getimage($row); ?>" alt="<?php echo $name . " / " . $cat; ?>" class="img-thumbnail" /></a></div> <?php
                 }
         }
         Style::block_end();

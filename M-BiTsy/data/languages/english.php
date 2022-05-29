@@ -1219,3 +1219,5 @@ $LANG["NO_SEEDER"] = "No Seeders";
 $LANG["NO_MATCHES"] = "Sorry. Nothing matches";
 $LANG["CLICK_ENLARGE"] = "Click to enlarge";
 $LANG["TORRENT_NOT_ACTIVE"] = "This torrent is not active";
+
+$LANG["ENTER_EMAIL"] = "Please keep your email up to date. A confirmation email will be sent.";

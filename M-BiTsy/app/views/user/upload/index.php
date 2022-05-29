@@ -41,6 +41,13 @@ if (Config::get('ALLOWEXTERNAL')) { ?>
     <div class="col-sm-8">
 	<input class="form-control" type='text' name='tmdb'>Example https://www.themoviedb.org/movie/399566-godzilla-vs-kong
     </div>
+</div><br>
+
+<div class="mb-6 row">
+    <label for="imdb" class="col-sm-2 col-form-label"><a href="https://www.imdb.com/?ref_=nv_home" target='_blank'><i class="fa fa-imdb" width='30' height='30' aria-hidden="true"></i></a></label>
+    <div class="col-sm-8">
+	<input class="form-control" type='text' name='imdb'>Example https://www.imdb.com/title/tt5034838/
+    </div>
 </div><br><?php ?>
 
  

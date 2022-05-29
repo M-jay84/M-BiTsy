@@ -119,4 +119,26 @@ class Moviedatabase
         // Load View
         View::render('moviedatabase/moviedetails', $data, 'user');
     }
+    
+    // Movies Default Page
+    public function season()
+    {
+        // Check User Input
+        $id = (int) Input::get('id');
+        $seasonnumber = (int) Input::get('sid');
+
+        // Get TMDB Data
+        $tmdb = new TMDB();
+            
+        // Init Data
+        $data = [
+            'id' => $id,
+            'seasonnumber' => $seasonnumber,
+            'title' => 'Season',
+            'tmdb' => $tmdb,
+        ];
+
+        // Load View
+        View::render('moviedatabase/seasondetails', $data, 'user');
+    }
 }

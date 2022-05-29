@@ -65,7 +65,7 @@ if (!$peer) {
 			Announce::UpdateSnatched($user['id'], $torrent['id'], $elapsed, $upthis, $seeder, 0);
 		}else{
             Announce::UpdateUser($user['id'], $upthis, $downthis);
-            Announce::UpdateSnatched($user['id'], $torrent['id'], $elapsed, $downthis, $upthis, $seeder);
+            Announce::UpdateSnatched($user['id'], $torrent['id'], $elapsed, $upthis, $seeder, $downthis);
         }
     }
     // Now Update Peer

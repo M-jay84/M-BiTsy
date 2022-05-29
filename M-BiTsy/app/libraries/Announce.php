@@ -319,9 +319,9 @@ class Announce
     public static function UpdateSnatched($userid, $torrentid, $elapsed, $upthis, $seeder, $downthis = 0)
     {
         if ($downthis == 0) {
-            DB::run("UPDATE LOW_PRIORITY `snatched` SET `upload` = `upload` + '$upthis', `upload_time` = '" . self::gmtime() . "', `last_time` = `last_time` + '$elapsed', completed = $seeder WHERE `tid` = ? AND `uid` = ?", [$torrentid, $userid]);
+            DB::run("UPDATE LOW_PRIORITY `snatched` SET `upload` = `upload` + '$upthis', `upload_time` = '" . self::gmtime() . "', `last_time` = `last_time` + '$elapsed', completed = ? WHERE `tid` = ? AND `uid` = ?", [$seeder, $torrentid, $userid]);
         } else {
-            DB::run("UPDATE LOW_PRIORITY `snatched` SET `upload` = `upload` + '$upthis', `download` = `download` + '$downthis', `upload_time` = '" . self::gmtime() . "', `last_time` = `last_time` + '$elapsed', completed = $seeder WHERE `tid` = ? AND `uid` = ?", [$torrentid, $userid]);
+            DB::run("UPDATE LOW_PRIORITY `snatched` SET `upload` = `upload` + '$upthis', `download` = `download` + '$downthis', `upload_time` = '" . self::gmtime() . "', `last_time` = `last_time` + '$elapsed', completed = ? WHERE `tid` = ? AND `uid` = ?", [$seeder, $torrentid, $userid]);
         }
     }
 

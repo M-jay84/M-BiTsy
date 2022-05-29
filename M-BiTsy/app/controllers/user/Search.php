@@ -198,7 +198,7 @@ class Search
         }
 
         // Get Tag Data
-        $stmt = DB::run("SELECT torrentid FROM tags WHERE name = ? GROUP BY torrentid", [$name])->fetchAll();
+        $stmt = DB::run("SELECT torrentid FROM tagtorrent WHERE type1 = ? OR type2 = ? OR type3 = ?", [$name, $name, $name])->fetchAll();
         if (count($stmt) == 0) {
             Redirect::autolink(URLROOT, Lang::T("NO_Tag"));
         }

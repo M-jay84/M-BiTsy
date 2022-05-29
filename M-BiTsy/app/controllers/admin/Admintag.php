@@ -12,7 +12,7 @@ class Admintag
   public function index()
   {
     // Get Tag Data
-    $supertag = Tags::getAll();
+    $supertag = DB::run("SELECT * FROM `tags`")->fetchAll();
 
     // Init Data
     $data = [
@@ -29,12 +29,13 @@ class Admintag
   {
     // Check User Input
     $name = Input::get('name');
+    $colour = Input::get('colour');
 
     if (!empty($_POST['addtag'])) {
       if (!$name) {
         Redirect::autolink(URLROOT . "/admintag", Lang::T("YOU_DID_NOT_ENTER_ANYTHING"));
       }
-      DB::insert('tags', ['name' => $name]);
+      DB::insert('tags', ['name' => $name, 'colour'=>$colour]);
       Redirect::autolink(URLROOT . '/admintag', 'Tag Added');
 
     } elseif (!empty($_POST['delete'])) {

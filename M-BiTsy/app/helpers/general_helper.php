@@ -8,29 +8,6 @@ function data_uri($file, $mime)
     return ('data:' . $mime . ';base64,' . $base64);
 }
 
-// Get Image Or Poster
-function getimage($row) {
-    if ($row["tmdb"] != '') {
-        $id_tmdb = TMDBS::getId($row["tmdb"]);
-        if (in_array($row["cat_parent"], SerieCats)) {
-            $_data = TMDBS::getSerie($id_tmdb);
-        } elseif (in_array($row["cat_parent"], MovieCats)) {
-            $_data = TMDBS::getFilm($id_tmdb);
-        }
-        $url = UPLOADDIR.'/tmdb/' . $_data["type"].'/' . $_data["poster"];
-        $img = data_uri($url, $_data["poster"]);
-
-    } elseif ($row["image1"] != '') {
-        $img = data_uri(UPLOADDIR . "/images/" . $row["image1"], $row['image1']);
-
-    } elseif ($row["image2"] != '') {
-        $img = data_uri(UPLOADDIR . "/images/" . $row["image2"], $row['image2']);
-
-    } else {
-        $img = "" . URLROOT . "/assets/images/misc/default_avatar.png";
-    }
-    return $img;
-}
 
 // Function To Count Database Table
 function get_row_count($table, $suffix = "")

@@ -76,6 +76,7 @@ if ($selectedid["privacy"] != "strong" || (Users::get("control_panel") == "yes")
         <?php echo Lang::T("UPLOADED"); ?>: <?php echo mksize($selectedid["uploaded"]); ?><br />
 		<?php echo Lang::T("DOWNLOADED"); ?>: <?php echo mksize($selectedid["downloaded"]); ?><br />
 		<?php echo Lang::T("RATIO"); ?>: <?php echo get_ratio_color($data['userratio']); ?><br />
+		<?php echo Lang::T("Seed Bonus"); ?>: <?php echo get_ratio_color($selectedid['seedbonus']); ?><br />
 		<?php echo Lang::T("Hit & Run"); ?>: <?php echo $data['numhnr']; ?><br />
 		<?php echo Lang::T("AVG_DAILY_DL"); ?>: <?php echo mksize($selectedid["downloaded"] / (TimeDate::DateDiff($selectedid["added"], time()) / 86400)); ?><br />
 		<?php echo Lang::T("AVG_DAILY_UL"); ?>: <?php echo mksize($selectedid["uploaded"] / (TimeDate::DateDiff($selectedid["added"], time()) / 86400)); ?><br />

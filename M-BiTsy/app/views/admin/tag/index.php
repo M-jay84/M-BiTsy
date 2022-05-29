@@ -5,11 +5,11 @@
     <th>Name</th>
 </tr></thead><tbody> <?php
 
-foreach($data['supertag'] as $tag) { 
-    $solved = $result["solved"] === 'yes' ? '<font color=green><b>Yes</b></font>' : '<font color=red><b>No</b></font>'; ?>
+foreach($data['supertag'] as $tag) { ?>
     <tr>
     <td><input type='checkbox' name='del[]' value='<?php echo $tag['id']; ?>' /></td>
     <td><?php echo $tag["name"]; ?></td>
+    <td><?php echo $tag["colour"]; ?></td>
     </tr> <?php
 } ?>
 </tbody></table>
@@ -21,7 +21,10 @@ foreach($data['supertag'] as $tag) {
 <div class="text-center">
     Add A New Tag<br>
 	<label for="name"><?php echo Lang::T("NAME"); ?>: </label>
-	<input id="name" type="text" class="form-control-md" name="name" minlength="3" maxlength="200">
+	<input id="name" type="text" class="form-control-md" name="name" minlength="3" maxlength="200"><br><br>
+	
+	<label for="colour"><?php echo Lang::T("Colour"); ?>: </label>
+	<input id="colour" type="text" class="form-control-md" name="colour" minlength="3" maxlength="200">
 </div><br>
 
 <div class="text-center">

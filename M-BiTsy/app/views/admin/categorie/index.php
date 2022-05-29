@@ -12,7 +12,7 @@
 foreach ($data['sql'] as $row) {
     print("<tbody><tr><td>$row[sort_index]</td><td>$row[parent_cat]</td><td>$row[name]</td><td>");
     if (isset($row["image"]) && $row["image"] != "") {
-        print("<img border=\"0\" src=\"" . URLROOT . "/assets/images/categories/" . $row["image"] . "\" alt=\"" . $row["name"] . "\" />");
+        print("<i class='fa ".$row['image']." title='".$row['name']."''></i>");
     } else {
         print("-");
     }

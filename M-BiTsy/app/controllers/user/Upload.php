@@ -102,6 +102,7 @@ class Upload
             $free = Input::get("free") == "" ? 0 : Input::get("free");
             $tube = Input::get('tube');
             $tmdb = Input::get('tmdb');
+            $imdb = Input::get('imdb');
             $anon = Input::get("anonycheck") == "yes" ? "yes" : "no";
             $langid = (int) Input::get("lang");
             $catid = (int) Input::get("type");
@@ -216,9 +217,9 @@ class Upload
 
             // Insert Torrent
             try {
-                DB::run("INSERT INTO torrents (filename, owner, name, vip, descr, image1, image2, category, tube, added, info_hash, size, numfiles, save_as, announce, external, nfo, torrentlang, anon, last_action, freeleech, tmdb, announcelist)
-                         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                        [$fname, Users::get('id'), $name, $vip, $descr, $inames[0], $inames[1], $catid, $tube, TimeDate::get_date_time(), $infohash, $torrentsize, $filecounts, $fname, $announce, $external, $nfo, $langid, $anon, TimeDate::get_date_time(), $free, $tmdb, $announcelist]);
+                DB::run("INSERT INTO torrents (filename, owner, name, vip, descr, image1, image2, category, tube, added, info_hash, size, numfiles, save_as, announce, external, nfo, torrentlang, anon, last_action, freeleech, tmdb, imdb, announcelist)
+                         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                        [$fname, Users::get('id'), $name, $vip, $descr, $inames[0], $inames[1], $catid, $tube, TimeDate::get_date_time(), $infohash, $torrentsize, $filecounts, $fname, $announce, $external, $nfo, $langid, $anon, TimeDate::get_date_time(), $free, $tmdb, $imdb, $announcelist]);
             } catch (PDOException $e) {
                 Torrents::deletetorrent(DB::lastInsertId());
                 rename("$torrent_dir/$fname", "$torrent_dir/duplicate.torrent"); // todo
@@ -253,9 +254,7 @@ class Upload
             // Tags Mod
             $tags = $_POST['tags'];
             if ($tags) {
-                foreach ($tags as $tag) {
-                    DB::insert('tags', ['name' => $tag, 'type' => 'torrent', 'torrentid'=> $id]);
-                }
+                DB::insert('tagtorrent', ['torrentid'=> $id, 'type1' => $tags[0], 'type2' => $tags[1], 'type3' => $tags[2]]);
             }
 
             // Move NFO

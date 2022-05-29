@@ -30,7 +30,7 @@ class Torrent
         }
 
         // Get Torrent Data
-        $res = DB::run("SELECT torrents.anon, torrents.seeders, torrents.tube, torrents.banned, torrents.leechers, torrents.info_hash, torrents.filename, torrents.nfo, torrents.last_action, torrents.numratings, torrents.name, torrents.tmdb, torrents.tmdb, torrents.owner, torrents.save_as, torrents.descr, torrents.visible, torrents.size, torrents.added, torrents.views, torrents.hits, torrents.times_completed, torrents.id, torrents.type, torrents.external, torrents.image1, torrents.image2, torrents.announce, torrents.numfiles, torrents.freeleech, torrents.vip, IF(torrents.numratings < 2, NULL, ROUND(torrents.ratingsum / torrents.numratings, 1)) AS rating, torrents.numratings, categories.name AS cat_name, torrentlang.name AS lang_name, torrentlang.image AS lang_image, categories.parent_cat as cat_parent, users.username, users.privacy FROM torrents LEFT JOIN categories ON torrents.category = categories.id LEFT JOIN torrentlang ON torrents.torrentlang = torrentlang.id LEFT JOIN users ON torrents.owner = users.id WHERE torrents.id = $id");
+        $res = DB::run("SELECT torrents.anon, torrents.seeders, torrents.tube, torrents.banned, torrents.leechers, torrents.info_hash, torrents.filename, torrents.nfo, torrents.last_action, torrents.numratings, torrents.name, torrents.tmdb, torrents.imdb, torrents.owner, torrents.save_as, torrents.descr, torrents.visible, torrents.size, torrents.added, torrents.views, torrents.hits, torrents.times_completed, torrents.id, torrents.type, torrents.external, torrents.image1, torrents.image2, torrents.announce, torrents.numfiles, torrents.freeleech, torrents.vip, IF(torrents.numratings < 2, NULL, ROUND(torrents.ratingsum / torrents.numratings, 1)) AS rating, torrents.numratings, categories.name AS cat_name, torrentlang.name AS lang_name, torrentlang.image AS lang_image, categories.parent_cat as cat_parent, users.username, users.privacy FROM torrents LEFT JOIN categories ON torrents.category = categories.id LEFT JOIN torrentlang ON torrents.torrentlang = torrentlang.id LEFT JOIN users ON torrents.owner = users.id WHERE torrents.id = $id");
         $row = $res->fetch(PDO::FETCH_ASSOC);
         
         // Check Torrent
@@ -42,17 +42,23 @@ class Torrent
         $freeleech = $row["freeleech"] == 1 ? "<font color=green><b>Yes</b></font>" : "<font color=red><b>No</b></font>";
 
         // TMDB
-        if(!empty($row["tmdb"]) && in_array($row["cat_parent"], SerieCats)) {
-            $id_tmdb = TMDBS::getId($row["tmdb"]);
+        if(!empty($row["imdb"])) {
+            $total = DB::run("SELECT COUNT(*) FROM tmdb WHERE torrentid = ?", [$id])->fetchColumn();
+            $id_tmdb = MDBS::getId($row["imdb"]);
+            if($total == 0) {
+                MDBS::createImdb($id_tmdb, $id, $row["imdb"]);
+            }
+        } elseif(!empty($row["tmdb"]) && in_array($row["cat_parent"], SerieCats)) {
+            $id_tmdb = MDBS::getId($row["tmdb"]);
             $total = DB::column('tmdb', 'COUNT(*)', ['id_tmdb'=>$id_tmdb,'type'=>'show']);
             if($total == 0) {
-                TMDBS::createSerie($id_tmdb, $id, $row["tmdb"]);
+                MDBS::createSerie($id_tmdb, $id, $row["tmdb"]);
             }
         } elseif(!empty($row["tmdb"]) && in_array($row["cat_parent"], MovieCats)) {
-            $id_tmdb = TMDBS::getId($row["tmdb"]);
+            $id_tmdb = MDBS::getId($row["tmdb"]);
             $total = DB::column('tmdb', 'COUNT(*)', ['id_tmdb'=>$id_tmdb,'type'=>'movie']);
             if($total == 0) {
-                TMDBS::createFilm($id_tmdb, $id, $row["tmdb"]);
+            MDBS::createFilm($id_tmdb, $id, $row["tmdb"]);
             }
         }
 
@@ -72,12 +78,10 @@ class Torrent
         }
 
 		// Get Tag Data
-        $stmt = Tags::getByTorrentId($id);
-		if ($stmt) {
-            $tags = '';
-            foreach ($stmt as $tag) {
-                $tags .= "<a href=".URLROOT."/search/tags?name=$tag[name]>$tag[name]</a>&nbsp;";
-            }
+        $tag = DB::run("SELECT type1, type2, type3 FROM `tagtorrent` wHERE torrentid = ?", [$id])->fetch();
+        //var_dump($tag);
+		if ($tag) {
+            $tags = get_tags($id);
         } else {
             $tags = '---';
         }
@@ -184,16 +188,14 @@ class Torrent
         $shortname = CutName(htmlspecialchars($row["name"]), 40);
 
 		// Get Tag Data
-        $stmt = Tags::getByTorrentId($id);
-		if ($stmt) {
-            $tags = '';
-            foreach ($stmt as $tag) {
-                $tags .= "<a href=".URLROOT."/search/tags?name=$tag[name]>$tag[name]</a>&nbsp;";
-            }
+		$tag = DB::run("SELECT type1, type2, type3 FROM `tagtorrent` wHERE torrentid = ?", [$id])->fetch();
+        //var_dump($tag);
+		if ($tag) {
+            $tags = get_tags($id);
         } else {
             $tags = 'No Tags Added';
         }
-
+        
         // Get Torrent Data
         $torrent1 = Torrents::getAll($id);
         
@@ -264,6 +266,7 @@ class Torrent
             }
 
             $updateset['tmdb'] = $_POST["tmdb"];
+            $updateset['imdb'] = $_POST["imdb"];
             $updateset['descr'] = $_POST["descr"];
             $updateset['category'] = (int) $_POST["type"];
             $updateset['tube'] = $_POST['tube'] ?? '';
@@ -291,9 +294,7 @@ class Torrent
             
             $tags = $_POST['tags'];
             if ($tags) {
-                foreach ($tags as $tag) {
-                    DB::insert('tags', ['name' => $tag, 'type' => 'torrent', 'torrentid'=> $id]);
-                }
+                DB::insert('tagtorrent', ['torrentid'=> $id, 'type1' => $tags[0], 'type2' => $tags[1], 'type3' => $tags[2]]);
             }
 
             // Images

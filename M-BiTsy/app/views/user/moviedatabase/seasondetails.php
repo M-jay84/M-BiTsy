@@ -18,11 +18,9 @@
 </div><br>
 
 <div class="ttform">
-<div class="text-center">
-    <a id="searchTVShow"><h3>Search TVShow</h3></a> <?php
-    $tvShows = $data['tmdb']->searchTVShow($data['name']);
-    foreach ($tvShows as $tvShow) {
-        echo $tvShow->getName() . ' <a href="'.URLROOT.'/moviedatabase/shows?id=' . $tvShow->getID() . '"><b>Link</b></a><br>';
-    } ?>
+<div class="text-center"> <?php
+    $tmdb = new TMDB(); // , true
+    $tvShow = $tmdb->getSeason($data['id'], $data['seasonnumber']);
+    print_r($tvShow); ?>
 </div>
 </div>

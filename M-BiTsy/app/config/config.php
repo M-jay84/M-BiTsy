@@ -65,15 +65,16 @@ define('_SUPERMODERATOR', 6);
 define('_ADMINISTRATOR', 7);
 
 // Cat arrays
-define('PopularCats', array(28)); // popular cat id for popular block
-define('MovieCats', array('Anime')); // movie cats eg array('Movies','MoviesHD')
-define('SerieCats', array('Apps')); // serie cat eg array('Anime','tv')
+define('PopularCats', array(1)); // popular cat id for popular block
+define('MovieCats', array('Film')); // movie cats eg array('Movies','MoviesHD')
+define('SerieCats', array('TV')); // serie cat eg array('Anime','tv')
 
 // TMDB
 define('_TMDBAPIKEY', 'Place_Api_Key_Here'); // Place Key Here ////////
 define('_TMDBLANG', 'en'); // TMDB Language
 define('_TMDBDEBUG', false); // TMDB Debug
 define('_TMDBswitch', false); // TMDB On - Off
+define('_OMDBAPIKEY', 'Place_Api_Key_Here'); // Place Key Here ////////
 
 // Debug
 define('DEBUG_VIEW_DATA', false);

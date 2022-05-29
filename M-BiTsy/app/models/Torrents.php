@@ -7,7 +7,7 @@ class Torrents
     {
         $row = DB::run(" SELECT torrents.anon, torrents.seeders, torrents.tube, torrents.banned,
             torrents.leechers, torrents.info_hash, torrents.filename, torrents.nfo, torrents.torrentlang, torrents.category,
-            torrents.last_action, torrents.numratings, torrents.name, torrents.tmdb,
+            torrents.last_action, torrents.numratings, torrents.name, torrents.tmdb, torrents.imdb,
             torrents.owner, torrents.save_as, torrents.descr, torrents.visible,
             torrents.size, torrents.added, torrents.views, torrents.hits,
             torrents.times_completed, torrents.id, torrents.type, torrents.external,

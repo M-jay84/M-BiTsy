@@ -134,11 +134,25 @@ foreach ($data['selecttor'] as $torr) :
     </div>
 
     <div class="col-12 col-md-7"> <?php
-        if (!empty($torr["tmdb"]) && in_array($torr["cat_parent"], SerieCats)) {
-            $id_tmdb = TMDBS::getId($torr["tmdb"]);
+        if ($torr["imdb"]) {
+            $total = DB::run("SELECT COUNT(*) FROM tmdb WHERE torrentid = ?", [$torr['id']])->fetchColumn();
+            $id_tmdb = MDBS::getId($row["imdb"]);
+            if($total > 0) {
+                $_data = MDBS::getImdb($id_tmdb, $torr['id']); ?>
+                
+                <b> Plot : </b><?php echo $_data["plot"] ?><br><br>
+                <b> Actors : </b><?php echo $_data["actors"] ?> <br>
+                <b> Duration : </b><?php echo $_data["duration"] ?> <br>
+                <b> Date : </b><?php echo $_data["date"] ?> <br>
+                <b> Creator : </b><?php echo $_data["producer"] ?><br>
+                <b> Genre : </b><?php echo $_data["genre"] ?><br>
+                <br> <?php
+            }
+        } elseif (!empty($torr["tmdb"]) && in_array($torr["cat_parent"], SerieCats)) {
+            $id_tmdb = MDBS::getId($torr["tmdb"]);
             $total = DB::column('tmdb', ' count(*)', ['id_tmdb' => $id_tmdb, 'type' => 'show']);
             if ($total > 0) {
-                $_data = TMDBS::getSerie($id_tmdb); ?>
+                $_data = MDBS::getSerie($id_tmdb); ?>
                 
                 <b> Plot : </b><?php echo $_data["plot"] ?><br><br>
                 <b> Actors : </b><br>
@@ -159,10 +173,10 @@ foreach ($data['selecttor'] as $torr) :
                 <br> <?php
             }
         } elseif (!empty($torr["tmdb"]) && in_array($torr["cat_parent"], MovieCats)) {
-            $id_tmdb = TMDBS::getId($torr["tmdb"]);
+            $id_tmdb = MDBS::getId($torr["tmdb"]);
             $total = DB::column('tmdb', ' count(*)', ['id_tmdb' => $id_tmdb, 'type' => 'movie']);
             if ($total > 0) {
-                $_data = TMDBS::getFilm($id_tmdb); ?>
+                $_data = MDBS::getFilm($id_tmdb); ?>
                 
                 <b> Plot : </b><?php echo $_data["plot"] ?> <br><br>
                 <b> Actors : </b><br>
@@ -177,7 +191,8 @@ foreach ($data['selecttor'] as $torr) :
                 </div><br>
                 <b> Duration : </b><?php echo $_data["duration"] ?> <br>
                 <b> Genre : </b><?php echo $_data["genre"] ?> <br>
-                <br> <?php
+                <b> Trailer : </b> <?php
+                print("<embed src='https://www.youtube.com/v/" . str_replace("watch?v=", "v/", htmlspecialchars($_data["trailer"])) . "' type=\"application/x-shockwave-flash\"  height=\"410\" width='100%'></embed>");
             }
         } else { ?>
             <b><?php echo Lang::T("DESCRIPTION"); ?>:</b><br><?php echo format_comment($torr['descr']); ?><br> <?php
@@ -188,7 +203,10 @@ foreach ($data['selecttor'] as $torr) :
     </div>
 
     <div class="col-12 col-md-3"> <?php
-        if ($torr["tmdb"] != "") {
+        if ($torr["imdb"] != "") {
+            //$url = UPLOADDIR.'/tmdb/' . $_data["type"].'/' . $_data["poster"];
+            echo '<img src="'.$_data["poster"].'" class="scaleA">';
+        }if ($torr["tmdb"] != "") {
             $url = UPLOADDIR.'/tmdb/' . $_data["type"].'/' . $_data["poster"]; ?>
             <img src='<?php echo data_uri($url, $_data["poster"]) ?>' height='450' width='100%' border='0' alt='' /><br><br><?php
         }
