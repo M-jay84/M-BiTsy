@@ -140,39 +140,34 @@ class MDBS
         return $_data;
     }
 
-    // Save Film Details In Database
+     // Save Film Details In Database
     public static function createImdb($id_tmdb, $id, $url = null)
     {
-        
-        
         // Get TMDB Api
         $movie = new OMDB($id_tmdb);
-            $imdb_id = $id_tmdb;
-            // Get & Save Image
-            $image = $movie->poster;
-            // Get Data
-            $trailer = '$imdb->getTrailerAsUrl()';
-            $title = $movie->title;
-            $duration = $movie->runtime;
-            $genre = $movie->genre;
-            $plot = $movie->plot;
-            $bdd = $movie->actors;
-            $date = $movie->released;
-            // Insert Data
-            DB::run(
-                "INSERT INTO tmdb 
-                 (id_tmdb, title, duration, producer, genre, plot, actor, trailer, date, image, url, type, torrentid)
-                 VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",
-                [$id_tmdb, $title, $duration, 'not working', $genre, $plot, $bdd, $trailer, NULL, $image, $url, $imdb_id, $id]
-            );
-
-
+        $imdb_id = $id_tmdb;
+        // Get & Save Image
+        $image = $movie->poster;
+        // Get Data
+        $trailer = '$imdb->getTrailerAsUrl()';
+        $title = $movie->title;
+        $duration = $movie->runtime;
+        $genre = $movie->genre;
+        $plot = $movie->plot;
+        $bdd = $movie->actors;
+        $date = date('Y-m-d H:i:s',strtotime($movie->released));;
+         // Insert Data
+        DB::run(
+            "INSERT INTO tmdb 
+            (id_tmdb, title, duration, producer, genre, plot, actor, trailer, date, image, url, type, torrentid)
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",
+            [$id_tmdb, $title, $duration, 'not working', $genre, $plot, $bdd, $trailer, $date, $image, $url, $imdb_id, $id]
+        );
     }
 
     // Fetch Movie Data From Database or Cache
     public static function getImdb($id_tmdb, $id)
     {
-        
         $TTCache = new Cache();
         $expires = 1728000; // Cache time in seconds
         if (($_data = $TTCache->Get("imdb/$id", $expires)) === false) {
@@ -187,7 +182,7 @@ class MDBS
             $_data["plot"] = $imdb["plot"];
             $_data["actors"] = $imdb["actor"];
             $_data["trailer"] = $imdb["trailer"];
-            $_data["date"] = $imdb["date"];
+            $_data["duration"] = $imdb["duration"];
             $_data["poster"] = $imdb["image"];
             $_data["type"] = "imdb";
             // Set Data In Cache
@@ -218,18 +213,13 @@ class MDBS
             $img = data_uri($url, $_data["poster"]);
             
         } elseif ($row["image1"] != '') {
-            
             $img = data_uri(UPLOADDIR . "/images/" . $row["image1"], $row['image1']);
-            
         } elseif ($row["image2"] != '') {
-            
             $img = data_uri(UPLOADDIR . "/images/" . $row["image2"], $row['image2']);
-            
         } else {
-            
             $img = "" . URLROOT . "/assets/images/misc/default_avatar.png";
-            
         }
+		
         return $img;
     }
     

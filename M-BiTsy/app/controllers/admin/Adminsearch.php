@@ -62,7 +62,7 @@ class Adminsearch
         View::render('search/index', $data, 'admin');
     }
 
-    public function advancedsearch()
+    public function advanced()
     {
         $do = $_GET['do']; // todo
         if ($do == "warndisable") {
@@ -132,12 +132,98 @@ class Adminsearch
             Redirect::autolink("$_POST[referer]", "Redirecting back");
             die;
         }
+        
+        $data = [
+            "name" => $_POST['name'],
+            "ratio" => $_POST['ratio'],
+            "member" => $_POST['member'],
+            "email" => $_POST['email'],
+            "ip" => $_POST['ip'],
+            "account" => $_POST['account'],
+            "uploaded" => $_POST['uploaded'],
+            "class" => $_POST['class'],
+            "downloaded" => $_POST['downloaded'],
+            "warned" => $_POST['warned']
+        ];
+        
+        $url = "?"; // assign url
+        $wherea = []; // assign conditions
+        $params = []; // assign vars
+        
+        if (!empty($data['name'])) {
+            $wherea[] = "users.username LIKE '%$data[name]%'";
+        }
+        
+        if (!empty($data['ratio'])) {
+            $ratio = $data['ratio'];
+            $wherea[] = "users.uploaded/users.downloaded > $data[ratio]";
+        }
+        
+        if (!empty($data['member'])) {
+            $wherea[] = "users.status = '$data[member]'";
+        }
+        
+        if (!empty($data['email'])) {
+            $wherea[] = "users.email LIKE '%$data[email]%'";
+        }
 
-        $title = Lang::T("ADVANCED_USER_SEARCH");
-        require APPROOT . '/views/admin/admincp/header.php';
-        Style::adminnavmenu();
-        require APPROOT . '/views/admin/search/advanced.php';
-        require APPROOT . '/views/admin/admincp/footer.php';
+        if (!empty($data['ip'])) {
+            $wherea[] = "users.ip LIKE '%$data[ip]%'";
+        }
+        
+        if (!empty($data['account'])) {
+            $wherea[] = "users.enabled = '$data[account]'";
+        }
+
+        if (!empty($data['uploaded'])) {
+            $uploaded = strtobytes($data['uploaded']);
+            $wherea[] = "users.uploaded > $uploaded";
+        }
+        
+        if (!empty($data['class'])) {
+            $wherea[] = "users.class = '$data[class]'";
+        }
+
+        if (!empty($data['downloaded'])) {
+            $downloaded = strtobytes($data['downloaded']);
+            $wherea[] = "users.downloaded > $downloaded";
+        }
+        
+        if (!empty($data['warned'])) {
+            $wherea[] = "users.warned = '$data[warned]'";
+        }
+        
+        $where = implode(' AND ', $wherea);
+        if ($where != '') {
+            $where = 'WHERE ' . $where;
+        }
+
+        // Pagination
+        $count = DB::run("SELECT COUNT(`id`) FROM `users` $where")->fetchcolumn();
+        list($pager, $limit) = Pagination::pager(25, $count, URLROOT . "/adminsearch/advanced&");
+        $results = DB::run("SELECT * FROM `users` $where $limit")->fetchAll();
+        
+        echo "<pre>".var_dump($_POST)."</pre>";
+
+        $data = [
+            'title' => Lang::T("ADVANCED_USER_SEARCH"),
+            'results' => $results,
+            'pager' => $pager,
+            "name" => $_POST['name'],
+            "ratio" => $_POST['ratio'],
+            "member" => $_POST['member'],
+            "email" => $_POST['email'],
+            "ip" => $_POST['ip'],
+            "account" => $_POST['account'],
+            "uploaded" => $_POST['uploaded'],
+            "class" => $_POST['class'],
+            "downloaded" => $_POST['downloaded'],
+            "warned" => $_POST['warned']
+        ];
+        
+        // Load View
+        View::render('search/advanced', $data, 'admin');
+
     }
 
 }

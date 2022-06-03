@@ -967,7 +967,7 @@ CREATE TABLE `tags` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM;
 
-INSERT INTO `tags` (`id`, `name`, `type`, `torrentid`) VALUES
+INSERT INTO `tags` (`id`, `name`, `colour`) VALUES
 (1, 'horror', '#000'),
 (2, 'action', '#000'),
 (3, 'adventure', '#000'),

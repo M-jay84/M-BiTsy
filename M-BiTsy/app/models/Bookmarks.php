@@ -5,9 +5,9 @@ class Bookmarks
     {
         $bookt = DB::column('bookmarks', 'COUNT(*)', ['targetid' => $target, 'type' => $type, 'userid' => Users::get('id')]);
         if ($bookt > 0) {
-            print("<a href=" . URLROOT . "/bookmark/delete?target=$target><button type='button' class='btn btn-sm ttbtn'>Delete Bookmark</button></a>");
+            print("<a href=" . URLROOT . "/bookmark/delete?target=$target><i class='fa fa-bookmark-o fa-2x' title='". Lang::T("Delete") ."'></i></a>");
         } else {
-            print("<a href=" . URLROOT . "/bookmark/add?target=$target><button type='button' class='btn btn-sm ttbtn'>Add Bookmark</button></a>");
+            print("<a href=" . URLROOT . "/bookmark/add?target=$target><i class='fa fa-bookmark fa-2x' title='Add Bookmark'></i></a>");
         }
     }
 
