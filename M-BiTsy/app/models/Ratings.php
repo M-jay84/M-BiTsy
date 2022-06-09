@@ -3,48 +3,40 @@
 class Ratings
 {
 
-    public static function ratingtor($id)
+    public static function ratingtor($id, $rating = 0)
     {
-        $xres = DB::run("SELECT rating, added FROM ratings WHERE torrent = $id AND user = " . Users::get("id"));
-        $xrow = $xres->fetch(PDO::FETCH_ASSOC);
-        $srating = "";
-        $srating .= "<br><b>" . Lang::T("RATINGS") . ":</b><br>";
-        if (!isset($xrow["rating"])) {
-            $srating .= "<br><b>Not Yet Rated</b><br>";
+        if (!$rating) {
+            $rating = "<b>" . Lang::T("RATINGS") . ":</b> <b>Not Yet Rated</b><br>";
         } else {
-            $rpic = ratingpic($xrow["rating"]);
-            if (!isset($rpic)) {
-                $srating .= "invalid?";
+            $average = ceil($rating);
+            $rating = "<img src=\"" . URLROOT . "/assets/images/rating/$average.png\" border=\"0\" alt=\"rating: $average/5\" title=\"rating: $average/5\" /></a><br>";
+        }
+        if (Users::get('id')) {
+            $ratings = [
+                5 => Lang::T("COOL"),
+                4 => Lang::T("PRETTY_GOOD"),
+                3 => Lang::T("DECENT"),
+                2 => Lang::T("PRETTY_BAD"),
+                1 => Lang::T("SUCKS"),
+            ];
+            $res = DB::run("SELECT rating, added FROM ratings WHERE torrent = $id AND user = " . Users::get("id"));
+            $row = $res->fetch(PDO::FETCH_ASSOC);
+            if ($row) {
+                $rating .= "<i>(" . Lang::T("YOU_RATED") . " \"" . $row["rating"] . " - " . $ratings[$row["rating"]] . "\")</i>";
             } else {
-                $numratings = $xrow["numratings"] ?? '';
-                $srating .= "$rpic (" . $xrow["rating"] . " " . Lang::T("OUT_OF") . " 5) " . $numratings . " " . Lang::T("USERS_HAVE_RATED");
+                $rating .= "<form style=\"display:inline;\" method=\"post\" action=\"" . URLROOT . "/rating?id=$id\"><input type=\"hidden\" name=\"id\" value=\"$id\" />\n";
+                $rating .= "<select name=\"rating\">\n";
+                $rating .= "<option value=\"0\">(" . Lang::T("ADD_RATING") . ")</option>\n";
+                foreach ($ratings as $k => $v) {
+                    $rating .= "<option value=\"$k\">$k - $v</option>\n";
+                }
+                $rating .= "</select>\n";
+                $rating .= "<input type=\"submit\" value=\"" . Lang::T("VOTE") . "\" />";
+                $rating .= "</form>\n";
             }
-
-        }
-        $ratings = array(
-            5 => Lang::T("COOL"),
-            4 => Lang::T("PRETTY_GOOD"),
-            3 => Lang::T("DECENT"),
-            2 => Lang::T("PRETTY_BAD"),
-            1 => Lang::T("SUCKS"),
-        );
-        $xres = DB::run("SELECT rating, added FROM ratings WHERE torrent = $id AND user = " . Users::get("id"));
-        $xrow = $xres->fetch(PDO::FETCH_ASSOC);
-        if ($xrow) {
-            $srating .= "<br /><i>(" . Lang::T("YOU_RATED") . " \"" . $xrow["rating"] . " - " . $ratings[$xrow["rating"]] . "\")</i>";
-        } else {
-            $srating .= "<form style=\"display:inline;\" method=\"post\" action=\"".URLROOT."/rating?id=$id\"><input type=\"hidden\" name=\"id\" value=\"$id\" />\n";
-            $srating .= "<select name=\"rating\">\n";
-            $srating .= "<option value=\"0\">(" . Lang::T("ADD_RATING") . ")</option>\n";
-            foreach ($ratings as $k => $v) {
-                $srating .= "<option value=\"$k\">$k - $v</option>\n";
-            }
-            $srating .= "</select>\n";
-            $srating .= "<input type=\"submit\" value=\"" . Lang::T("VOTE") . "\" />";
-            $srating .= "</form>\n";
         }
 
-        return $srating;
+        return $rating;
     }
 
     public static function addRating($id, $rating)

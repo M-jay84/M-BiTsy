@@ -103,9 +103,9 @@ foreach ($data['selecttor'] as $torr) :
         if ($torr["external"] != 'yes' && $torr["vip"] == 'yes') {
             print("<b>Torrent VIP: </b><font color='orange'>Torrent reserved for VIP</font><br>");
         }
-        if (Users::get('id')) {
-            echo Ratings::ratingtor($torr['id']);
-        }
+        
+        echo Ratings::ratingtor($torr['id'], $torr['rating']);
+		
         // Scrape External Torrents
         if ($torr["external"] == 'yes') {
             echo $data['scraper'];

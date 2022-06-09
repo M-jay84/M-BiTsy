@@ -333,7 +333,8 @@ function torrenttable($res)
                     if (!$row["rating"]) {
                         $rating = "--";
                     } else {
-                        $rating = "<img src=\"" . URLROOT . "/assets/images/rating/$row[rating].png\" border=\"0\" alt=\"rating: $row[rating]/5\" title=\"rating: $row[rating]/5\" /></a>";
+                        $average = ceil($row["rating"]);
+                        $rating = "<img src=\"" . URLROOT . "/assets/images/rating/$average.png\" border=\"0\" alt=\"rating: $average/5\" title=\"rating: $average/5\" /></a>";
                     }
                     //$rating = $row["rating"] . "/5)";
                     print("<td>$rating</td>");
